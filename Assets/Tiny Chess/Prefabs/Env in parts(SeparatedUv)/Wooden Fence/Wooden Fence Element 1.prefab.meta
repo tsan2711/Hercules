@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: bc76a8b8a3fb53b41aa24701223f34e6
+timeCreated: 1516788899
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Wooden Fence/Wooden
+    Fence Element 1.prefab
+  uploadId: 232123

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8369076af3b36244e957bb32ff384a73
+timeCreated: 1516788838
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Wooden Pillars/Wooden
+    Pillar 7.prefab
+  uploadId: 232123

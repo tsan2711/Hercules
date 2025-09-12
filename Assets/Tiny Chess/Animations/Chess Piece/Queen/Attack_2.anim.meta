@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: e5ba87e57ca12c642bd59f74dc07002d
+timeCreated: 1517392541
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Attack_2.anim
+  uploadId: 232123

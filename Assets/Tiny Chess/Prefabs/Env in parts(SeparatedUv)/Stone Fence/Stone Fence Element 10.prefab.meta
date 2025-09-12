@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1a2da7ded567f71479398e320b9b9a8c
+timeCreated: 1516778480
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Stone Fence/Stone
+    Fence Element 10.prefab
+  uploadId: 232123

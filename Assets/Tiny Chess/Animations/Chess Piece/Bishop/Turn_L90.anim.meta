@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9f7306284db58e5438ccb729cdf5eaa5
+timeCreated: 1517390722
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Bishop/Turn_L90.anim
+  uploadId: 232123

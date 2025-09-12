@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 2939ec6a2e1a67543b5f5ee2f887b6bf
+timeCreated: 1518943621
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Icons/Black Rook Icon.prefab
+  uploadId: 232123

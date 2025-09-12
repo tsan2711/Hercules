@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5f3f75b0de9e7b7489c4514770c6e4f1
+timeCreated: 1518851744
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Stone/Stone Black Horse.mat
+  uploadId: 232123

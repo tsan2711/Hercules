@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f7118f496df0737438339acc21f7f224
+timeCreated: 1517211848
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/White Pawn.prefab
+  uploadId: 232123

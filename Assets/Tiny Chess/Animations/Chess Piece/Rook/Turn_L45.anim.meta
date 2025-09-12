@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3e9354556aadab24492eec597d8ab22c
+timeCreated: 1517393195
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Rook/Turn_L45.anim
+  uploadId: 232123

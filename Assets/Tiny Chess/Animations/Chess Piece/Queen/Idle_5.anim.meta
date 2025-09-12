@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 4c17f273068833047aa8c48677cc8e43
+timeCreated: 1517392544
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Idle_5.anim
+  uploadId: 232123

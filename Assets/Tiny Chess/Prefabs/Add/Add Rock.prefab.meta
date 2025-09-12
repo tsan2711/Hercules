@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: da58a97d99ca08d459b6953f0f52c0ef
+timeCreated: 1517473569
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Add/Add Rock.prefab
+  uploadId: 232123

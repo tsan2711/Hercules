@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 63dd55ebbb84f9b46af7aa102c00d232
+timeCreated: 1517229953
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Environment example prefab/Stone Pillar 1.prefab
+  uploadId: 232123

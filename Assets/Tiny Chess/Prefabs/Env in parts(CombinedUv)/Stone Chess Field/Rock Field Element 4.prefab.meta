@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 24b38dcd5b6876146b9a47271f027272
+timeCreated: 1516788206
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stone Chess Field/Rock
+    Field Element 4.prefab
+  uploadId: 232123

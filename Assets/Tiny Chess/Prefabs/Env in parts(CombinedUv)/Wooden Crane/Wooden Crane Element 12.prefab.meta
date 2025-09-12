@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a3aa4b43cd6aefa469cf9101dcfcaada
+timeCreated: 1516782672
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Wooden Crane/Wooden
+    Crane Element 12.prefab
+  uploadId: 232123

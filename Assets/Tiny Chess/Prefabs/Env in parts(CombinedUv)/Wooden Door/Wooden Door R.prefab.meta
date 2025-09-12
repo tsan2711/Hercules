@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2cfe6f47161c9354597a58098124ea3f
+timeCreated: 1516788812
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Wooden Door/Wooden
+    Door R.prefab
+  uploadId: 232123

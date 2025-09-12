@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c2603a89ba9d7db43acf78c84268dcb3
+timeCreated: 1518943626
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Icons/Black Queen Icon.prefab
+  uploadId: 232123

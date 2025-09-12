@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5c04b1dc7d3d85d4d9c3b9de9700be67
+timeCreated: 1516873606
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stone Pillars/Stone
+    Pillars Element 15.prefab
+  uploadId: 232123

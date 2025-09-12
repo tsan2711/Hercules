@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 111f1e69dfb38414bba002398f30d3c9
+timeCreated: 1517392181
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Pawn/Idle_5_slow.anim
+  uploadId: 232123

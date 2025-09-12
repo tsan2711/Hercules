@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 81ce3f8e70ccdee44b351a9d4c77d2e1
+timeCreated: 1517392544
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Die_2.anim
+  uploadId: 232123

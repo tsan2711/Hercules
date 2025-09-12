@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cab5f13ae783c0e47bebde00fd0357a5
+timeCreated: 1518893794
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Stone Chess Piece/White Stone
+    Pawn.prefab
+  uploadId: 232123

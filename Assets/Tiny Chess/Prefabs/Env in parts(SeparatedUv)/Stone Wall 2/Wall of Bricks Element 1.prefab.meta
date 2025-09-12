@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cb37c4e0403747447b27e96c395a9439
+timeCreated: 1516787359
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Stone Wall 2/Wall
+    of Bricks Element 1.prefab
+  uploadId: 232123

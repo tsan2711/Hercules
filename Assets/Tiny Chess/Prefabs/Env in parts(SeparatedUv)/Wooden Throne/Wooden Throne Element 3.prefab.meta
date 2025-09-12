@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 7c4d47a5e3ac35e448692b9e095cd7ab
+timeCreated: 1516788510
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Wooden Throne/Wooden
+    Throne Element 3.prefab
+  uploadId: 232123

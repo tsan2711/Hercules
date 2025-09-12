@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 358c36a452a14c54d81bd8b035615546
+timeCreated: 1517391693
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/King/Idle_1.anim
+  uploadId: 232123

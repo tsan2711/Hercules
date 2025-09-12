@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6ec226d501ff4f24581d7d1a7c170c15
+timeCreated: 1517234653
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Environment/L_Flag Ctrl .controller
+  uploadId: 232123

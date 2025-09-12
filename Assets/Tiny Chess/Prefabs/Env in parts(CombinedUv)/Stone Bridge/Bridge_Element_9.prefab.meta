@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 787bf37f0e337ea468394dc29c1b045c
+timeCreated: 1516873131
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stone Bridge/Bridge_Element_9.prefab
+  uploadId: 232123

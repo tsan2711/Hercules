@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9306d0714f459cd4b8799c8d289cd27b
+timeCreated: 1517391694
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/King/Die_2.anim
+  uploadId: 232123

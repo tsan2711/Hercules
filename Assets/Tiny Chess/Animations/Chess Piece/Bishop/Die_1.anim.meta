@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8695882a8426ad540bbc25dd8f49b67a
+timeCreated: 1517390721
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Bishop/Die_1.anim
+  uploadId: 232123

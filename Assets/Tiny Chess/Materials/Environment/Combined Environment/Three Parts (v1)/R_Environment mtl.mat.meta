@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: db9b04450e5706d49a26f84769afad41
+timeCreated: 1516793080
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Combined Environment/Three Parts
+    (v1)/R_Environment mtl.mat
+  uploadId: 232123

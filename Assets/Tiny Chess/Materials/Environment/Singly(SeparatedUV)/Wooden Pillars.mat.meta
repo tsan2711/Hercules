@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 671e4eedd2d126b4cb08e86694e77dd1
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly(SeparatedUV)/Wooden Pillars.mat
+  uploadId: 232123

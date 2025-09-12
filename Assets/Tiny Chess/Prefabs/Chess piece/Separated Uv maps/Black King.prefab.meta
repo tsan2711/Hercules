@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 04caf89b4893cdf4e8b87656c5bfa027
+timeCreated: 1517218889
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Separated Uv maps/Black King.prefab
+  uploadId: 232123

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 69d1f6f6cf7f9f741a91cb050be73177
+timeCreated: 1517234965
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Environment/R_Flag Ctrl 2.controller
+  uploadId: 232123

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 790e203b43244e2488d95192da02de8e
+timeCreated: 1517211860
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/Black Rook.prefab
+  uploadId: 232123

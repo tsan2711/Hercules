@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 279db6381e10dfa4ea1b4074d833bfb8
+timeCreated: 1518893794
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Stone Chess Piece/White Stone
+    King.prefab
+  uploadId: 232123

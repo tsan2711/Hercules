@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a1ef8811a7a882b4a89bb8f03463d5f4
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly Pixel(SeparatedUV) 1/Wooden
+    Crane.mat
+  uploadId: 232123

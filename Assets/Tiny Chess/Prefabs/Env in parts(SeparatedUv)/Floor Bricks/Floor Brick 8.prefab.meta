@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3131919457775e44ab458d4ae12ffb0a
+timeCreated: 1516779070
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Floor Bricks/Floor
+    Brick 8.prefab
+  uploadId: 232123

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f28fbd1634932b34cb1ac151f6aa07e5
+timeCreated: 1518895665
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Icons/White Bishop Icon.mat
+  uploadId: 232123

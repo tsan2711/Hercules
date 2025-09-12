@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 63617d81a48407348b303f2f7fe34f88
+timeCreated: 1518895665
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Icons/Black Bishop Icon.mat
+  uploadId: 232123

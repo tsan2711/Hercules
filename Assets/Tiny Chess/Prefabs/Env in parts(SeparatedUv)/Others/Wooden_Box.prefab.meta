@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c5c5fe16330379b44ae4982bcaf2ddfb
+timeCreated: 1516872521
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Others/Wooden_Box.prefab
+  uploadId: 232123

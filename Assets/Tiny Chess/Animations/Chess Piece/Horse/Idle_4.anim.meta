@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 93edbbe140a009d40ab1806a997e32e9
+timeCreated: 1517391367
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Horse/Idle_4.anim
+  uploadId: 232123

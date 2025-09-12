@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3c04176fe31dd2343b01ea7d3fbaf913
+timeCreated: 1517211844
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/White Rook.prefab
+  uploadId: 232123

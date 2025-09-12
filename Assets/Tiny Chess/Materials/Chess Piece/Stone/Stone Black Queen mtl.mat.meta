@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6f5307ecd56f13649863bee010c3d586
+timeCreated: 1518851744
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Stone/Stone Black Queen mtl.mat
+  uploadId: 232123

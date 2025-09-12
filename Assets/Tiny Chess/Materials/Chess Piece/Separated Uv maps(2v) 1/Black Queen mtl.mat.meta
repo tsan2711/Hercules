@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 76a6bb58a3371284e92e52395053ebfe
+timeCreated: 1514546093
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Separated Uv maps(2v) 1/Black
+    Queen mtl.mat
+  uploadId: 232123

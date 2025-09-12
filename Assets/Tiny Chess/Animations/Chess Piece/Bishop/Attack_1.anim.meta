@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c2d542fb45932c04ba3b6a1ff8b451f8
+timeCreated: 1517390712
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Bishop/Attack_1.anim
+  uploadId: 232123

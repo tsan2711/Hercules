@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d6c5074a81e58dd4681833c40d847065
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly Pixel(SeparatedUV) 1/Floor
+    Bricks mtl.mat
+  uploadId: 232123

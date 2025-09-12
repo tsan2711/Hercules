@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d89a05c1511c8ac4dac5dc6597d78a2c
+timeCreated: 1514755537
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece Controllers/Queen Amin Ctrl.controller
+  uploadId: 232123

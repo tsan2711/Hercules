@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8f51800f1d90f8347a260fdac1f8a068
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly Pixel(SeparatedUV) 1/Others/Iron
+    Garting.mat
+  uploadId: 232123

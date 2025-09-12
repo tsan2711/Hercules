@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f28699b1026501a4aa8528e8b37f7dec
+timeCreated: 1516778112
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Rocks/Rock 11.prefab
+  uploadId: 232123

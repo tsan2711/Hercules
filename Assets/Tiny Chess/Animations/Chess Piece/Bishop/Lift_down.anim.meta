@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 2134735630b01824eab28596f36fe092
+timeCreated: 1517390722
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Bishop/Lift_down.anim
+  uploadId: 232123

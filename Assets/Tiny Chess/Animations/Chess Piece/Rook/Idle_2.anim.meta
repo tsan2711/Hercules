@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 144fe8855efabfc4b9de903b84190ee5
+timeCreated: 1517393192
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Rook/Idle_2.anim
+  uploadId: 232123

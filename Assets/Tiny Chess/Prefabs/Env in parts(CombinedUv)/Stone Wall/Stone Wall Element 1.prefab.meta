@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 54fa77b53b0dabf4caf909f9c0efb211
+timeCreated: 1516782585
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stone Wall/Stone
+    Wall Element 1.prefab
+  uploadId: 232123

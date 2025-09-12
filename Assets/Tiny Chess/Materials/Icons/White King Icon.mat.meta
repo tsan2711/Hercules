@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3abff8f07df2c344793ec2a90dabe85d
+timeCreated: 1518895665
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Icons/White King Icon.mat
+  uploadId: 232123

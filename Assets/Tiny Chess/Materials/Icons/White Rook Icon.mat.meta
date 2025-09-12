@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a876a2e81b7318149bc8838a37f574be
+timeCreated: 1518895665
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Icons/White Rook Icon.mat
+  uploadId: 232123

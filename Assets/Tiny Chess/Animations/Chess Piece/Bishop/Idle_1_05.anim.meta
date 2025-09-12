@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b96dbeb480cd4f3439bd89f9810ea3cf
+timeCreated: 1517390720
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Bishop/Idle_1_05.anim
+  uploadId: 232123

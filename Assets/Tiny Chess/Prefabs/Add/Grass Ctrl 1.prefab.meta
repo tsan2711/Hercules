@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: abf0dca57062faf42a55a1e78abe35c7
+timeCreated: 1517294111
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Add/Grass Ctrl 1.prefab
+  uploadId: 232123

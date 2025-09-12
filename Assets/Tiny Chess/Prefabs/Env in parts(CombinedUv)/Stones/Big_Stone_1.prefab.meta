@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f08792cb31d85d540868d68da35ea020
+timeCreated: 1516874781
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stones/Big_Stone_1.prefab
+  uploadId: 232123

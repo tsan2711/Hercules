@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 447ca813f7666724cb7ca2ed628b9f96
+timeCreated: 1516788206
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Stone Chess Field/Stone
+    Field Element 19.prefab
+  uploadId: 232123

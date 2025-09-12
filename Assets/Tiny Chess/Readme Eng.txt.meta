@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9077ef0a98d580e4c973d36e7cf1e1c8
+timeCreated: 1517479665
+licenseType: Store
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Readme Eng.txt
+  uploadId: 232123

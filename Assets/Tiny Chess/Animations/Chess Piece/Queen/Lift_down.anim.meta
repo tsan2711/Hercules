@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 4cc98eb516064ec4898a466f1a74a228
+timeCreated: 1517392544
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Lift_down.anim
+  uploadId: 232123

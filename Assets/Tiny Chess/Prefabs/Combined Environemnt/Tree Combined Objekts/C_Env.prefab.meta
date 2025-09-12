@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c2fe2afd5e2430749ab0e7b96c7bc0c2
+timeCreated: 1517376155
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Combined Environemnt/Tree Combined Objekts/C_Env.prefab
+  uploadId: 232123

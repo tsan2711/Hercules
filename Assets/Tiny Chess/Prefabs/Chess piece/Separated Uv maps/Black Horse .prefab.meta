@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cc9be819238a9784689500a60082a08d
+timeCreated: 1517218890
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Separated Uv maps/Black Horse
+    .prefab
+  uploadId: 232123

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 61176457011be5441ab8b9aa4b2aa7d0
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly Pixel(SeparatedUV) 1/Stone
+    Chess Field.mat
+  uploadId: 232123

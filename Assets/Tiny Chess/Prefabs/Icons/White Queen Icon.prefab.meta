@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 54f2aa9d526db654ca462dab8afef72c
+timeCreated: 1518943614
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Icons/White Queen Icon.prefab
+  uploadId: 232123

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 1994b7c0fbb81e348be47a3e88ae1842
+timeCreated: 1517211851
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/White Horse.prefab
+  uploadId: 232123

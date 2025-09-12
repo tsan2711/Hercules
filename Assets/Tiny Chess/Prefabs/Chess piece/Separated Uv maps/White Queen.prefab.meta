@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: fd3e8d0dc5d1b5b4fa6f9989f5aec437
+timeCreated: 1517218857
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Separated Uv maps/White Queen.prefab
+  uploadId: 232123

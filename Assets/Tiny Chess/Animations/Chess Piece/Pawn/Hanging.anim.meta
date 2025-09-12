@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 76e73f82f067b134a9d8badee452ab02
+timeCreated: 1517392181
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Pawn/Hanging.anim
+  uploadId: 232123

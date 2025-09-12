@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: df6f466cb85d3b7498e9444e04e471ff
+timeCreated: 1517392543
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Walk.anim
+  uploadId: 232123

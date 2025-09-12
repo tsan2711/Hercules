@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 23158d49b47a666489f1ac2dd4a819a3
+timeCreated: 1517392543
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Lift_up.anim
+  uploadId: 232123

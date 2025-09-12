@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b3406a078fe3a384190d5410b9fc81bd
+timeCreated: 1517392181
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Pawn/Idle_1.anim
+  uploadId: 232123

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9ddda65c1c1654147bbbdbdfcdb4881f
+timeCreated: 1518893794
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Stone Chess Piece/White Stone
+    Bishop.prefab
+  uploadId: 232123

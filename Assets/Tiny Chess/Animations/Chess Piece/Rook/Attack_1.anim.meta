@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: fe8fcaf9e534be24faf8f1cc953f2837
+timeCreated: 1517393195
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Rook/Attack_1.anim
+  uploadId: 232123

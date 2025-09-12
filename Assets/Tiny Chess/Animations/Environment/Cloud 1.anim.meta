@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8b23728ba4dde95449cc501364e00c9c
+timeCreated: 1517379383
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Environment/Cloud 1.anim
+  uploadId: 232123

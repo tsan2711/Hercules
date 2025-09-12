@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a3cd954f8d68b9d4ca1f0f491722ac97
+timeCreated: 1517391369
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Horse/Attack_2.anim
+  uploadId: 232123

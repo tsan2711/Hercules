@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5bf6cd298cf19a14e8de9d06f2207ebc
+timeCreated: 1515001718
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece Controllers/Pawn All Anim.controller
+  uploadId: 232123

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: be8f5191d5b444a46a3ede36a08c7a65
+timeCreated: 1517218869
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Separated Uv maps/White Horse.prefab
+  uploadId: 232123

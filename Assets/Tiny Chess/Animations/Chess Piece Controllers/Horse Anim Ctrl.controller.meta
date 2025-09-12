@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6f26fc8ffac1ade4196f7fc73e2a5bb9
+timeCreated: 1514714076
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece Controllers/Horse Anim Ctrl.controller
+  uploadId: 232123

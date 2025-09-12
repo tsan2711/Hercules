@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9a4e1131596d5d64e9857bee47b8b38e
+timeCreated: 1516780121
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Others/Flagpole.prefab
+  uploadId: 232123

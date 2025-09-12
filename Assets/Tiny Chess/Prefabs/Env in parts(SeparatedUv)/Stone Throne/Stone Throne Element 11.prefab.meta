@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 87945aca3ef5ed24aab18ff95827f44c
+timeCreated: 1516787642
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Stone Throne/Stone
+    Throne Element 11.prefab
+  uploadId: 232123

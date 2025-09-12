@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: eb30949c9dd766747b6cc55a52d43a07
+timeCreated: 1516874801
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stones/Stone_10.prefab
+  uploadId: 232123

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5398c4f29e6db334685f564caa47d079
+timeCreated: 1514561910
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece Controllers/Pawn Anim Ctrl
+    4.controller
+  uploadId: 232123

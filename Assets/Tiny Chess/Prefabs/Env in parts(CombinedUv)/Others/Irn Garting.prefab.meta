@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9d2ba02d9a955eb4794f21e90c5e2159
+timeCreated: 1516780121
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Others/Irn Garting.prefab
+  uploadId: 232123

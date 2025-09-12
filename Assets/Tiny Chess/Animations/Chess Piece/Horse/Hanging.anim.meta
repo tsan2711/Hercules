@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 0a15dc06b0c390a40927478f9274c123
+timeCreated: 1517391368
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Horse/Hanging.anim
+  uploadId: 232123

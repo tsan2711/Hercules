@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7c8b9021d15942046a2b6526f33ed48b
+timeCreated: 1517234653
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Environment/L_Flag.anim
+  uploadId: 232123

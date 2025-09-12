@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 82f1cada8c3ad3d48a9391abc796d2cf
+timeCreated: 1518851744
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Stone/Stone Black Bishop mtl.mat
+  uploadId: 232123

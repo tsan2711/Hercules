@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 94cb5304215d3ec48b8fea7529b8d89c
+timeCreated: 1516782585
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(SeparatedUv)/Stone Wall/Stone
+    wall.prefab
+  uploadId: 232123

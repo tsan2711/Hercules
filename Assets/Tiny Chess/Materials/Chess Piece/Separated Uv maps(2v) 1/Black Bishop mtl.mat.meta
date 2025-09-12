@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4ed1bc8d8e5a0884f9b7ff2934317579
+timeCreated: 1514546093
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Separated Uv maps(2v) 1/Black
+    Bishop mtl.mat
+  uploadId: 232123

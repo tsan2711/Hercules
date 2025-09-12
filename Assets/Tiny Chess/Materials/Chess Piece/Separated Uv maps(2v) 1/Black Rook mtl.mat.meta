@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 613c64521f9e59b4287c164b39fb521e
+timeCreated: 1514546093
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Chess Piece/Separated Uv maps(2v) 1/Black
+    Rook mtl.mat
+  uploadId: 232123

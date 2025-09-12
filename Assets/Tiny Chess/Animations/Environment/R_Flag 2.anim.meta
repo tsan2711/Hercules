@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: fe29b2b12623807408ec6a6121b36a7f
+timeCreated: 1517234965
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Environment/R_Flag 2.anim
+  uploadId: 232123

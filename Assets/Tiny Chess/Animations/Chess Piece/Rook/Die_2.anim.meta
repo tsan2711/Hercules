@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 105b63cdea4e75b4c8136c390543ba88
+timeCreated: 1517393194
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Rook/Die_2.anim
+  uploadId: 232123

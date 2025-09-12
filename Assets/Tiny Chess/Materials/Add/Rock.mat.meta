@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 47a83474eddf84c4f89497d43fe25d45
+timeCreated: 1517426872
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Add/Rock.mat
+  uploadId: 232123

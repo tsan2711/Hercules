@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39f5ad36485ba9e4e8ee3155cc301a6d
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly Pixel(SeparatedUV) 1/Wooden
+    Throne 1.mat
+  uploadId: 232123

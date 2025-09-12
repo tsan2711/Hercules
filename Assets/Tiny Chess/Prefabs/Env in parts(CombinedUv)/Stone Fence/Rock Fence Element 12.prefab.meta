@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 638781d4bb495f34dabdbf683d854649
+timeCreated: 1516778480
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Env in parts(CombinedUv)/Stone Fence/Rock
+    Fence Element 12.prefab
+  uploadId: 232123

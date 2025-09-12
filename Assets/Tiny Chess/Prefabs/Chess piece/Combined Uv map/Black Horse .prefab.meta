@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 29f2368d4a191e44aa1d3ef930229d4d
+timeCreated: 1517211867
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/Black Horse .prefab
+  uploadId: 232123

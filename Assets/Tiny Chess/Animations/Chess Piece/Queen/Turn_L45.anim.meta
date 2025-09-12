@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 20766c7e241729f46966262e8ede371c
+timeCreated: 1517392543
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Animations/Chess Piece/Queen/Turn_L45.anim
+  uploadId: 232123

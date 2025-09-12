@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b4bc0c5c58dd8464d96a4da303d00a02
+timeCreated: 1517218870
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Separated Uv maps/White Bishop.prefab
+  uploadId: 232123

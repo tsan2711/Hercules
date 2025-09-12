@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e69ad30c7be86524890ee2dc14e72fe3
+timeCreated: 1517393430
+licenseType: Store
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Demo 3.unity
+  uploadId: 232123

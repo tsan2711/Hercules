@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7ccfa6040a39dc14286995c5f77b2a2e
+timeCreated: 1516775160
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Materials/Environment/Singly(SeparatedUV)/Stone Bridge.mat
+  uploadId: 232123

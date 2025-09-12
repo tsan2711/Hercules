@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 4e6df7cbbcafef74bb3d1e08fb1b2ed8
+timeCreated: 1517211864
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110350
+  packageName: Tiny Chess
+  packageVersion: 1.1
+  assetPath: Assets/Tiny Chess/Prefabs/Chess piece/Combined Uv map/Black Pawn.prefab
+  uploadId: 232123
