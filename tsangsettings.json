@@ -1,0 +1,83 @@
+{
+    "m_Id": "Default copy",
+    "m_ParentId": "",
+    "m_Entries": [
+        {
+            "identifier": {
+                "path": "Main Menu/Edit/Play"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 32,
+                    "m_Modifiers": 0
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/Assets/Rename"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 50,
+                    "m_Modifiers": 0
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/Edit/Rename"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 51,
+                    "m_Modifiers": 0
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/GameObject/Create Empty"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 49,
+                    "m_Modifiers": 1
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/GameObject/Create Empty Child"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 50,
+                    "m_Modifiers": 1
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/GameObject/Create Empty Parent"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 51,
+                    "m_Modifiers": 1
+                }
+            ]
+        },
+        {
+            "identifier": {
+                "path": "Main Menu/GameObject/Toggle Active State"
+            },
+            "combinations": [
+                {
+                    "m_KeyCode": 49,
+                    "m_Modifiers": 0
+                }
+            ]
+        }
+    ]
+}
