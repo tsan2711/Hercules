@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 72806ab512260804f91846598bc0c3e8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 276554
+  packageName: Better Transform - Size, Notes, Global-Local workspace & child parent
+    transform
+  packageVersion: 2.11.0a
+  assetPath: Assets/Tiny Giant Studio/Better Transform/Sample Scene.unity
+  uploadId: 766716

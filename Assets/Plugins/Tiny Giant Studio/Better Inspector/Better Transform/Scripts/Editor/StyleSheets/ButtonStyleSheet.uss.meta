@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 131d905069871374e8fe6cab76c779cc
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 12385, guid: 0000000000000000e000000000000000, type: 0}
+  disableValidation: 0
+AssetOrigin:
+  serializedVersion: 1
+  productId: 276554
+  packageName: Better Transform - Size, Notes, Global-Local workspace & child parent
+    transform
+  packageVersion: 2.11.0a
+  assetPath: Assets/Plugins/Tiny Giant Studio/Better Inspector/Better Transform/Scripts/Editor/StyleSheets/ButtonStyleSheet.uss
+  uploadId: 766716

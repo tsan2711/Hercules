@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ce465cbac9f131241acfd8b7127846a4
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 13804, guid: 0000000000000000e000000000000000, type: 0}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 276554
+  packageName: Better Transform - Size, Notes, Global-Local workspace & child parent
+    transform
+  packageVersion: 2.11.0a
+  assetPath: Assets/Plugins/Tiny Giant Studio/Better Inspector/Better Transform/Scripts/Editor/Templates/CustomFoldoutTemplate.uxml
+  uploadId: 766716
