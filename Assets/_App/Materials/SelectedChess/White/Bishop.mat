@@ -30,8 +30,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _EmissionStrength: 3
+    - _PulseAmplitude: 0.5
+    - _PulseSpeed: 3
     - _RimIntensity: 5
-    - _RimPower: 4
+    - _RimPower: 3
     m_Colors:
     - _RimColor: {r: 0.3237362, g: 0.8094186, b: 0.9150943, a: 1}
   m_BuildTextureStacks: []

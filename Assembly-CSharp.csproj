@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Tiny Chess/Readme Eng.txt" />
+    <None Include="Assets/_App/Shader/Tile.shader" />
     <None Include="Assets/Tiny Chess/Update.txt" />
     <None Include="Assets/_App/Shader/Pawn.shader" />
     <None Include="Assets/Hovl Studio/Magic effects pack/Demo scene/Readme.txt" />

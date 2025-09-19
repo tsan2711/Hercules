@@ -29,10 +29,24 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionStrength: 2.25
-    - _RimIntensity: 3.26
-    - _RimPower: 2
+    - _ColorShiftIntensity: 0.3
+    - _ColorShiftSpeed: 1.5
+    - _EmissionStrength: 5
+    - _HologramIntensity: 0.5
+    - _NoiseScale: 10
+    - _NoiseSpeed: 1
+    - _PulseAmplitude: 0.5
+    - _PulseSpeed: 3
+    - _RimIntensity: 3
+    - _RimPower: 3
+    - _ScanLineIntensity: 1.5
+    - _ScanLineSpeed: 3
+    - _ScanLineWidth: 0.05
+    - _WaveAmplitude: 0.02
+    - _WaveFrequency: 5
+    - _WaveSpeed: 1
     m_Colors:
     - _RimColor: {r: 0.16967781, g: 0.47790593, b: 0.8773585, a: 1}
+    - _SecondaryColor: {r: 1, g: 0.19999996, b: 0.8, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

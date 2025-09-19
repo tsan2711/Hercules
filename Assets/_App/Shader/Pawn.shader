@@ -6,7 +6,9 @@ Shader "Unlit/Pawn"
         _RimColor ("Rim Color", Color) = (0.5, 0.8, 1.0, 1.0)
         _RimPower ("Rim Power", Range(0.5, 8.0)) = 3.0
         _RimIntensity ("Rim Intensity", Range(0.0, 5.0)) = 2.0
-        _EmissionStrength ("Emission Strength", Range(0.0, 10.0)) = 1.0
+        _EmissionStrength ("Emission Strength", Range(0.0, 5.0)) = 1.0
+        _PulseSpeed ("Pulse Speed", Range(0.0, 5.0)) = 2.0
+        _PulseAmplitude ("Pulse Amplitude", Range(0.0, 1.0)) = 0.3
     }
     SubShader
     {
@@ -45,6 +47,8 @@ Shader "Unlit/Pawn"
             float _RimPower;
             float _RimIntensity;
             float _EmissionStrength;
+            float _PulseSpeed;
+            float _PulseAmplitude;
 
             v2f vert (appdata v)
             {
@@ -63,7 +67,7 @@ Shader "Unlit/Pawn"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
+                // Sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
                 
                 // Calculate rim lighting effect
@@ -74,16 +78,16 @@ Shader "Unlit/Pawn"
                 float rimDot = 1.0 - saturate(dot(worldNormal, viewDirection));
                 float rimEffect = pow(rimDot, _RimPower) * _RimIntensity;
                 
-                // Apply rim color with emission - Enhanced for bloom
-                float3 rimEmission = _RimColor.rgb * rimEffect * _EmissionStrength;
+                // Simple pulsing animation effect
+                float pulse = sin(_Time.y * _PulseSpeed) * _PulseAmplitude + 1.0;
                 
-                // Boost emission values for HDR bloom effect
-                rimEmission *= (1.0 + rimEffect * 2.0); // Multiply by up to 3x for bright areas
+                // Apply rim color with emission
+                float3 rimEmission = _RimColor.rgb * rimEffect * _EmissionStrength * pulse;
                 
                 // Combine base color with rim lighting
                 col.rgb += rimEmission;
                 
-                // apply fog
+                // Apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }

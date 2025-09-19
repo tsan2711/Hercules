@@ -29,9 +29,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionStrength: 5
+    - _EmissionStrength: 3
+    - _PulseAmplitude: 0.5
+    - _PulseSpeed: 3
     - _RimIntensity: 5
-    - _RimPower: 3.5
+    - _RimPower: 3
     m_Colors:
     - _RimColor: {r: 0.3237362, g: 0.8094186, b: 0.9150943, a: 1}
   m_BuildTextureStacks: []
