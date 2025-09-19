@@ -65,13 +65,50 @@
     <Analyzer Include="/Users/tsangcuteso1/Desktop/6000.0.57f1/Unity/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Dark UI/Scripts/SwitchManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/BlurManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/TimedEvent.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/LaunchURL.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/UIParticleRenderer.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/ButtonAnimationFix.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/GamepadChecker.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/CanvasManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/PointerEnterEvents.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/SliderManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/PanelTabManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/ScrollForMore.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/ModalWindowManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/GamepadTriggerEvent.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/DemoScrollForMore.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/PressKeyEvent.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/VirtualCursor.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/UIDissolveEffect.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/SplashScreenManager.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/HoldKeyEvent.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/MainPanelManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/PanelTabButton.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/UIElementSound.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/PanelBrushManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/MainPanelButton.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/QualityManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/CustomDropdown.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/SliderGamepadManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/ScrollGamepadManager.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/LayoutGroupPositionFix.cs" />
+    <Compile Include="Assets/Dark UI/Scripts/VirtualCursorAnimate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Tiny Chess/Readme Eng.txt" />
+    <None Include="Assets/Dark UI/Read Me.txt" />
+    <None Include="Assets/Dark UI/Shaders/UI Particle Additive.shader" />
+    <None Include="Assets/Dark UI/Shaders/UI Blur.shader" />
+    <None Include="Assets/Dark UI/Shaders/Masked UI Blur.shader" />
     <None Include="Assets/_App/Shader/Tile.shader" />
+    <None Include="Assets/Dark UI/Shaders/UI Dissolve Effect.shader" />
     <None Include="Assets/Tiny Chess/Update.txt" />
     <None Include="Assets/_App/Shader/Pawn.shader" />
+    <None Include="Assets/Dark UI/Shaders/Fast UI Blur.shader" />
     <None Include="Assets/Hovl Studio/Magic effects pack/Demo scene/Readme.txt" />
   </ItemGroup>
   <ItemGroup>
