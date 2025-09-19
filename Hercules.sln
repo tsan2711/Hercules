@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeStage.Maintainer.Editor", "CodeStage.Maintainer.Editor.csproj", "{BF9F30AC-4187-BB81-B2F0-A3399F447538}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{D76A181E-8D6F-DC72-108F-6D9DC587BB47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyGiantStudio.BetterInspector.Editor", "TinyGiantStudio.BetterInspector.Editor.csproj", "{2CDB1F08-8311-E7C5-7197-8E24CDD5AAF7}"
@@ -14,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyGiantStudio.BetterInspector.BetterTransform.Editor", "TinyGiantStudio.BetterInspector.BetterTransform.Editor.csproj", "{5F0C4D1C-CC9A-BB6B-EFA9-4F2429EACE78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wingman", "Wingman.csproj", "{9447A664-EFBC-9300-DE51-D4D852E38D6D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeStage.Maintainer.Demo", "CodeStage.Maintainer.Demo.csproj", "{8895526C-CF1C-5BC4-1BDF-6E7D037F9CA9}"
 EndProject
@@ -31,6 +31,10 @@ Global
 		{BF9F30AC-4187-BB81-B2F0-A3399F447538}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF9F30AC-4187-BB81-B2F0-A3399F447538}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF9F30AC-4187-BB81-B2F0-A3399F447538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D76A181E-8D6F-DC72-108F-6D9DC587BB47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D76A181E-8D6F-DC72-108F-6D9DC587BB47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D76A181E-8D6F-DC72-108F-6D9DC587BB47}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,10 +59,6 @@ Global
 		{9447A664-EFBC-9300-DE51-D4D852E38D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9447A664-EFBC-9300-DE51-D4D852E38D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9447A664-EFBC-9300-DE51-D4D852E38D6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8895526C-CF1C-5BC4-1BDF-6E7D037F9CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8895526C-CF1C-5BC4-1BDF-6E7D037F9CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8895526C-CF1C-5BC4-1BDF-6E7D037F9CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
