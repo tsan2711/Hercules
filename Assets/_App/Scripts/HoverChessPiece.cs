@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ChessRaycastDebug : MonoBehaviour
 {
@@ -8,20 +9,13 @@ public class ChessRaycastDebug : MonoBehaviour
     private GameObject currentHover;
     private Material[][] hoverOriginalMaterials;
 
-    public enum ChessType
-    {
-        Pawn, Bishop, Rook, Horse, HorseRider, Queen, King
-    }
+    [Header("Square Highlight Prefabs")]
+    public GameObject whiteHighlightPrefab;
+    public GameObject blackHighlightPrefab;
+    private List<GameObject> activeSquares = new List<GameObject>();
 
-    [System.Serializable]
-    public class ChessMaterial
-    {
-        public bool isWhite;
-        public ChessType type;
-        public Material[] materials;
-    }
-
-    public ChessMaterial[] chessMaterials;
+    [Header("Board Settings")]
+    public float tileSize = 2f; // khoảng cách giữa các ô
 
     void Update()
     {
@@ -33,37 +27,41 @@ public class ChessRaycastDebug : MonoBehaviour
         {
             if (hitPiece)
             {
-                GameObject piece = hit.collider.gameObject;
+                GameObject pieceObj = hit.collider.gameObject;
 
-                if (piece == currentSelected)
+                if (pieceObj == currentSelected)
                 {
-                    // Click lại quân đã chọn → bỏ highlight
                     ResetSelected();
+                    ClearHighlights();
                 }
                 else
                 {
                     ResetSelected();
                     ResetHover();
-                    ApplyHighlight(piece, ref selectedOriginalMaterials);
-                    currentSelected = piece;
+                    ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
+                    currentSelected = pieceObj;
+
+                    ChessPieceInfo info = pieceObj.GetComponent<ChessPieceInfo>();
+                    if (info != null)
+                        Highlight2Ahead(info);
                 }
             }
             else
             {
-                // Click ngoài → bỏ highlight
                 ResetSelected();
+                ClearHighlights();
             }
         }
 
         // Hover logic (chỉ khi chưa chọn)
         if (hitPiece)
         {
-            GameObject piece = hit.collider.gameObject;
-            if (piece != currentSelected && piece != currentHover)
+            GameObject pieceObj = hit.collider.gameObject;
+            if (pieceObj != currentSelected && pieceObj != currentHover)
             {
                 ResetHover();
-                ApplyHighlight(piece, ref hoverOriginalMaterials);
-                currentHover = piece;
+                ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
+                currentHover = pieceObj;
             }
         }
         else
@@ -71,6 +69,44 @@ public class ChessRaycastDebug : MonoBehaviour
             ResetHover();
         }
     }
+
+    // Spawn highlight 2 ô trước dựa trên vị trí Transform, prefab tùy màu quân
+    void Highlight2Ahead(ChessPieceInfo piece)
+    {
+        ClearHighlights();
+
+        Vector3 piecePos = piece.transform.position;
+        int direction = piece.isWhite ? 1 : -1; // hướng di chuyển
+        Vector3 highlightPos = piecePos + new Vector3(0, 0.1f, 2 * tileSize * direction);
+
+        GameObject prefabToUse = piece.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
+
+        GameObject obj = Instantiate(prefabToUse, highlightPos, Quaternion.identity);
+        activeSquares.Add(obj);
+    }
+
+    // Xóa toàn bộ highlight cũ
+    void ClearHighlights()
+    {
+        foreach (var sq in activeSquares)
+            Destroy(sq);
+        activeSquares.Clear();
+    }
+
+    public enum ChessType
+    {
+        Pawn, Bishop, Rook, Knight, Queen, King
+    }
+
+    [System.Serializable]
+    public class ChessMaterial
+    {
+        public bool isWhite;
+        public ChessType type;
+        public Material[] materials;
+    }
+
+    public ChessMaterial[] chessMaterials;
 
     Material[] GetMaterialForPiece(bool isWhite, ChessType type)
     {
