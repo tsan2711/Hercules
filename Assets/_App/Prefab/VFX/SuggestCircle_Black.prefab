@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5838426555003249380}
   - component: {fileID: 6550533627587501479}
   - component: {fileID: 3093956393230064969}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4913,7 +4913,7 @@ GameObject:
   - component: {fileID: 2432162746674593092}
   - component: {fileID: 7440663267452343606}
   - component: {fileID: 7103719645736335978}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9912,7 +9912,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 3e-45, y: 6e-45, z: 1e-45, w: 0}
+  m_BoundingSphereOverride: {x: 2.0142e-41, y: 2.524355e-29, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
@@ -9955,7 +9955,7 @@ GameObject:
   - component: {fileID: 2573609716801664133}
   - component: {fileID: 5515289631355306113}
   - component: {fileID: 6312271316603807739}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sides
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14846,7 +14846,7 @@ GameObject:
   - component: {fileID: 3062331060501936460}
   - component: {fileID: 4986459271254180704}
   - component: {fileID: 8685378884169644759}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Snowflakes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19746,9 +19746,10 @@ GameObject:
   - component: {fileID: 54063920062927159}
   - component: {fileID: 1120988371264523310}
   - component: {fileID: 199918149492401337}
-  m_Layer: 0
+  - component: {fileID: -4309594641202045722}
+  m_Layer: 7
   m_Name: SuggestCircle_Black
-  m_TagString: Untagged
+  m_TagString: MoveSquare
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24630,3 +24631,24 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &-4309594641202045722
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977563532432562801}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.824136, y: 1.8742509, z: 7.9711175}
+  m_Center: {x: 0.14866304, y: 0.07879615, z: -0.04299569}

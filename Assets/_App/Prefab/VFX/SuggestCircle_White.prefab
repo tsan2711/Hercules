@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8947135920632386533}
   - component: {fileID: 1082986384123289091}
   - component: {fileID: 5379314291808057874}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sides
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4902,9 +4902,10 @@ GameObject:
   - component: {fileID: 1980073473702706673}
   - component: {fileID: 5663268685218695842}
   - component: {fileID: 7254082649670144621}
-  m_Layer: 0
+  - component: {fileID: 2255456774242524921}
+  m_Layer: 7
   m_Name: SuggestCircle_White
-  m_TagString: Untagged
+  m_TagString: MoveSquare
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9786,6 +9787,27 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &2255456774242524921
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442113594538427752}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.408123, y: 1.3239985, z: 8.182861}
+  m_Center: {x: 0.011340141, y: 0.31958342, z: -0.04060483}
 --- !u!1 &5296650652705162305
 GameObject:
   m_ObjectHideFlags: 0
@@ -9799,7 +9821,7 @@ GameObject:
   - component: {fileID: 8087875639058608120}
   - component: {fileID: 5061770803817113493}
   - component: {fileID: 6382914422760549980}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14841,7 +14863,7 @@ GameObject:
   - component: {fileID: 5184026206324827186}
   - component: {fileID: 2291840609760070586}
   - component: {fileID: 2292048649015961317}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19741,7 +19763,7 @@ GameObject:
   - component: {fileID: 7596821500795122337}
   - component: {fileID: 2445889793716320240}
   - component: {fileID: 8754802225375633353}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Snowflakes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
