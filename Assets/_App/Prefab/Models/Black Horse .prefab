@@ -1300,6 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isWhite: 0
   type: 3
+  boardPosition: {x: 0, y: 0}
 --- !u!65 &4454586193913439431
 BoxCollider:
   m_ObjectHideFlags: 0

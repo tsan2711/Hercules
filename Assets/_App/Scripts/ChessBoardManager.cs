@@ -2,6 +2,8 @@
 
 public class ChessBoardManager : MonoBehaviour
 {
+    public static ChessBoardManager Instance; // Singleton để truy cập dễ từ MoveGenerator
+
     [Header("Chess Prefabs")]
     public GameObject whitePawnPrefab;
     public GameObject whiteRookPrefab;
@@ -18,9 +20,14 @@ public class ChessBoardManager : MonoBehaviour
     public GameObject blackKingPrefab;
 
     [Header("Board Settings")]
-    public float tileSize = 2f; // Khoảng cách giữa các ô
-    [HideInInspector]
-    public ChessPieceInfo[,] board = new ChessPieceInfo[8, 8];
+    public float tileSize = 2f;
+    public Vector3 boardOrigin = new Vector3(-7, 2, -7); // góc dưới trái bàn cờ (A1)
+    [HideInInspector] public ChessPieceInfo[,] board = new ChessPieceInfo[8, 8];
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -29,81 +36,73 @@ public class ChessBoardManager : MonoBehaviour
 
     void SpawnBoard()
     {
-        // Vị trí bắt đầu
-        Vector3 whitePawnStart = new Vector3(-7, 2, -5);
-        Vector3 whiteBackStart = new Vector3(-7, 2, -7);
+        // --- Trắng ---
+        SpawnPieceRow(whitePawnPrefab, true, 1);
+        SpawnBackRow(true, 0);
 
-        Vector3 blackPawnStart = new Vector3(7, 2, 5);
-        Vector3 blackBackStart = new Vector3(7, 2, 7);
-
-        // Spawn quân trắng
-        SpawnPieceRow(whitePawnPrefab, true, 0, whitePawnStart);
-        SpawnBackRow(true, 0, whiteBackStart);
-
-        // Spawn quân đen
-        SpawnPieceRow(blackPawnPrefab, false, 0, blackPawnStart);
-        SpawnBackRow(false, 0, blackBackStart);
+        // --- Đen ---
+        SpawnPieceRow(blackPawnPrefab, false, 6);
+        SpawnBackRow(false, 7);
     }
 
-    void SpawnPieceRow(GameObject prefab, bool isWhite, int row, Vector3 startPos)
+    void SpawnPieceRow(GameObject prefab, bool isWhite, int row)
     {
         for (int col = 0; col < 8; col++)
         {
-            float x = isWhite ? startPos.x + col * tileSize : startPos.x - col * tileSize;
-            float y = startPos.y;
-            float z = startPos.z;
-
-            Vector3 pos = new Vector3(x, y, z);
-
+            Vector3 pos = BoardToWorld(col, row);
             Quaternion rot = isWhite ? Quaternion.identity : Quaternion.Euler(0, 180, 0);
 
             GameObject obj = Instantiate(prefab, pos, rot);
             ChessPieceInfo info = obj.GetComponent<ChessPieceInfo>();
             info.isWhite = isWhite;
+            info.boardPosition = new Vector2Int(col, row);
+
             board[col, row] = info;
         }
     }
 
-    void SpawnBackRow(bool isWhite, int row, Vector3 startPos)
+    void SpawnBackRow(bool isWhite, int row)
     {
-        GameObject[] piecesOrder = new GameObject[8];
-
-        if (isWhite)
-        {
-            piecesOrder[0] = whiteRookPrefab;
-            piecesOrder[1] = whiteKnightPrefab;
-            piecesOrder[2] = whiteBishopPrefab;
-            piecesOrder[3] = whiteQueenPrefab;
-            piecesOrder[4] = whiteKingPrefab;
-            piecesOrder[5] = whiteBishopPrefab;
-            piecesOrder[6] = whiteKnightPrefab;
-            piecesOrder[7] = whiteRookPrefab;
-        }
-        else
-        {
-            piecesOrder[0] = blackRookPrefab;
-            piecesOrder[1] = blackKnightPrefab;
-            piecesOrder[2] = blackBishopPrefab;
-            piecesOrder[3] = blackQueenPrefab;
-            piecesOrder[4] = blackKingPrefab;
-            piecesOrder[5] = blackBishopPrefab;
-            piecesOrder[6] = blackKnightPrefab;
-            piecesOrder[7] = blackRookPrefab;
-        }
+        GameObject[] piecesOrder = isWhite
+            ? new GameObject[] { whiteRookPrefab, whiteKnightPrefab, whiteBishopPrefab, whiteQueenPrefab, whiteKingPrefab, whiteBishopPrefab, whiteKnightPrefab, whiteRookPrefab }
+            : new GameObject[] { blackRookPrefab, blackKnightPrefab, blackBishopPrefab, blackQueenPrefab, blackKingPrefab, blackBishopPrefab, blackKnightPrefab, blackRookPrefab };
 
         for (int col = 0; col < 8; col++)
         {
-            float x = isWhite ? startPos.x + col * tileSize : startPos.x - col * tileSize;
-            float y = startPos.y;
-            float z = startPos.z;
-
-            Vector3 pos = new Vector3(x, y, z);
+            Vector3 pos = BoardToWorld(col, row);
             Quaternion rot = isWhite ? Quaternion.identity : Quaternion.Euler(0, 180, 0);
 
             GameObject obj = Instantiate(piecesOrder[col], pos, rot);
             ChessPieceInfo info = obj.GetComponent<ChessPieceInfo>();
             info.isWhite = isWhite;
+            info.boardPosition = new Vector2Int(col, row);
+
             board[col, row] = info;
         }
     }
+
+    // Chuyển từ tọa độ bàn cờ sang world position
+    public Vector3 BoardToWorld(int x, int y)
+    {
+        return new Vector3(boardOrigin.x + x * tileSize, boardOrigin.y, boardOrigin.z + y * tileSize);
+    }
+
+    // Chuyển từ world position sang tọa độ bàn cờ (nếu cần)
+    public Vector2Int WorldToBoard(Vector3 worldPos)
+    {
+        int x = Mathf.RoundToInt((worldPos.x - boardOrigin.x) / tileSize);
+        int y = Mathf.RoundToInt((worldPos.z - boardOrigin.z) / tileSize);
+        return new Vector2Int(x, y);
+    }
+
+    public void UpdateBoardPosition(ChessPieceInfo piece, Vector2Int newPos)
+    {
+        // Xóa vị trí cũ trên board
+        board[piece.boardPosition.x, piece.boardPosition.y] = null;
+
+        // Ghi vị trí mới
+        board[newPos.x, newPos.y] = piece;
+        piece.boardPosition = newPos;
+    }
+
 }

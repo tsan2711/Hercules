@@ -15,20 +15,39 @@ public class ChessRaycastDebug : MonoBehaviour
     private List<GameObject> activeSquares = new List<GameObject>();
 
     [Header("Board Settings")]
-    public float tileSize = 2f; // khoảng cách giữa các ô
+    public float tileSize = 2f;
+
+    [Header("Move Generation")]
+    public ChessMoveGenerator moveGenerator;
+    public ChessPieceMover pieceMover; // Thêm vào Inspector
+
+    private ChessPieceInfo selectedInfo;
+    private List<Vector3> currentMoves = new List<Vector3>();
 
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool hitPiece = Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("ChessPiece"));
+        bool hitSquare = Physics.Raycast(ray, out RaycastHit squareHit, 100f, LayerMask.GetMask("MoveSquare"));
 
-        // Click logic
+        // --- XỬ LÝ CLICK ---
         if (Input.GetMouseButtonDown(0))
         {
-            if (hitPiece)
+            if (hitSquare && selectedInfo != null) // Click vào ô highlight
+            {
+                Vector3 targetPos = squareHit.collider.transform.position;
+                if (currentMoves.Contains(targetPos))
+                {
+                    pieceMover.MovePiece(selectedInfo, targetPos);
+                    ResetSelected();
+                    ClearHighlights();
+                    return;
+                }
+            }
+
+            if (hitPiece) // Click vào quân cờ
             {
                 GameObject pieceObj = hit.collider.gameObject;
-
                 if (pieceObj == currentSelected)
                 {
                     ResetSelected();
@@ -38,12 +57,23 @@ public class ChessRaycastDebug : MonoBehaviour
                 {
                     ResetSelected();
                     ResetHover();
+
                     ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
                     currentSelected = pieceObj;
 
-                    ChessPieceInfo info = pieceObj.GetComponent<ChessPieceInfo>();
-                    if (info != null)
-                        Highlight2Ahead(info);
+                    selectedInfo = pieceObj.GetComponent<ChessPieceInfo>();
+                    if (selectedInfo != null)
+                    {
+                        currentMoves = moveGenerator.GetMoves(selectedInfo);
+                        ClearHighlights();
+                        GameObject prefabToUse = selectedInfo.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
+
+                        foreach (var pos in currentMoves)
+                        {
+                            GameObject obj = Instantiate(prefabToUse, pos, Quaternion.identity);
+                            activeSquares.Add(obj);
+                        }
+                    }
                 }
             }
             else
@@ -53,7 +83,7 @@ public class ChessRaycastDebug : MonoBehaviour
             }
         }
 
-        // Hover logic (chỉ khi chưa chọn)
+        // --- HOVER LOGIC ---
         if (hitPiece)
         {
             GameObject pieceObj = hit.collider.gameObject;
@@ -70,22 +100,6 @@ public class ChessRaycastDebug : MonoBehaviour
         }
     }
 
-    // Spawn highlight 2 ô trước dựa trên vị trí Transform, prefab tùy màu quân
-    void Highlight2Ahead(ChessPieceInfo piece)
-    {
-        ClearHighlights();
-
-        Vector3 piecePos = piece.transform.position;
-        int direction = piece.isWhite ? 1 : -1; // hướng di chuyển
-        Vector3 highlightPos = piecePos + new Vector3(0, 0.1f, 2 * tileSize * direction);
-
-        GameObject prefabToUse = piece.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
-
-        GameObject obj = Instantiate(prefabToUse, highlightPos, Quaternion.identity);
-        activeSquares.Add(obj);
-    }
-
-    // Xóa toàn bộ highlight cũ
     void ClearHighlights()
     {
         foreach (var sq in activeSquares)
@@ -93,10 +107,7 @@ public class ChessRaycastDebug : MonoBehaviour
         activeSquares.Clear();
     }
 
-    public enum ChessType
-    {
-        Pawn, Bishop, Rook, Knight, Queen, King
-    }
+    public enum ChessType { Pawn, Bishop, Rook, Knight, Queen, King }
 
     [System.Serializable]
     public class ChessMaterial
@@ -139,22 +150,19 @@ public class ChessRaycastDebug : MonoBehaviour
     void ResetHover()
     {
         if (currentHover == null) return;
-
         SkinnedMeshRenderer[] renderers = currentHover.GetComponentsInChildren<SkinnedMeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
             renderers[i].materials = hoverOriginalMaterials[i];
-
         currentHover = null;
     }
 
     void ResetSelected()
     {
         if (currentSelected == null) return;
-
         SkinnedMeshRenderer[] renderers = currentSelected.GetComponentsInChildren<SkinnedMeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
             renderers[i].materials = selectedOriginalMaterials[i];
-
         currentSelected = null;
+        selectedInfo = null;
     }
 }
