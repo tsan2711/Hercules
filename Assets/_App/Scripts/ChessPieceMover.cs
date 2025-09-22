@@ -72,6 +72,10 @@ public class ChessPieceMover : MonoBehaviour
                     ChessBoardManager.Instance.board[7, y] = null;
                     ChessBoardManager.Instance.board[5, y] = rook;
                     rook.hasMoved = true;
+                    
+                    // Chuyển lượt chơi sau nhập thành
+                    if (ChessBoardManager.Instance != null)
+                        ChessBoardManager.Instance.EndTurn();
                     return;
                 }
             }
@@ -95,6 +99,10 @@ public class ChessPieceMover : MonoBehaviour
                     ChessBoardManager.Instance.board[0, y] = null;
                     ChessBoardManager.Instance.board[3, y] = rook;
                     rook.hasMoved = true;
+                    
+                    // Chuyển lượt chơi sau nhập thành
+                    if (ChessBoardManager.Instance != null)
+                        ChessBoardManager.Instance.EndTurn();
                     return;
                 }
             }
@@ -113,6 +121,98 @@ public class ChessPieceMover : MonoBehaviour
         // Cập nhật board
         ChessBoardManager.Instance.UpdateBoardPosition(piece, target);
         piece.hasMoved = true;
+        
+        // Kiểm tra phong cấp tốt
+        if (piece.type == ChessRaycastDebug.ChessType.Pawn)
+        {
+            CheckPawnPromotion(piece, target);
+        }
+        
+        // Chuyển lượt chơi
+        if (ChessBoardManager.Instance != null)
+            ChessBoardManager.Instance.EndTurn();
+    }
+    
+    // Kiểm tra và thực hiện phong cấp tốt
+    private void CheckPawnPromotion(ChessPieceInfo pawn, Vector2Int targetPos)
+    {
+        // Kiểm tra tốt có đến cuối bàn cờ không
+        bool reachedEnd = (pawn.isWhite && targetPos.y == 7) || (!pawn.isWhite && targetPos.y == 0);
+        
+        if (reachedEnd)
+        {
+            Debug.Log($"Pawn promotion! {(pawn.isWhite ? "White" : "Black")} pawn reached the end!");
+            
+            // Phong cấp thành Hậu (Queen)
+            PromotePawn(pawn, ChessRaycastDebug.ChessType.Queen);
+        }
+    }
+    
+    // Thực hiện phong cấp tốt
+    private void PromotePawn(ChessPieceInfo pawn, ChessRaycastDebug.ChessType newType)
+    {
+        Vector2Int pos = pawn.boardPosition;
+        bool isWhite = pawn.isWhite;
+        
+        // Xóa tốt cũ
+        Destroy(pawn.gameObject);
+        ChessBoardManager.Instance.board[pos.x, pos.y] = null;
+        
+        // Tạo quân mới
+        GameObject newPiecePrefab = GetPromotionPrefab(isWhite, newType);
+        if (newPiecePrefab != null)
+        {
+            Vector3 worldPos = ChessBoardManager.Instance.BoardToWorld(pos.x, pos.y);
+            
+            // Logic xoay cho quân phong cấp: chỉ quân trắng xoay 180 độ, quân đen giữ nguyên
+            Quaternion rot = isWhite ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+            
+            GameObject newPieceObj = Instantiate(newPiecePrefab, worldPos, rot);
+            
+            // Đảm bảo quân phong cấp có đúng hướng
+            newPieceObj.transform.rotation = rot;
+            
+            Debug.Log($"Promoted piece rotation set to: {rot.eulerAngles} for {(isWhite ? "White" : "Black")} {newType}");
+            
+            ChessPieceInfo newPieceInfo = newPieceObj.GetComponent<ChessPieceInfo>();
+            newPieceInfo.isWhite = isWhite;
+            newPieceInfo.type = newType;
+            newPieceInfo.boardPosition = pos;
+            newPieceInfo.hasMoved = true; // Quân phong cấp đã được coi là đã di chuyển
+            
+            ChessBoardManager.Instance.board[pos.x, pos.y] = newPieceInfo;
+            
+            Debug.Log($"Pawn promoted to {newType}!");
+        }
+    }
+    
+    // Lấy prefab cho quân phong cấp
+    private GameObject GetPromotionPrefab(bool isWhite, ChessRaycastDebug.ChessType type)
+    {
+        ChessBoardManager boardManager = ChessBoardManager.Instance;
+        
+        if (isWhite)
+        {
+            switch (type)
+            {
+                case ChessRaycastDebug.ChessType.Queen: return boardManager.whiteQueenPrefab;
+                case ChessRaycastDebug.ChessType.Rook: return boardManager.whiteRookPrefab;
+                case ChessRaycastDebug.ChessType.Bishop: return boardManager.whiteBishopPrefab;
+                case ChessRaycastDebug.ChessType.Knight: return boardManager.whiteKnightPrefab;
+            }
+        }
+        else
+        {
+            switch (type)
+            {
+                case ChessRaycastDebug.ChessType.Queen: return boardManager.blackQueenPrefab;
+                case ChessRaycastDebug.ChessType.Rook: return boardManager.blackRookPrefab;
+                case ChessRaycastDebug.ChessType.Bishop: return boardManager.blackBishopPrefab;
+                case ChessRaycastDebug.ChessType.Knight: return boardManager.blackKnightPrefab;
+            }
+        }
+        
+        return null;
     }
 
 }

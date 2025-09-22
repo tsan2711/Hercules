@@ -23,6 +23,9 @@ public class ChessBoardManager : MonoBehaviour
     public float tileSize = 2f;
     public Vector3 boardOrigin = new Vector3(-7, 2, -7); // góc dưới trái bàn cờ (A1)
     [HideInInspector] public ChessPieceInfo[,] board = new ChessPieceInfo[8, 8];
+    
+    [Header("Turn Management")]
+    public bool isWhiteTurn = true; // Quân trắng đi trước
 
     void Awake()
     {
@@ -103,6 +106,18 @@ public class ChessBoardManager : MonoBehaviour
         // Ghi vị trí mới
         board[newPos.x, newPos.y] = piece;
         piece.boardPosition = newPos;
+    }
+    
+    // Turn Management Methods
+    public bool CanPlayerMove(bool isWhite)
+    {
+        return isWhite == isWhiteTurn;
+    }
+    
+    public void EndTurn()
+    {
+        isWhiteTurn = !isWhiteTurn;
+        Debug.Log($"Turn switched to: {(isWhiteTurn ? "White" : "Black")}");
     }
 
 }

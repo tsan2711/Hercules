@@ -48,6 +48,15 @@ public class ChessRaycastDebug : MonoBehaviour
             if (hitPiece) // Click vào quân cờ
             {
                 GameObject pieceObj = hit.collider.gameObject;
+                ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
+                
+                // Kiểm tra xem có phải lượt của người chơi này không
+                if (pieceInfo != null && ChessBoardManager.Instance != null && !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
+                {
+                    Debug.Log($"It's not {(pieceInfo.isWhite ? "White" : "Black")}'s turn!");
+                    return;
+                }
+                
                 if (pieceObj == currentSelected)
                 {
                     ResetSelected();
