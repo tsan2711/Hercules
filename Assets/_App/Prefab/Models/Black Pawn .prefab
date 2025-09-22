@@ -462,6 +462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isWhite: 0
   type: 0
+  hasMoved: 0
   boardPosition: {x: 0, y: 0}
 --- !u!65 &762530816520361644
 BoxCollider:
@@ -482,8 +483,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 3.66, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 2.481557, z: 1}
+  m_Center: {x: 0, y: 0.88554335, z: 0}
 --- !u!1 &3400222568398726285
 GameObject:
   m_ObjectHideFlags: 0

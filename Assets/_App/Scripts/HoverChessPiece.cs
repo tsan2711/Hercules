@@ -33,6 +33,7 @@ public class ChessRaycastDebug : MonoBehaviour
         // --- XỬ LÝ CLICK ---
         if (Input.GetMouseButtonDown(0))
         {
+            SoundManager.Instance.PlayClick();
             if (hitSquare && selectedInfo != null) // Click vào ô highlight
             {
                 Vector3 targetPos = squareHit.collider.transform.position;
@@ -48,6 +49,15 @@ public class ChessRaycastDebug : MonoBehaviour
             if (hitPiece) // Click vào quân cờ
             {
                 GameObject pieceObj = hit.collider.gameObject;
+                ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
+                
+                // Kiểm tra xem có phải lượt của người chơi này không
+                if (pieceInfo != null && ChessBoardManager.Instance != null && !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
+                {
+                    Debug.Log($"It's not {(pieceInfo.isWhite ? "White" : "Black")}'s turn!");
+                    return;
+                }
+                
                 if (pieceObj == currentSelected)
                 {
                     ResetSelected();
@@ -87,8 +97,12 @@ public class ChessRaycastDebug : MonoBehaviour
         if (hitPiece)
         {
             GameObject pieceObj = hit.collider.gameObject;
-            if (pieceObj != currentSelected && pieceObj != currentHover)
+
+            // Chỉ phát âm thanh khi hover vào 1 quân mới
+            if (pieceObj != currentHover)
             {
+                SoundManager.Instance.PlayHover(); // Phát 1 lần duy nhất khi đổi hover
+
                 ResetHover();
                 ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
                 currentHover = pieceObj;
@@ -97,6 +111,7 @@ public class ChessRaycastDebug : MonoBehaviour
         else
         {
             ResetHover();
+            currentHover = null;
         }
     }
 
