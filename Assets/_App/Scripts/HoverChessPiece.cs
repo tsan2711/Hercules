@@ -50,18 +50,18 @@ public class ChessRaycastDebug : MonoBehaviour
             {
                 GameObject pieceObj = hit.collider.gameObject;
                 ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
-                
-                // Kiểm tra xem có phải lượt của người chơi này không
-                if (pieceInfo != null && ChessBoardManager.Instance != null && !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
+
+                if (pieceInfo != null && ChessBoardManager.Instance != null &&
+                    !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
                 {
                     Debug.Log($"It's not {(pieceInfo.isWhite ? "White" : "Black")}'s turn!");
                     return;
                 }
-                
+
                 if (pieceObj == currentSelected)
                 {
-                    ResetSelected();
-                    ClearHighlights();
+                    // Đã click lại chính quân đang được chọn => không làm gì hết
+                    return;
                 }
                 else
                 {
@@ -98,10 +98,9 @@ public class ChessRaycastDebug : MonoBehaviour
         {
             GameObject pieceObj = hit.collider.gameObject;
 
-            // Chỉ phát âm thanh khi hover vào 1 quân mới
             if (pieceObj != currentHover)
             {
-                SoundManager.Instance.PlayHover(); // Phát 1 lần duy nhất khi đổi hover
+                SoundManager.Instance.PlayHover();
 
                 ResetHover();
                 ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
@@ -154,11 +153,11 @@ public class ChessRaycastDebug : MonoBehaviour
 
         for (int i = 0; i < renderers.Length; i++)
         {
-            originalMaterialsArray[i] = renderers[i].materials;
-            Material[] newMats = new Material[renderers[i].materials.Length];
+            originalMaterialsArray[i] = renderers[i].sharedMaterials;
+            Material[] newMats = new Material[renderers[i].sharedMaterials.Length];
             for (int j = 0; j < newMats.Length; j++)
                 newMats[j] = mats[Mathf.Min(j, mats.Length - 1)];
-            renderers[i].materials = newMats;
+            renderers[i].sharedMaterials = newMats;
         }
     }
 
@@ -167,7 +166,7 @@ public class ChessRaycastDebug : MonoBehaviour
         if (currentHover == null) return;
         SkinnedMeshRenderer[] renderers = currentHover.GetComponentsInChildren<SkinnedMeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
-            renderers[i].materials = hoverOriginalMaterials[i];
+            renderers[i].sharedMaterials = hoverOriginalMaterials[i];
         currentHover = null;
     }
 
@@ -176,7 +175,7 @@ public class ChessRaycastDebug : MonoBehaviour
         if (currentSelected == null) return;
         SkinnedMeshRenderer[] renderers = currentSelected.GetComponentsInChildren<SkinnedMeshRenderer>();
         for (int i = 0; i < renderers.Length; i++)
-            renderers[i].materials = selectedOriginalMaterials[i];
+            renderers[i].sharedMaterials = selectedOriginalMaterials[i];
         currentSelected = null;
         selectedInfo = null;
     }
