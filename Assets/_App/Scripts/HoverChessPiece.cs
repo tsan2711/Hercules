@@ -74,15 +74,29 @@ public class ChessRaycastDebug : MonoBehaviour
                     selectedInfo = pieceObj.GetComponent<ChessPieceInfo>();
                     if (selectedInfo != null)
                     {
-                        currentMoves = moveGenerator.GetMoves(selectedInfo);
+                        // Sử dụng ChessCheckSystem để chỉ lấy những nước đi hợp lệ
+                        if (ChessCheckSystem.Instance != null)
+                        {
+                            currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
+                        }
+                        else
+                        {
+                            // Fallback nếu ChessCheckSystem chưa có
+                            currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
+                        }
+                        
                         ClearHighlights();
                         GameObject prefabToUse = selectedInfo.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
 
+                        // Chỉ tạo highlight cho những nước đi hợp lệ
                         foreach (var pos in currentMoves)
                         {
                             GameObject obj = Instantiate(prefabToUse, pos, Quaternion.identity);
                             activeSquares.Add(obj);
                         }
+                        
+                        // Debug log
+                        Debug.Log($"[Legal Moves] {selectedInfo.type} {(selectedInfo.isWhite ? "Trắng" : "Đen")} có {currentMoves.Count} nước đi hợp lệ");
                     }
                 }
             }

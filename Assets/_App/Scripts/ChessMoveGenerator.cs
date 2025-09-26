@@ -5,6 +5,23 @@ public class ChessMoveGenerator : MonoBehaviour
 {
     public List<Vector3> GetMoves(ChessPieceInfo piece)
     {
+        // Lấy nước đi cơ bản
+        List<Vector3> basicMoves = GetBasicMoves(piece);
+        
+        // Nếu có ChessCheckSystem, lọc ra những nước đi hợp lệ
+        if (ChessCheckSystem.Instance != null)
+        {
+            return ChessCheckSystem.Instance.GetLegalMoves(piece);
+        }
+        
+        return basicMoves;
+    }
+    
+    /// <summary>
+    /// Lấy nước đi cơ bản không tính đến check (dùng nội bộ)
+    /// </summary>
+    public List<Vector3> GetBasicMoves(ChessPieceInfo piece)
+    {
         switch (piece.type)
         {
             case ChessRaycastDebug.ChessType.Pawn: return GetPawnMoves(piece);
