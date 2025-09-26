@@ -80,6 +80,7 @@ public class ChessBoardManager : MonoBehaviour
             info.isWhite = isWhite;
             info.boardPosition = new Vector2Int(col, row);
 
+            //Debug.Log($"Spawned {info.type} {(info.isWhite ? "White" : "Black")} tại {info.boardPosition}");
             board[col, row] = info;
         }
     }
