@@ -398,9 +398,9 @@ public class ChessCheckSystem : MonoBehaviour
         HideCheckIndicator();
         
         Vector3 worldPos = ChessBoardManager.Instance.BoardToWorld(kingPos.x, kingPos.y);
-        worldPos.y += 1f; // Nâng lên một chút để thấy rõ
+        worldPos.y += 0f; // Nâng lên một chút để thấy rõ
         
-        currentCheckIndicator = Instantiate(checkIndicatorPrefab, worldPos, Quaternion.identity);
+        currentCheckIndicator = Instantiate(checkIndicatorPrefab, worldPos, Quaternion.Euler(-90, 0, 0));
     }
     
     private void HideCheckIndicator()
