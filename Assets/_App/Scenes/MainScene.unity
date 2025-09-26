@@ -4492,8 +4492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28dd1952be07dc74893c4c10b0d0acb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whiteHighlightPrefab: {fileID: 442113594538427752, guid: ec1ff810c36314982a2051a4e6b5de5a, type: 3}
-  blackHighlightPrefab: {fileID: 7977563532432562801, guid: 4a5f8c36ab99a4d7ba2f841715c4d833, type: 3}
+  whiteHighlightPrefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  blackHighlightPrefab: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
   tileSize: 2
   moveGenerator: {fileID: 4407455}
   pieceMover: {fileID: 492342966}
@@ -13508,7 +13508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableDebugLogs: 1
   enableVisualDebug: 1
-  checkIndicatorPrefab: {fileID: 6415039569016494249, guid: 2ad0a34f15599864f96de2b1aa937d4b, type: 3}
+  checkIndicatorPrefab: {fileID: 5642766282230003982, guid: b5c8ca7ed10b61e499cce8ec3b6e2e4c, type: 3}
 --- !u!1001 &2120201269
 PrefabInstance:
   m_ObjectHideFlags: 0
