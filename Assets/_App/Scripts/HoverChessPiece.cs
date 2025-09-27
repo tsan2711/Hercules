@@ -4,10 +4,12 @@ using UnityEngine;
 public class ChessRaycastDebug : MonoBehaviour
 {
     private GameObject currentSelected;
-    private Material[][] selectedOriginalMaterials;
+    private ChessPieceSkinController selectedSkinController;
 
     private GameObject currentHover;
-    private Material[][] hoverOriginalMaterials;
+    private ChessPieceSkinController hoverSkinController;
+    private Material[][] hoverOriginalMaterials; // Backup for fallback
+    private Material[][] selectedOriginalMaterials; // Backup for fallback
 
     [Header("Square Highlight Prefabs")]
     public GameObject whiteHighlightPrefab;
@@ -39,9 +41,33 @@ public class ChessRaycastDebug : MonoBehaviour
                 Vector3 targetPos = squareHit.collider.transform.position;
                 if (currentMoves.Contains(targetPos))
                 {
-                    pieceMover.MovePiece(selectedInfo, targetPos);
-                    ResetSelected();
-                    ClearHighlights();
+                    // Sử dụng ChessPieceController thay vì ChessPieceMover
+                    ChessPieceController pieceController = selectedInfo.GetComponent<ChessPieceController>();
+                    if (pieceController != null)
+                    {
+                        // Kiểm tra xem piece có đang busy không
+                        if (pieceController.IsBusy)
+                        {
+                            Debug.LogWarning($"Piece {selectedInfo.name} is busy, cannot move!");
+                            return;
+                        }
+                        
+                        pieceController.MovePiece(targetPos);
+                        
+                        // Reset selection sau khi move thành công
+                        ResetSelected();
+                        ClearHighlights();
+                    }
+                    else
+                    {
+                        // Fallback nếu không có ChessPieceController
+                        Debug.LogWarning($"No ChessPieceController found on {selectedInfo.name}, using fallback");
+                        pieceMover.MovePiece(selectedInfo, targetPos);
+                        
+                        // Reset selection sau khi move thành công
+                        ResetSelected();
+                        ClearHighlights();
+                    }
                     return;
                 }
             }
@@ -68,7 +94,18 @@ public class ChessRaycastDebug : MonoBehaviour
                     ResetSelected();
                     ResetHover();
 
-                    ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
+                    // Use ChessPieceSkinController instead of manual material handling
+                    selectedSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
+                    if (selectedSkinController != null)
+                    {
+                        selectedSkinController.SetSkinState(SkinState.Selected);
+                    }
+                    else
+                    {
+                        // Fallback to old method if no skin controller
+                        Debug.LogWarning($"No ChessPieceSkinController found on {pieceObj.name}, using fallback");
+                        ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
+                    }
                     currentSelected = pieceObj;
 
                     selectedInfo = pieceObj.GetComponent<ChessPieceInfo>();
@@ -117,7 +154,19 @@ public class ChessRaycastDebug : MonoBehaviour
                 SoundManager.Instance.PlayHover();
 
                 ResetHover();
-                ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
+                
+                // Use ChessPieceSkinController for hover effect
+                hoverSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
+                if (hoverSkinController != null && hoverSkinController.CurrentState == SkinState.Normal)
+                {
+                    hoverSkinController.SetSkinState(SkinState.Hover);
+                }
+                else if (hoverSkinController == null)
+                {
+                    // Fallback to old method
+                    ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
+                }
+                
                 currentHover = pieceObj;
             }
         }
@@ -178,18 +227,42 @@ public class ChessRaycastDebug : MonoBehaviour
     void ResetHover()
     {
         if (currentHover == null) return;
-        SkinnedMeshRenderer[] renderers = currentHover.GetComponentsInChildren<SkinnedMeshRenderer>();
-        for (int i = 0; i < renderers.Length; i++)
-            renderers[i].sharedMaterials = hoverOriginalMaterials[i];
+        
+        // Use ChessPieceSkinController to reset hover state
+        if (hoverSkinController != null)
+        {
+            hoverSkinController.SetSkinState(SkinState.Normal);
+            hoverSkinController = null;
+        }
+        else
+        {
+            // Fallback to old method
+            SkinnedMeshRenderer[] renderers = currentHover.GetComponentsInChildren<SkinnedMeshRenderer>();
+            for (int i = 0; i < renderers.Length; i++)
+                renderers[i].sharedMaterials = hoverOriginalMaterials[i];
+        }
+        
         currentHover = null;
     }
 
     void ResetSelected()
     {
         if (currentSelected == null) return;
-        SkinnedMeshRenderer[] renderers = currentSelected.GetComponentsInChildren<SkinnedMeshRenderer>();
-        for (int i = 0; i < renderers.Length; i++)
-            renderers[i].sharedMaterials = selectedOriginalMaterials[i];
+        
+        // Use ChessPieceSkinController to reset selected state
+        if (selectedSkinController != null)
+        {
+            selectedSkinController.SetSkinState(SkinState.Normal);
+            selectedSkinController = null;
+        }
+        else
+        {
+            // Fallback to old method
+            SkinnedMeshRenderer[] renderers = currentSelected.GetComponentsInChildren<SkinnedMeshRenderer>();
+            for (int i = 0; i < renderers.Length; i++)
+                renderers[i].sharedMaterials = selectedOriginalMaterials[i];
+        }
+        
         currentSelected = null;
         selectedInfo = null;
     }

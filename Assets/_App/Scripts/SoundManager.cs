@@ -12,6 +12,8 @@ public class SoundManager : MonoBehaviour
     [Range(0f, 1f)] public float hoverVolume = 0.3f;
     [Range(0f, 1f)] public float clickVolume = 0.1f;
 
+    [Range(0f, 1f)] public float sfxVolume = 0.1f;
+
     private AudioSource audioSource;
 
     void Awake()
@@ -32,5 +34,11 @@ public class SoundManager : MonoBehaviour
     {
         if (clickSound != null)
             audioSource.PlayOneShot(clickSound, clickVolume);
+    }
+
+    public void PlaySFX(AudioClip clip)
+    {
+        if (clip != null)
+            audioSource.PlayOneShot(clip, sfxVolume);
     }
 }

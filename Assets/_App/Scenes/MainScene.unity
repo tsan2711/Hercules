@@ -3395,6 +3395,7 @@ MonoBehaviour:
   clickSound: {fileID: 8300000, guid: dc682e1f543c77847b62a1aceb8e0a0f, type: 3}
   hoverVolume: 0.2
   clickVolume: 0.15
+  sfxVolume: 0.1
 --- !u!82 &577732536
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4492,8 +4493,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28dd1952be07dc74893c4c10b0d0acb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whiteHighlightPrefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
-  blackHighlightPrefab: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
+  whiteHighlightPrefab: {fileID: 1195785148564078503, guid: dc370fe549e6e483880edccbdf535c54, type: 3}
+  blackHighlightPrefab: {fileID: 1195785148564078503, guid: dc370fe549e6e483880edccbdf535c54, type: 3}
   tileSize: 2
   moveGenerator: {fileID: 4407455}
   pieceMover: {fileID: 492342966}
@@ -4569,6 +4570,7 @@ Transform:
   m_Children:
   - {fileID: 577732534}
   - {fileID: 685069224}
+  - {fileID: 1287876100}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &784415303
@@ -7433,6 +7435,67 @@ MonoBehaviour:
   type: 2
   hasMoved: 0
   boardPosition: {x: 0, y: 0}
+--- !u!1 &1287876099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1287876100}
+  - component: {fileID: 1287876101}
+  m_Layer: 0
+  m_Name: VFXManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1287876100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287876099}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 784415302}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1287876101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287876099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e6f8a2b4c7e1d5f8a3b6c9e2d5f8a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultVFXDuration: 3
+  autoCleanup: 1
+  maxVFXInstances: 50
+  moveVFXPrefab: {fileID: 7478731271839673279, guid: 4d3c8045dd8857a4b8d34c2361c61045, type: 3}
+  attackVFXPrefab: {fileID: 0}
+  teleportVFXPrefab: {fileID: 0}
+  spawnVFXPrefab: {fileID: 8378648546881499446, guid: 867c572a5be680d42a042d2349f10143, type: 3}
+  destroyVFXPrefab: {fileID: 0}
+  hitVFXPrefab: {fileID: 0}
+  missVFXPrefab: {fileID: 0}
+  moveVFXDuration: 2
+  attackVFXDuration: 1.5
+  teleportVFXDuration: 3
+  spawnVFXDuration: 2.5
+  destroyVFXDuration: 2
+  hitVFXDuration: 1
+  missVFXDuration: 0.8
 --- !u!65 &1289497652
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9459,7 +9522,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &1568483602
 Animator:
   serializedVersion: 7
@@ -9468,7 +9531,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568483601}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6aba44a3cb7954245a518e5871ce19f2, type: 2}
   m_CullingMode: 0
@@ -10159,13 +10222,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658236029}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09254184, y: -0.69918436, z: 0.09204931, w: 0.7029255}
-  m_LocalPosition: {x: 21.7, y: 13.4, z: -1.4}
+  m_LocalRotation: {x: 0.2445237, y: -0.66153675, z: 0.24486871, w: 0.66529447}
+  m_LocalPosition: {x: 16.4, y: 15.4, z: -1.4}
   m_LocalScale: {x: 1.0479567, y: 1.0479572, z: 1.0479568}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1568483603}
-  m_LocalEulerAnglesHint: {x: 359.97, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 400.492, y: -89.612, z: 0.173}
 --- !u!95 &1658236031
 Animator:
   serializedVersion: 7
@@ -12261,7 +12324,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1998479389
 Animator:
   serializedVersion: 7
@@ -13131,7 +13194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224285257788118906, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -56.7
+      value: -56.69995
       objectReference: {fileID: 0}
     - target: {fileID: 224285257788118906, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_AnchoredPosition.y

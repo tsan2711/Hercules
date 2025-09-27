@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class ChessPieceMover : MonoBehaviour
 {
@@ -33,7 +34,25 @@ public class ChessPieceMover : MonoBehaviour
                 Vector3 targetPos = hit.collider.transform.position;
                 if (selectedPiece != null && currentMoves.Contains(targetPos))
                 {
-                    MovePiece(selectedPiece, targetPos);
+                    // Sử dụng ChessPieceController thay vì MovePiece trực tiếp
+                    ChessPieceController pieceController = selectedPiece.GetComponent<ChessPieceController>();
+                    if (pieceController != null)
+                    {
+                        // Kiểm tra xem piece có đang busy không
+                        if (pieceController.IsBusy)
+                        {
+                            Debug.LogWarning($"Piece {selectedPiece.name} is busy, cannot move!");
+                            return;
+                        }
+                        
+                        pieceController.MovePiece(targetPos);
+                    }
+                    else
+                    {
+                        // Fallback nếu không có ChessPieceController
+                        Debug.LogWarning($"No ChessPieceController found on {selectedPiece.name}, using fallback");
+                        MovePiece(selectedPiece, targetPos);
+                    }
                     selectedPiece = null;
                     currentMoves.Clear();
                     Debug.Log("Moved piece to " + targetPos);
@@ -47,81 +66,178 @@ public class ChessPieceMover : MonoBehaviour
         Vector2Int start = piece.boardPosition;
         Vector2Int target = ChessBoardManager.Instance.WorldToBoard(targetWorldPos);
 
+        // Check if piece has ChessPieceController for animated movement
+        ChessPieceController pieceController = piece.GetComponent<ChessPieceController>();
+        
         // === Kiểm tra nhập thành ===
         if (piece.type == ChessRaycastDebug.ChessType.King && Mathf.Abs(target.x - start.x) == 2)
         {
-            int y = start.y;
-
-            // Nhập thành nhỏ (king-side)
-            if (target.x > start.x)
-            {
-                ChessPieceInfo rook = ChessBoardManager.Instance.board[7, y];
-                if (rook != null && rook.type == ChessRaycastDebug.ChessType.Rook && !rook.hasMoved)
-                {
-                    // Di chuyển vua
-                    piece.transform.position = targetWorldPos;
-                    piece.boardPosition = target;
-                    ChessBoardManager.Instance.board[start.x, y] = null;
-                    ChessBoardManager.Instance.board[target.x, y] = piece;
-                    piece.hasMoved = true;
-
-                    // Di chuyển xe
-                    Vector2Int rookTarget = new Vector2Int(5, y);
-                    rook.transform.position = ChessBoardManager.Instance.BoardToWorld(rookTarget.x, rookTarget.y);
-                    rook.boardPosition = rookTarget;
-                    ChessBoardManager.Instance.board[7, y] = null;
-                    ChessBoardManager.Instance.board[5, y] = rook;
-                    rook.hasMoved = true;
-                    
-                    // Chuyển lượt chơi sau nhập thành
-                    if (ChessBoardManager.Instance != null)
-                        ChessBoardManager.Instance.EndTurn();
-                    return;
-                }
-            }
-            // Nhập thành lớn (queen-side)
-            else
-            {
-                ChessPieceInfo rook = ChessBoardManager.Instance.board[0, y];
-                if (rook != null && rook.type == ChessRaycastDebug.ChessType.Rook && !rook.hasMoved)
-                {
-                    // Di chuyển vua
-                    piece.transform.position = targetWorldPos;
-                    piece.boardPosition = target;
-                    ChessBoardManager.Instance.board[start.x, y] = null;
-                    ChessBoardManager.Instance.board[target.x, y] = piece;
-                    piece.hasMoved = true;
-
-                    // Di chuyển xe
-                    Vector2Int rookTarget = new Vector2Int(3, y);
-                    rook.transform.position = ChessBoardManager.Instance.BoardToWorld(rookTarget.x, rookTarget.y);
-                    rook.boardPosition = rookTarget;
-                    ChessBoardManager.Instance.board[0, y] = null;
-                    ChessBoardManager.Instance.board[3, y] = rook;
-                    rook.hasMoved = true;
-                    
-                    // Chuyển lượt chơi sau nhập thành
-                    if (ChessBoardManager.Instance != null)
-                        ChessBoardManager.Instance.EndTurn();
-                    return;
-                }
-            }
+            HandleCastling(piece, target, start, targetWorldPos);
+            return;
         }
 
         // === Di chuyển bình thường ===
-        piece.transform.position = targetWorldPos;
-
-        // Nếu ăn quân địch
-        ChessPieceInfo targetPiece = ChessBoardManager.Instance.board[target.x, target.y];
-        if (targetPiece != null && targetPiece != piece)
-        {
-            Destroy(targetPiece.gameObject); // Hoặc xử lý khác nếu muốn
-        }
-
-        // Cập nhật board
-        ChessBoardManager.Instance.UpdateBoardPosition(piece, target);
-        piece.hasMoved = true;
         
+        // Kiểm tra có quân địch tại vị trí đích không
+        ChessPieceInfo targetPiece = ChessBoardManager.Instance.board[target.x, target.y];
+        bool isAttackMove = targetPiece != null && targetPiece != piece;
+        
+        // Sử dụng ChessPieceController nếu có
+        if (pieceController != null)
+        {
+            pieceController.ExecuteMove(targetWorldPos, isAttackMove ? targetPiece : null, () => {
+                // Callback sau khi di chuyển hoàn thành
+                HandlePostMoveLogic(piece, target);
+            });
+        }
+        else
+        {
+            // Fallback: Use DOTween for simple movement animation
+            Vector3 startPos = piece.transform.position;
+            
+            // Animate movement with DOTween
+            piece.transform.DOMove(targetWorldPos, 1f)
+                .SetEase(Ease.OutQuart)
+                .OnComplete(() => {
+                    // Handle attack after movement
+                    if (isAttackMove)
+                    {
+                        HandleTargetPieceCapture(targetPiece);
+                    }
+                    
+                    // Cập nhật board
+                    ChessBoardManager.Instance.UpdateBoardPosition(piece, target);
+                    piece.hasMoved = true;
+                    
+                    HandlePostMoveLogic(piece, target);
+                });
+        }
+    }
+    
+    /// <summary>
+    /// Xử lý nhập thành
+    /// </summary>
+    private void HandleCastling(ChessPieceInfo king, Vector2Int target, Vector2Int start, Vector3 targetWorldPos)
+    {
+        int y = start.y;
+        ChessPieceController kingController = king.GetComponent<ChessPieceController>();
+        
+        // Nhập thành nhỏ (king-side)
+        if (target.x > start.x)
+        {
+            ChessPieceInfo rook = ChessBoardManager.Instance.board[7, y];
+            if (rook != null && rook.type == ChessRaycastDebug.ChessType.Rook && !rook.hasMoved)
+            {
+                ChessPieceController rookController = rook.GetComponent<ChessPieceController>();
+                Vector3 rookTargetPos = ChessBoardManager.Instance.BoardToWorld(5, y);
+                
+                // Di chuyển với animation nếu có controller
+                if (kingController != null && rookController != null)
+                {
+                    // Di chuyển vua trước
+                    kingController.ExecuteMove(targetWorldPos, null, () => {
+                        // Sau đó di chuyển xe
+                        rookController.ExecuteMove(rookTargetPos, null, () => {
+                            CompleteCastling(king, rook, target, new Vector2Int(5, y), start);
+                        });
+                    });
+                }
+                else
+                {
+                    // Fallback: Animate both pieces with DOTween
+                    Sequence castlingSequence = DOTween.Sequence();
+                    castlingSequence.Append(king.transform.DOMove(targetWorldPos, 1f).SetEase(Ease.OutQuart));
+                    castlingSequence.Join(rook.transform.DOMove(rookTargetPos, 1f).SetEase(Ease.OutQuart));
+                    castlingSequence.OnComplete(() => {
+                        CompleteCastling(king, rook, target, new Vector2Int(5, y), start);
+                    });
+                }
+                return;
+            }
+        }
+        // Nhập thành lớn (queen-side)
+        else
+        {
+            ChessPieceInfo rook = ChessBoardManager.Instance.board[0, y];
+            if (rook != null && rook.type == ChessRaycastDebug.ChessType.Rook && !rook.hasMoved)
+            {
+                ChessPieceController rookController = rook.GetComponent<ChessPieceController>();
+                Vector3 rookTargetPos = ChessBoardManager.Instance.BoardToWorld(3, y);
+                
+                // Di chuyển với animation nếu có controller
+                if (kingController != null && rookController != null)
+                {
+                    // Di chuyển vua trước
+                    kingController.ExecuteMove(targetWorldPos, null, () => {
+                        // Sau đó di chuyển xe
+                        rookController.ExecuteMove(rookTargetPos, null, () => {
+                            CompleteCastling(king, rook, target, new Vector2Int(3, y), start);
+                        });
+                    });
+                }
+                else
+                {
+                    // Fallback: Animate both pieces with DOTween
+                    Sequence castlingSequence = DOTween.Sequence();
+                    castlingSequence.Append(king.transform.DOMove(targetWorldPos, 1f).SetEase(Ease.OutQuart));
+                    castlingSequence.Join(rook.transform.DOMove(rookTargetPos, 1f).SetEase(Ease.OutQuart));
+                    castlingSequence.OnComplete(() => {
+                        CompleteCastling(king, rook, target, new Vector2Int(3, y), start);
+                    });
+                }
+                return;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Hoàn thành logic nhập thành
+    /// </summary>
+    private void CompleteCastling(ChessPieceInfo king, ChessPieceInfo rook, Vector2Int kingTarget, Vector2Int rookTarget, Vector2Int kingStart)
+    {
+        // Cập nhật board positions
+        king.boardPosition = kingTarget;
+        ChessBoardManager.Instance.board[kingStart.x, kingStart.y] = null;
+        ChessBoardManager.Instance.board[kingTarget.x, kingTarget.y] = king;
+        king.hasMoved = true;
+
+        rook.boardPosition = rookTarget;
+        ChessBoardManager.Instance.board[7, kingStart.y] = null; // or 0 for queenside
+        ChessBoardManager.Instance.board[rookTarget.x, rookTarget.y] = rook;
+        rook.hasMoved = true;
+        
+        // Chuyển lượt chơi sau nhập thành
+        if (ChessBoardManager.Instance != null)
+            ChessBoardManager.Instance.EndTurn();
+    }
+    
+    /// <summary>
+    /// Xử lý việc ăn quân (fallback method)
+    /// </summary>
+    private void HandleTargetPieceCapture(ChessPieceInfo targetPiece)
+    {
+        if (targetPiece == null) return;
+        
+        // Try to use ChessPieceSkinController for dissolve effect
+        ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
+        if (targetSkin != null)
+        {
+            targetSkin.TriggerDissolveOut(() => {
+                Destroy(targetPiece.gameObject);
+            });
+        }
+        else
+        {
+            // Fallback to immediate destruction
+            Destroy(targetPiece.gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// Xử lý logic sau di chuyển (pawn promotion, end turn)
+    /// </summary>
+    private void HandlePostMoveLogic(ChessPieceInfo piece, Vector2Int target)
+    {
         // Kiểm tra phong cấp tốt
         if (piece.type == ChessRaycastDebug.ChessType.Pawn)
         {

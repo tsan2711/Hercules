@@ -721,6 +721,8 @@ GameObject:
   - component: {fileID: 2226171300195860492}
   - component: {fileID: 6638361019673988251}
   - component: {fileID: 4409661641480698924}
+  - component: {fileID: 3815219704553609848}
+  - component: {fileID: 8901743097799549280}
   m_Layer: 6
   m_Name: Black Rook
   m_TagString: Untagged
@@ -804,6 +806,157 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.825035, z: 1}
   m_Center: {x: 0, y: 1.2968307, z: 0}
+--- !u!114 &3815219704553609848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5980566651361189687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f5e47f89a6d4c49a9c7f2b3d8e1a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveType: 2
+  moveSpeed: 2
+  moveDuration: 1
+  moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1
+      value: 0.4
+      inSlope: 2.3333333
+      outSlope: 2.3333333
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.7
+      inSlope: 0.9642856
+      outSlope: 0.9642856
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.10025074
+      outSlope: 0.10025074
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33928573
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpHeight: 10
+  attackType: 0
+  attackDuration: 0.5
+  attackRange: 1.5
+  attackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  vfxSpawnPoint: {fileID: 0}
+  moveSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  teleportSound: {fileID: 0}
+--- !u!114 &8901743097799549280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5980566651361189687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e8d2f6a1b3e5c78b4f9e3a2d7c8b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalMaterials:
+    materials: []
+    description: 
+  hoverMaterials:
+    materials: []
+    description: 
+  selectedMaterials:
+    materials: []
+    description: 
+  movingMaterials:
+    materials: []
+    description: 
+  attackingMaterials:
+    materials: []
+    description: 
+  dissolveMaterials:
+    materials: []
+    description: 
+  transitionDuration: 0.3
+  transitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dissolveInDuration: 2
+  dissolveOutDuration: 1.5
+  dissolvePropertyName: _DissolveAmount
+  edgeWidthPropertyName: _EdgeWidth
+  edgeIntensityPropertyName: _EdgeIntensity
+  autoSetupFromPieceInfo: 1
+  debugMode: 0
 --- !u!1 &6147012732982530689
 GameObject:
   m_ObjectHideFlags: 0

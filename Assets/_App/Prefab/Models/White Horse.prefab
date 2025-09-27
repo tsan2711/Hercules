@@ -1021,6 +1021,8 @@ GameObject:
   - component: {fileID: 8129895188975947649}
   - component: {fileID: 9199604070520259090}
   - component: {fileID: 8081619649671092802}
+  - component: {fileID: -6348107261933357176}
+  - component: {fileID: -6083671517599701120}
   m_Layer: 6
   m_Name: White Horse
   m_TagString: Untagged
@@ -1104,6 +1106,166 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.9994302, z: 1}
   m_Center: {x: 0, y: 1.29549, z: 0}
+--- !u!114 &-6348107261933357176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204281051250637745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f5e47f89a6d4c49a9c7f2b3d8e1a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveType: 1
+  moveSpeed: 2
+  moveDuration: 1
+  moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.5
+      outSlope: 1.5
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2
+      value: 0.3
+      inSlope: 1.4166666
+      outSlope: 1.4166666
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.7
+      inSlope: 1.0833333
+      outSlope: 1.0833333
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8
+      value: 0.95
+      inSlope: 0.5416667
+      outSlope: 0.5416667
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpHeight: 10
+  attackType: 0
+  attackDuration: 0.5
+  attackRange: 1.5
+  attackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  vfxSpawnPoint: {fileID: 0}
+  moveSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  teleportSound: {fileID: 0}
+--- !u!114 &-6083671517599701120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204281051250637745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e8d2f6a1b3e5c78b4f9e3a2d7c8b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalMaterials:
+    materials: []
+    description: 
+  hoverMaterials:
+    materials: []
+    description: 
+  selectedMaterials:
+    materials: []
+    description: 
+  movingMaterials:
+    materials: []
+    description: 
+  attackingMaterials:
+    materials: []
+    description: 
+  dissolveMaterials:
+    materials: []
+    description: 
+  transitionDuration: 0.3
+  transitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dissolveInDuration: 2
+  dissolveOutDuration: 1.5
+  dissolvePropertyName: _DissolveAmount
+  edgeWidthPropertyName: _EdgeWidth
+  edgeIntensityPropertyName: _EdgeIntensity
+  autoSetupFromPieceInfo: 1
+  debugMode: 0
 --- !u!1 &7329440984575905955
 GameObject:
   m_ObjectHideFlags: 0
