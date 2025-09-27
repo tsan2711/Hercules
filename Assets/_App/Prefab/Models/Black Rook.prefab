@@ -864,7 +864,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   jumpHeight: 10
-  attackType: 0
+  attackType: 4
   attackDuration: 0.5
   attackRange: 1.5
   attackCurve:

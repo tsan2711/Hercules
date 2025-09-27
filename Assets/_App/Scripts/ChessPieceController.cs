@@ -98,14 +98,14 @@ public class ChessPieceController : MonoBehaviour
         {
             case ChessRaycastDebug.ChessType.Pawn:
                 moveType = MoveType.Walk;
-                attackType = AttackType.MeleeAfterMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 1.5f;
                 moveDuration = 1.2f;
                 break;
                 
             case ChessRaycastDebug.ChessType.Knight:
                 moveType = MoveType.Jump;
-                attackType = AttackType.MeleeAfterMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 2f;
                 moveDuration = 1f;
                 jumpHeight = 2f;
@@ -113,28 +113,28 @@ public class ChessPieceController : MonoBehaviour
                 
             case ChessRaycastDebug.ChessType.Bishop:
                 moveType = MoveType.Teleport;
-                attackType = AttackType.RangedBeforeMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 3f;
                 moveDuration = 0.5f;
                 break;
                 
             case ChessRaycastDebug.ChessType.Rook:
                 moveType = MoveType.Slide;
-                attackType = AttackType.RangedBeforeMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 2.5f;
                 moveDuration = 0.8f;
                 break;
                 
             case ChessRaycastDebug.ChessType.Queen:
                 moveType = MoveType.Float;
-                attackType = AttackType.RangedBeforeMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 2f;
                 moveDuration = 1f;
                 break;
                 
             case ChessRaycastDebug.ChessType.King:
                 moveType = MoveType.Walk;
-                attackType = AttackType.MeleeAfterMove;
+                attackType = AttackType.CastSpellBeforeMove;
                 moveSpeed = 1f;
                 moveDuration = 1.5f;
                 break;
@@ -403,10 +403,11 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private IEnumerator ExecuteMoveSequence(Vector3 targetWorldPos, ChessPieceInfo targetPiece, System.Action onComplete)
     {
-
-        Debug.Log("ExecuteMoveSequence");
+        Debug.Log($"ExecuteMoveSequence - AttackType: {attackType}, TargetPiece: {(targetPiece != null ? targetPiece.name : "null")}");
         Vector3 startPos = transform.position;
         bool isAttackMove = targetPiece != null;
+        
+        Debug.Log($"isAttackMove: {isAttackMove}");
         
         // Bắt đầu sequence
         if (isAttackMove)
@@ -421,7 +422,15 @@ public class ChessPieceController : MonoBehaviour
         // Thực hiện pre-move attack nếu cần
         if (isAttackMove && (attackType == AttackType.RangedBeforeMove || attackType == AttackType.RangedThenMove))
         {
+            Debug.Log("Executing RangedBeforeMove/RangedThenMove");
             yield return StartCoroutine(ExecuteAttackSequence(targetPiece, startPos));
+        }
+        
+        // Thực hiện cast spell trước khi di chuyển nếu cần
+        if (isAttackMove && attackType == AttackType.CastSpellBeforeMove)
+        {
+            Debug.Log("Executing CastSpellBeforeMove");
+            yield return StartCoroutine(ExecuteCastSpellSequence(targetPiece, startPos));
         }
         
         // Thực hiện di chuyển
@@ -648,18 +657,64 @@ public class ChessPieceController : MonoBehaviour
         // Determine attack direction
         Vector3 attackDirection = (targetPiece.transform.position - attackFromPos).normalized;
         
+        Debug.Log($"Executing attack sequence with type: {attackType}");
         switch (attackType)
         {
             case AttackType.MeleeAfterMove:
-            case AttackType.RangedBeforeMove:
                 yield return StartCoroutine(DirectAttack(targetPiece, attackDirection));
                 break;
                 
+            case AttackType.RangedBeforeMove:
             case AttackType.RangedThenMove:
             case AttackType.MoveThenRanged:
                 yield return StartCoroutine(RangedAttack(targetPiece, attackDirection));
                 break;
+                
+            case AttackType.CastSpellBeforeMove:
+                // CastSpellBeforeMove được handle riêng trong ExecuteMoveSequence
+                Debug.LogWarning("CastSpellBeforeMove should be handled in ExecuteMoveSequence, not ExecuteAttackSequence");
+                break;
         }
+        
+        // Reset skin state
+        if (skinController != null)
+        {
+            skinController.SetSkinState(SkinState.Normal);
+        }
+        
+        isAttacking = false;
+    }
+    
+    /// <summary>
+    /// Thực hiện cast spell sequence - cast spell trước, đợi dissolve xong rồi mới di chuyển
+    /// </summary>
+    private IEnumerator ExecuteCastSpellSequence(ChessPieceInfo targetPiece, Vector3 castFromPos)
+    {
+        isAttacking = true;
+        
+        // Trigger attack events
+        OnAttackStarted?.Invoke(this, targetPiece);
+        
+        // Set attacking skin state
+        if (skinController != null)
+        {
+            skinController.SetSkinState(SkinState.Attacking);
+        }
+        
+        // Spawn spell VFX tại vị trí cast
+        currentAttackVFX = SpawnVFX(VFXType.Attack, castFromPos);
+        
+        // Play cast sound
+        PlaySound(attackSound);
+        
+        // Cast spell animation (piece có thể có animation cast)
+        yield return StartCoroutine(CastSpellAnimation(targetPiece, castFromPos));
+        
+        // Spawn projectile và đợi nó đến target
+        yield return StartCoroutine(CastProjectileToTarget(targetPiece, castFromPos));
+        
+        // Đợi target piece dissolve hoàn toàn
+        yield return StartCoroutine(WaitForTargetDissolve(targetPiece));
         
         // Reset skin state
         if (skinController != null)
@@ -693,7 +748,7 @@ public class ChessPieceController : MonoBehaviour
         // Apply damage to target (trigger dissolve effect)
         if (targetPiece.GetComponent<ChessPieceSkinController>() != null)
         {
-            targetPiece.GetComponent<ChessPieceSkinController>().SetSkinState(SkinState.Dissolving);
+            targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
         }
         
         // Return to original position
@@ -728,7 +783,7 @@ public class ChessPieceController : MonoBehaviour
                 // Apply damage to target
                 if (targetPiece.GetComponent<ChessPieceSkinController>() != null)
                 {
-                    targetPiece.GetComponent<ChessPieceSkinController>().SetSkinState(SkinState.Dissolving);
+                    targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
                 }
                 
                 // Despawn projectile VFX
@@ -878,10 +933,169 @@ public class ChessPieceController : MonoBehaviour
         // Despawn all VFX
         DespawnAllPieceVFX(true);
         
-        // Reset skin state
-        if (skinController != null)
+        // Reset skin state - chỉ khi GameObject còn active
+        if (skinController != null && gameObject.activeInHierarchy)
         {
-            skinController.SetSkinState(SkinState.Normal);
+            skinController.SetSkinState(SkinState.Normal, false); // false = không animated
+        }
+    }
+    
+    /// <summary>
+    /// Animation cast spell
+    /// </summary>
+    private IEnumerator CastSpellAnimation(ChessPieceInfo targetPiece, Vector3 castFromPos)
+    {
+        float castDuration = 0.5f;
+        float elapsed = 0f;
+        
+        // Cast animation - có thể là glow effect, particle burst, etc.
+        while (elapsed < castDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / castDuration;
+            
+            // Có thể thêm animation cho piece khi cast spell
+            // Ví dụ: scale up/down, rotation, glow effect
+            yield return null;
+        }
+    }
+    
+    /// <summary>
+    /// Cast projectile đến target và đợi impact
+    /// </summary>
+    private IEnumerator CastProjectileToTarget(ChessPieceInfo targetPiece, Vector3 castFromPos)
+    {
+        Debug.Log($"CastProjectileToTarget called - Target: {targetPiece.name}, From: {castFromPos}");
+        
+        Vector3 targetPos = targetPiece.transform.position;
+        
+        // Get projectile type từ chess piece type
+        ProjectileType projectileType = ProjectileInfo.GetProjectileType(pieceInfo.type);
+        float projectileSpeed = ProjectileInfo.GetDefaultSpeed(projectileType);
+        
+        Debug.Log($"ProjectileType: {projectileType}, Speed: {projectileSpeed}");
+        
+        // Spawn projectile từ ProjectileManager
+        GameObject projectile = null;
+        if (ProjectileManager.Instance != null)
+        {
+            Debug.Log("ProjectileManager.Instance found, spawning projectile...");
+            projectile = ProjectileManager.Instance.SpawnProjectile(projectileType, castFromPos, targetPos, projectileSpeed);
+        }
+        else
+        {
+            Debug.LogError("ProjectileManager.Instance is null!");
+        }
+        
+        if (projectile != null)
+        {
+            // ProjectileController đã có sẵn từ prefab và đã được initialize
+            ProjectileController controller = projectile.GetComponent<ProjectileController>();
+            if (controller != null)
+            {
+            // Subscribe to hit event
+            controller.OnHit += OnProjectileHit;
+            controller.OnExplode += OnProjectileExplode;
+                
+                // Đợi projectile đến target hoặc hit
+                float maxWaitTime = ProjectileInfo.GetDefaultLifetime(projectileType);
+                float elapsed = 0f;
+                
+                while (elapsed < maxWaitTime && projectile != null)
+                {
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+                
+            // Unsubscribe from events
+            controller.OnHit -= OnProjectileHit;
+            controller.OnExplode -= OnProjectileExplode;
+            }
+        }
+        else
+        {
+            // Fallback: đợi thời gian cố định
+            float fallbackDuration = 2f;
+            yield return new WaitForSeconds(fallbackDuration);
+        }
+    }
+    
+    /// <summary>
+    /// Callback khi projectile hit target
+    /// </summary>
+    private void OnProjectileHit(ProjectileController projectile, GameObject target)
+    {
+        Debug.Log($"Projectile {projectile.Type} hit {target.name}");
+        
+        // Trigger dissolve và die animation cho target
+        ChessPieceInfo targetPiece = target.GetComponent<ChessPieceInfo>();
+        if (targetPiece != null && targetPiece.GetComponent<ChessPieceSkinController>() != null)
+        {
+            targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
+        }
+        
+        // Trigger die animation
+        StartCoroutine(TriggerDieAnimation(targetPiece));
+        
+        // Spawn impact VFX
+        if (VFXManager.Instance != null)
+        {
+            VFXManager.Instance.SpawnVFX(VFXType.Hit, target.transform.position);
+        }
+    }
+    
+    /// <summary>
+    /// Callback khi projectile explode
+    /// </summary>
+    private void OnProjectileExplode(ProjectileController projectile, Vector3 explosionPos)
+    {
+        Debug.Log($"Projectile {projectile.Type} exploded at {explosionPos}");
+        
+        // Có thể thêm screen shake, camera effects, etc.
+        // ScreenShake.Instance?.Shake(0.5f, 0.3f);
+    }
+    
+    /// <summary>
+    /// Trigger die animation cho target piece
+    /// </summary>
+    private IEnumerator TriggerDieAnimation(ChessPieceInfo targetPiece)
+    {
+        // Die animation - có thể là fall down, explode, etc.
+        float dieDuration = 1f;
+        Vector3 originalPos = targetPiece.transform.position;
+        Vector3 fallPos = originalPos + Vector3.down * 0.5f;
+        
+        // Fall down animation
+        targetPiece.transform.DOMove(fallPos, dieDuration * 0.7f).SetEase(Ease.InQuad);
+        
+        // Rotation animation
+        targetPiece.transform.DORotate(new Vector3(0, 0, 90f), dieDuration).SetEase(Ease.InQuad);
+        
+        // Scale down animation
+        targetPiece.transform.DOScale(Vector3.zero, dieDuration).SetEase(Ease.InQuad);
+        
+        yield return new WaitForSeconds(dieDuration);
+    }
+    
+    /// <summary>
+    /// Đợi target piece dissolve hoàn toàn
+    /// </summary>
+    private IEnumerator WaitForTargetDissolve(ChessPieceInfo targetPiece)
+    {
+        // Đợi dissolve effect hoàn thành
+        float dissolveDuration = 2f; // Thời gian dissolve từ ChessPieceSkinController
+        
+        // Có thể check dissolve progress thực tế từ skin controller
+        ChessPieceSkinController targetSkinController = targetPiece.GetComponent<ChessPieceSkinController>();
+        if (targetSkinController != null)
+        {
+            // Đợi dissolve hoàn thành (có thể implement callback từ skin controller)
+            yield return new WaitForSeconds(dissolveDuration);
+        }
+        else
+        {
+            // Fallback: đợi thời gian cố định
+            yield return new WaitForSeconds(dissolveDuration);
         }
     }
     
@@ -928,6 +1142,20 @@ public class ChessPieceController : MonoBehaviour
             }
         }
     }
+
+    [ContextMenu("Test Cast Spell Attack")]
+    private void TestCastSpellAttack()
+    {
+        SetAttackType(AttackType.CastSpellBeforeMove);
+        Debug.Log("Attack type set to CastSpellBeforeMove");
+    }
+    
+    [ContextMenu("Test Ranged Attack")]
+    private void TestRangedAttack()
+    {
+        SetAttackType(AttackType.RangedBeforeMove);
+        Debug.Log("Attack type set to RangedBeforeMove");
+    }
 }
 
 // Enums for movement and attack types
@@ -947,5 +1175,6 @@ public enum AttackType
     MeleeAfterMove,     // Di chuyển trước, đánh sau (Pawn, King, Knight)
     RangedBeforeMove,   // Bắn trước, di chuyển sau (Bishop, Rook)
     RangedThenMove,     // Bắn rồi di chuyển ngay
-    MoveThenRanged      // Di chuyển rồi bắn ngay
+    MoveThenRanged,     // Di chuyển rồi bắn ngay
+    CastSpellBeforeMove // Cast spell trước, đợi dissolve xong rồi mới di chuyển
 }

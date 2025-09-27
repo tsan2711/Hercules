@@ -217,7 +217,8 @@ public class ChessPieceSkinController : MonoBehaviour
             Debug.Log($"Skin state changed: {previousState} -> {currentState} on {gameObject.name}");
         }
         
-        if (animated && transitionDuration > 0f)
+        // Chỉ start coroutine nếu GameObject active
+        if (animated && transitionDuration > 0f && gameObject.activeInHierarchy)
         {
             StartSkinTransition();
         }
@@ -225,6 +226,26 @@ public class ChessPieceSkinController : MonoBehaviour
         {
             ApplySkinStateImmediate();
         }
+    }
+    
+    /// <summary>
+    /// Set skin state ngay lập tức mà không cần coroutine
+    /// </summary>
+    public void SetSkinStateImmediate(SkinState newState)
+    {
+        if (newState == currentState) return;
+        
+        SkinState previousState = currentState;
+        currentState = newState;
+        
+        OnSkinStateChanged?.Invoke(previousState, currentState);
+        
+        if (debugMode)
+        {
+            Debug.Log($"Skin state changed immediately: {previousState} -> {currentState} on {gameObject.name}");
+        }
+        
+        ApplySkinStateImmediate();
     }
     
     /// <summary>

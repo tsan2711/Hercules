@@ -5,6 +5,7 @@ public class ChessRaycastDebug : MonoBehaviour
 {
     private GameObject currentSelected;
     private ChessPieceSkinController selectedSkinController;
+    private bool isMoving = false; // Flag để track move state
 
     private GameObject currentHover;
     private ChessPieceSkinController hoverSkinController;
@@ -35,6 +36,13 @@ public class ChessRaycastDebug : MonoBehaviour
         // --- XỬ LÝ CLICK ---
         if (Input.GetMouseButtonDown(0))
         {
+            // Kiểm tra xem có đang trong quá trình move không
+            if (isMoving)
+            {
+                Debug.LogWarning("Cannot click while piece is moving!");
+                return;
+            }
+            
             SoundManager.Instance.PlayClick();
             if (hitSquare && selectedInfo != null) // Click vào ô highlight
             {
@@ -52,11 +60,15 @@ public class ChessRaycastDebug : MonoBehaviour
                             return;
                         }
                         
+                        // Subscribe to move completion event
+                        pieceController.OnActionSequenceCompleted += OnPieceMoveCompleted;
+                        
+                        // Set moving flag
+                        isMoving = true;
+                        
                         pieceController.MovePiece(targetPos);
                         
-                        // Reset selection sau khi move thành công
-                        ResetSelected();
-                        ClearHighlights();
+                        // DON'T reset selection here - wait for completion event
                     }
                     else
                     {
@@ -64,7 +76,7 @@ public class ChessRaycastDebug : MonoBehaviour
                         Debug.LogWarning($"No ChessPieceController found on {selectedInfo.name}, using fallback");
                         pieceMover.MovePiece(selectedInfo, targetPos);
                         
-                        // Reset selection sau khi move thành công
+                        // Reset selection ngay lập tức cho fallback
                         ResetSelected();
                         ClearHighlights();
                     }
@@ -243,6 +255,24 @@ public class ChessRaycastDebug : MonoBehaviour
         }
         
         currentHover = null;
+    }
+
+    /// <summary>
+    /// Callback khi piece hoàn thành di chuyển
+    /// </summary>
+    private void OnPieceMoveCompleted(ChessPieceController pieceController)
+    {
+        // Unsubscribe from event
+        pieceController.OnActionSequenceCompleted -= OnPieceMoveCompleted;
+        
+        // Reset moving flag
+        isMoving = false;
+        
+        // Reset selection sau khi move hoàn thành
+        ResetSelected();
+        ClearHighlights();
+        
+        Debug.Log($"Piece {pieceController.name} completed move sequence");
     }
 
     void ResetSelected()
