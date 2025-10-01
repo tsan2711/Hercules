@@ -1165,6 +1165,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &100865110
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2554,6 +2557,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &372029506
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4126,8 +4132,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -4840,9 +4845,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &779303014 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4179465716009886, guid: 39792eb05750b1c4884cff7eea9fc7b6, type: 3}
@@ -4859,6 +4864,8 @@ GameObject:
   - component: {fileID: 784415302}
   - component: {fileID: 784415301}
   - component: {fileID: 784415303}
+  - component: {fileID: 784415305}
+  - component: {fileID: 784415304}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4880,7 +4887,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whiteHighlightPrefab: {fileID: 1195785148564078503, guid: dc370fe549e6e483880edccbdf535c54, type: 3}
   blackHighlightPrefab: {fileID: 1195785148564078503, guid: 94987da30a35e44d8b8d17cfb4795c20, type: 3}
-  tileSize: 2
   moveGenerator: {fileID: 4407455}
   pieceMover: {fileID: 492342966}
   chessMaterials:
@@ -4972,6 +4978,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: Main Scene
+--- !u!114 &784415304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784415300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4371b9dd0d9cda45979f80327558a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  board: {fileID: 1313804180}
+--- !u!114 &784415305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784415300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5030f021d986cb3479d1dedff1ea9b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardBehaviour: {fileID: 784415304}
+  elo: 1600
+  moveTimeMs: 1200
+  threads: 2
+  hashMB: 128
+  contempt: 0
+  useSkillLevel: 0
+  skillLevel: 10
 --- !u!1001 &809031174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5109,8 +5148,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -5197,8 +5235,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -6086,9 +6123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &975899182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9d2d02e592ff0d744a35e1f488301752, type: 3}
@@ -6741,7 +6778,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224180091544838782, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 53.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224180091544838782, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -6761,7 +6798,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224799519448523320, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 53.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224799519448523320, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -6781,7 +6818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224833301936061730, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 127.81
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224833301936061730, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -6801,7 +6838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224847026841835810, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 64.41
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224847026841835810, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -6821,7 +6858,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224909443133380826, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 64.41
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224909443133380826, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -7162,6 +7199,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &1085501736
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7972,9 +8012,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 1
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &1252810365 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4179465716009886, guid: abf0dca57062faf42a55a1e78abe35c7, type: 3}
@@ -8073,9 +8113,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!65 &1283404633
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8110,9 +8150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 2
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1 &1287876099
 GameObject:
   m_ObjectHideFlags: 0
@@ -8211,6 +8251,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &1289327290
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8334,9 +8377,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &1291767983 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4179465716009886, guid: 39792eb05750b1c4884cff7eea9fc7b6, type: 3}
@@ -8477,6 +8520,8 @@ MonoBehaviour:
   blackQueenPrefab: {fileID: 5864898527682665829, guid: 38442bb5f5330a942b81334a24fe2b49, type: 3}
   blackKingPrefab: {fileID: 3300168842726544374, guid: 9f8b18d87675c3c4aa52c597f4818b07, type: 3}
   tileSize: 2
+  boardFrame: {fileID: 0}
+  boardRenderer: {fileID: 0}
   boardOrigin: {x: -7, y: 2, z: -7}
   isWhiteTurn: 1
 --- !u!1 &1328844933
@@ -8700,9 +8745,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1 &1337117206
 GameObject:
   m_ObjectHideFlags: 0
@@ -9137,8 +9182,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -9410,9 +9454,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!65 &1415196540
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9447,9 +9491,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &1430211813 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4179465716009886, guid: abf0dca57062faf42a55a1e78abe35c7, type: 3}
@@ -9937,9 +9981,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &1513512245 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4179465716009886, guid: abf0dca57062faf42a55a1e78abe35c7, type: 3}
@@ -10900,6 +10944,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &1627588557
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11605,9 +11652,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1001 &1722457976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12284,9 +12331,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!21 &1826344544
 Material:
   serializedVersion: 8
@@ -12298,8 +12345,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -12409,9 +12455,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1 &1861685313
 GameObject:
   m_ObjectHideFlags: 0
@@ -12727,9 +12773,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!65 &1878144236
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12764,9 +12810,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &1897266138 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9d2d02e592ff0d744a35e1f488301752, type: 3}
@@ -13003,9 +13049,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 3
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1001 &1936854612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13243,6 +13289,9 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  explosionRadius: 2
+  knockbackForce: 10
+  explosionEffect: {fileID: 0}
 --- !u!23 &1959447476
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13619,9 +13668,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 1
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!4 &2001699029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9d2d02e592ff0d744a35e1f488301752, type: 3}
@@ -13716,9 +13765,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1001 &2009702070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13887,9 +13936,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1001 &2015644489
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14344,7 +14393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224104902173032242, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 77.59
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224104902173032242, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -14444,7 +14493,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224452190952647574, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 77.59
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224452190952647574, guid: 738986601f3c7024eba34825abbf8078, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -15023,9 +15072,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhite: 0
-  type: 0
-  hasMoved: 0
   boardPosition: {x: 0, y: 0}
+  pieceType: 0
+  hasMoved: 0
 --- !u!1001 &2142489000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15110,8 +15159,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

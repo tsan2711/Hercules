@@ -1,0 +1,267 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|c:\\users\\admin\\onedrive\\documents\\github\\hercules\\assets\\_app\\scripts\\ai\\stockfishengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\ai\\stockfishengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF9F30AC-4187-BB81-B2F0-A3399F447538}|CodeStage.Maintainer.Editor.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\plugins\\codestage\\maintainer\\editor\\scripts\\ui\\tabs\\referencesfinder\\childtabs\\scene\\hierarchyreferencestab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF9F30AC-4187-BB81-B2F0-A3399F447538}|CodeStage.Maintainer.Editor.csproj|solutionrelative:assets\\plugins\\codestage\\maintainer\\editor\\scripts\\ui\\tabs\\referencesfinder\\childtabs\\scene\\hierarchyreferencestab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|c:\\users\\admin\\onedrive\\documents\\github\\hercules\\assets\\_app\\scripts\\ai\\chessboardadapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\ai\\chessboardadapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\ai\\ichessboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\ai\\ichessboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\chessboardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\chessboardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\hoverchesspiece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\hoverchesspiece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\cursorprefab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\cursorprefab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\chessmovegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\chessmovegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\checkmatetestscenario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\checkmatetestscenario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\vfxmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\vfxmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\chesspieceinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\chesspieceinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\gameplay\\pawncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\gameplay\\pawncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\chesschecksystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\chesschecksystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\chesspiecemover.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\chesspiecemover.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\assets\\_app\\scripts\\projectilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A95692C-FEC5-310D-9C0A-BB3AAF9EDC7A}|Assembly-CSharp.csproj|solutionrelative:assets\\_app\\scripts\\projectilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StockfishEngine.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\StockfishEngine.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\AI\\StockfishEngine.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\StockfishEngine.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\AI\\StockfishEngine.cs",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAwwJIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:17:32.119Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ChessBoardAdapter.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\ChessBoardAdapter.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\AI\\ChessBoardAdapter.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\ChessBoardAdapter.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\AI\\ChessBoardAdapter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:07:42.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PawnController.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\Gameplay\\PawnController.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\Gameplay\\PawnController.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\Gameplay\\PawnController.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\Gameplay\\PawnController.cs",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:25:59.637Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CheckmateTestScenario.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\CheckmateTestScenario.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\CheckmateTestScenario.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\CheckmateTestScenario.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\CheckmateTestScenario.cs",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAmwK4AAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:25:35.38Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ChessPieceMover.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessPieceMover.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ChessPieceMover.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessPieceMover.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ChessPieceMover.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:01:53.36Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ChessMoveGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessMoveGenerator.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ChessMoveGenerator.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessMoveGenerator.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ChessMoveGenerator.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAwFgAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:00:49.694Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ChessPieceInfo.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessPieceInfo.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ChessPieceInfo.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessPieceInfo.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ChessPieceInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:27:40.079Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ChessCheckSystem.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessCheckSystem.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ChessCheckSystem.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessCheckSystem.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ChessCheckSystem.cs",
+              "ViewState": "AgIAABkBAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:00:17.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ProjectileController.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ProjectileController.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ProjectileController.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ProjectileController.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ProjectileController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T16:56:21.234Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ChessBoardManager.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessBoardManager.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\ChessBoardManager.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\ChessBoardManager.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\ChessBoardManager.cs",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAQwDYBAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T16:58:36.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HierarchyReferencesTab.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\Plugins\\CodeStage\\Maintainer\\Editor\\Scripts\\UI\\Tabs\\ReferencesFinder\\ChildTabs\\Scene\\HierarchyReferencesTab.cs",
+              "RelativeDocumentMoniker": "Assets\\Plugins\\CodeStage\\Maintainer\\Editor\\Scripts\\UI\\Tabs\\ReferencesFinder\\ChildTabs\\Scene\\HierarchyReferencesTab.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\Plugins\\CodeStage\\Maintainer\\Editor\\Scripts\\UI\\Tabs\\ReferencesFinder\\ChildTabs\\Scene\\HierarchyReferencesTab.cs",
+              "RelativeToolTip": "Assets\\Plugins\\CodeStage\\Maintainer\\Editor\\Scripts\\UI\\Tabs\\ReferencesFinder\\ChildTabs\\Scene\\HierarchyReferencesTab.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T16:35:34.954Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IChessBoard.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\IChessBoard.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\AI\\IChessBoard.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\AI\\IChessBoard.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\AI\\IChessBoard.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:07:11.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "HoverChessPiece.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\HoverChessPiece.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\HoverChessPiece.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\HoverChessPiece.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\HoverChessPiece.cs",
+              "ViewState": "AgIAAE4BAAAAAAAAAAAuwHoBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T17:54:31.635Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CursorPrefab.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\CursorPrefab.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\CursorPrefab.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\CursorPrefab.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\CursorPrefab.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T18:03:13.017Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "VFXManager.cs",
+              "DocumentMoniker": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\VFXManager.cs",
+              "RelativeDocumentMoniker": "Assets\\_App\\Scripts\\VFXManager.cs",
+              "ToolTip": "C:\\Users\\admin\\OneDrive\\Documents\\GitHub\\Hercules\\Assets\\_App\\Scripts\\VFXManager.cs",
+              "RelativeToolTip": "Assets\\_App\\Scripts\\VFXManager.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T21:35:59.685Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
