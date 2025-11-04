@@ -17,8 +17,9 @@ public class DissolveInEffect : MonoBehaviour, IEffect
     
     [Header("Shader Properties")]
     [SerializeField] private string dissolvePropertyName = "_DissolveAmount";
-    [SerializeField] private string edgeWidthPropertyName = "_EdgeWidth";
-    [SerializeField] private string edgeIntensityPropertyName = "_EdgeIntensity";
+    [SerializeField] private string edgeWidthPropertyName = "_DissolveEdgeWidth";
+    [SerializeField] private string edgeIntensityPropertyName = "_DissolveEdgeIntensity";
+    [SerializeField] private string edgeColorPropertyName = "_DissolveEdgeColor";
     
     // Private fields
     private Material[] materials;
@@ -51,16 +52,44 @@ public class DissolveInEffect : MonoBehaviour, IEffect
     
     private void InitializeMaterials()
     {
+        if (Target == null)
+            Target = gameObject;
+            
         renderers = Target.GetComponentsInChildren<Renderer>();
+        
+        if (renderers == null || renderers.Length == 0)
+        {
+            Debug.LogWarning($"No Renderers found on {Target.name}");
+            materials = new Material[0];
+            return;
+        }
+        
         List<Material> materialList = new List<Material>();
         
         foreach (var renderer in renderers)
         {
-            foreach (var material in renderer.materials)
+            if (renderer == null) continue;
+            
+            // Use sharedMaterials first to check, then get instance materials
+            Material[] sharedMats = renderer.sharedMaterials;
+            Material[] instanceMats = renderer.materials; // Force instance materials
+            
+            for (int i = 0; i < instanceMats.Length; i++)
             {
-                if (material.HasProperty(dissolvePropertyName))
+                Material mat = instanceMats[i];
+                if (mat != null)
                 {
-                    materialList.Add(material);
+                    // Check if material has dissolve property
+                    if (mat.HasProperty(dissolvePropertyName))
+                    {
+                        materialList.Add(mat);
+                    }
+                    // Also check shared material
+                    else if (i < sharedMats.Length && sharedMats[i] != null && sharedMats[i].HasProperty(dissolvePropertyName))
+                    {
+                        // Material instance should also have the property
+                        materialList.Add(mat);
+                    }
                 }
             }
         }
@@ -69,8 +98,21 @@ public class DissolveInEffect : MonoBehaviour, IEffect
         
         if (materials.Length == 0)
         {
-            Debug.LogWarning($"No materials with {dissolvePropertyName} property found on {Target.name}");
+            Debug.LogWarning($"No materials with {dissolvePropertyName} property found on {Target.name}. " +
+                           $"Make sure materials use a shader with dissolve support (e.g., Custom/DissolveIn or Unlit/Pawn)");
         }
+        else
+        {
+            Debug.Log($"DissolveInEffect initialized on {Target.name} with {materials.Length} materials");
+        }
+    }
+    
+    /// <summary>
+    /// Reinitialize materials (useful when materials change at runtime)
+    /// </summary>
+    public void ReinitializeMaterials()
+    {
+        InitializeMaterials();
     }
     
     public void PlayEffect(System.Action onComplete = null)
@@ -79,6 +121,22 @@ public class DissolveInEffect : MonoBehaviour, IEffect
         {
             StopEffect();
         }
+        
+        // Reinitialize materials in case they changed
+        if (materials == null || materials.Length == 0)
+        {
+            InitializeMaterials();
+        }
+        
+        if (materials == null || materials.Length == 0)
+        {
+            Debug.LogWarning($"Cannot play dissolve effect on {Target.name}: No materials with dissolve property found!");
+            Debug.LogWarning($"Make sure the materials use a shader with {dissolvePropertyName} property (e.g., Custom/DissolveIn or Unlit/Pawn)");
+            onComplete?.Invoke();
+            return;
+        }
+        
+        Debug.Log($"DissolveInEffect.PlayEffect: Found {materials.Length} materials with dissolve property on {Target.name}");
         
         onCompleteCallback = onComplete;
         
@@ -89,15 +147,43 @@ public class DissolveInEffect : MonoBehaviour, IEffect
         
         isPlaying = true;
         
+        float startValue = GetDissolveAmount();
+        Debug.Log($"Playing dissolve effect on {Target.name} from {startValue} to 1.0 over {duration} seconds");
+        
+        // Track last logged value
+        float lastLoggedValue = -1f;
+        
         // Animate dissolve amount from 0 to 1
         dissolveTween = DOTween.To(
             () => GetDissolveAmount(),
-            (value) => SetDissolveAmount(value),
+            (value) => {
+                SetDissolveAmount(value);
+                
+                // Debug log every 0.2 progress (0.0, 0.2, 0.4, 0.6, 0.8, 1.0)
+                float progressStep = Mathf.Floor(value * 5f) / 5f;
+                if (progressStep != lastLoggedValue)
+                {
+                    lastLoggedValue = progressStep;
+                    Debug.Log($"Dissolve progress: {value:F3} ({progressStep * 100:F0}%) on {Target.name}");
+                    
+                    // Verify dissolve amount was actually set
+                    float verifyValue = GetDissolveAmount();
+                    if (Mathf.Abs(verifyValue - value) > 0.01f)
+                    {
+                        Debug.LogWarning($"Dissolve amount mismatch! Expected: {value:F3}, Actual: {verifyValue:F3}");
+                    }
+                }
+            },
             1f,
             duration
         ).SetEase(dissolveCurve)
         .OnComplete(() => {
             isPlaying = false;
+            
+            // Verify final dissolve amount
+            float finalAmount = GetDissolveAmount();
+            Debug.Log($"Dissolve effect completed on {Target.name}. Final dissolve amount: {finalAmount}");
+            
             onCompleteCallback?.Invoke();
         });
     }
@@ -145,6 +231,11 @@ public class DissolveInEffect : MonoBehaviour, IEffect
                         SetEdgeIntensity(edgeIntensityValue);
                     break;
                     
+                case "edgecolor":
+                    if (param.Value is Color edgeColorValue)
+                        SetEdgeColor(edgeColorValue);
+                    break;
+                    
                 case "playonstart":
                     if (param.Value is bool playOnStartValue)
                         playOnStart = playOnStartValue;
@@ -161,21 +252,79 @@ public class DissolveInEffect : MonoBehaviour, IEffect
     // Shader property setters/getters
     private void SetDissolveAmount(float value)
     {
+        // If materials array is empty, try to reinitialize
+        if (materials == null || materials.Length == 0)
+        {
+            InitializeMaterials();
+        }
+        
+        if (materials == null || materials.Length == 0)
+        {
+            // Fallback: try to set on all renderers directly
+            if (renderers != null)
+            {
+                foreach (var renderer in renderers)
+                {
+                    if (renderer != null)
+                    {
+                        Material[] rendererMats = renderer.materials;
+                        foreach (var mat in rendererMats)
+                        {
+                            if (mat != null && mat.HasProperty(dissolvePropertyName))
+                            {
+                                mat.SetFloat(dissolvePropertyName, value);
+                            }
+                        }
+                    }
+                }
+            }
+            return;
+        }
+        
         foreach (var material in materials)
         {
             if (material != null)
             {
-                material.SetFloat(dissolvePropertyName, value);
+                if (material.HasProperty(dissolvePropertyName))
+                {
+                    material.SetFloat(dissolvePropertyName, value);
+                }
             }
         }
     }
     
     private float GetDissolveAmount()
     {
-        if (materials.Length > 0 && materials[0] != null)
+        // If materials array is empty, try to reinitialize
+        if (materials == null || materials.Length == 0)
         {
-            return materials[0].GetFloat(dissolvePropertyName);
+            InitializeMaterials();
         }
+        
+        if (materials != null && materials.Length > 0 && materials[0] != null)
+        {
+            if (materials[0].HasProperty(dissolvePropertyName))
+            {
+                return materials[0].GetFloat(dissolvePropertyName);
+            }
+        }
+        
+        // Fallback: try to get from renderers directly
+        if (renderers != null && renderers.Length > 0)
+        {
+            foreach (var renderer in renderers)
+            {
+                if (renderer != null)
+                {
+                    Material[] rendererMats = renderer.materials;
+                    if (rendererMats.Length > 0 && rendererMats[0] != null && rendererMats[0].HasProperty(dissolvePropertyName))
+                    {
+                        return rendererMats[0].GetFloat(dissolvePropertyName);
+                    }
+                }
+            }
+        }
+        
         return 0f;
     }
     
@@ -197,6 +346,17 @@ public class DissolveInEffect : MonoBehaviour, IEffect
             if (material != null && material.HasProperty(edgeIntensityPropertyName))
             {
                 material.SetFloat(edgeIntensityPropertyName, value);
+            }
+        }
+    }
+    
+    private void SetEdgeColor(Color value)
+    {
+        foreach (var material in materials)
+        {
+            if (material != null && material.HasProperty(edgeColorPropertyName))
+            {
+                material.SetColor(edgeColorPropertyName, value);
             }
         }
     }

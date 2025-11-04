@@ -5,6 +5,6 @@ using UnityEngine;
 /// </summary>
 public class UIMenuManager : MonoBehaviour
 {
-    // Class này đã được đơn giản hóa, tất cả logic đã được xử lý trong StageSelectionPanel
+
 }
 

@@ -102,7 +102,18 @@ public class ChessPieceMover : MonoBehaviour
                     // Handle attack after movement
                     if (isAttackMove)
                     {
-                        HandleTargetPieceCapture(targetPiece);
+                        // Try to use ChessPieceController's dissolve logic
+                        ChessPieceController targetController = targetPiece.GetComponent<ChessPieceController>();
+                        if (targetController != null)
+                        {
+                            // Use reflection or public method to trigger dissolve
+                            HandleTargetPieceCaptureWithDissolve(targetPiece);
+                        }
+                        else
+                        {
+                            // Fallback: use dissolve logic directly
+                            HandleTargetPieceCaptureWithDissolve(targetPiece);
+                        }
                     }
                     
                     // Cập nhật board
@@ -212,25 +223,99 @@ public class ChessPieceMover : MonoBehaviour
     }
     
     /// <summary>
-    /// Xử lý việc ăn quân (fallback method)
+    /// Xử lý việc ăn quân với dissolve effect
     /// </summary>
-    private void HandleTargetPieceCapture(ChessPieceInfo targetPiece)
+    private void HandleTargetPieceCaptureWithDissolve(ChessPieceInfo targetPiece)
     {
         if (targetPiece == null) return;
         
-        // Try to use ChessPieceSkinController for dissolve effect
-        ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
-        if (targetSkin != null)
+        Debug.Log($"HandleTargetPieceCaptureWithDissolve called for {targetPiece.name} in ChessPieceMover");
+        
+        // Kiểm tra PawnController trước
+        PawnController pawnController = targetPiece.GetComponent<PawnController>();
+        if (pawnController != null)
         {
-            targetSkin.TriggerDissolveOut(() => {
-                Destroy(targetPiece.gameObject);
+            Debug.Log($"PawnController found, using StartDissolveOut");
+            
+            ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
+            if (targetSkin != null)
+            {
+                targetSkin.SetSkinStateImmediate(SkinState.Dissolving);
+            }
+            
+            pawnController.StartDissolveOut(() => {
+                Debug.Log($"Destroying {targetPiece.name} after PawnController dissolve");
+                CleanupAndDestroy(targetPiece);
+            });
+            return;
+        }
+        
+        // Fallback: Use ChessPieceSkinController
+        Debug.Log($"No PawnController found, using ChessPieceSkinController");
+        ChessPieceSkinController targetSkinFallback = targetPiece.GetComponent<ChessPieceSkinController>();
+        if (targetSkinFallback != null)
+        {
+            Debug.Log($"ChessPieceSkinController found, triggering dissolve out");
+            targetSkinFallback.SetSkinStateImmediate(SkinState.Dissolving);
+            targetSkinFallback.TriggerDissolveOut(() => {
+                Debug.Log($"Destroying {targetPiece.name} after ChessPieceSkinController dissolve");
+                CleanupAndDestroy(targetPiece);
             });
         }
         else
         {
-            // Fallback to immediate destruction
+            Debug.LogWarning($"No ChessPieceSkinController found on {targetPiece.name}, trying to add one...");
+            
+            // Try to add ChessPieceSkinController
+            ChessPieceSkinController newSkinController = targetPiece.gameObject.AddComponent<ChessPieceSkinController>();
+            if (newSkinController != null)
+            {
+                Debug.Log($"Added ChessPieceSkinController, triggering dissolve out");
+                newSkinController.SetSkinStateImmediate(SkinState.Dissolving);
+                newSkinController.TriggerDissolveOut(() => {
+                    Debug.Log($"Destroying {targetPiece.name} after newly added ChessPieceSkinController dissolve");
+                    CleanupAndDestroy(targetPiece);
+                });
+            }
+            else
+            {
+                Debug.LogWarning($"Could not add ChessPieceSkinController, destroying immediately");
+                CleanupAndDestroy(targetPiece);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Cleanup board và destroy piece
+    /// </summary>
+    private void CleanupAndDestroy(ChessPieceInfo targetPiece)
+    {
+        if (targetPiece == null) return;
+        
+        // Cleanup board position
+        if (ChessBoardManager.Instance != null)
+        {
+            Vector2Int boardPos = targetPiece.boardPosition;
+            if (boardPos.x >= 0 && boardPos.x < 8 && boardPos.y >= 0 && boardPos.y < 8)
+            {
+                ChessBoardManager.Instance.board[boardPos.x, boardPos.y] = null;
+            }
+        }
+        
+        // Destroy game object
+        if (targetPiece.gameObject != null)
+        {
             Destroy(targetPiece.gameObject);
         }
+    }
+    
+    /// <summary>
+    /// Xử lý việc ăn quân (fallback method - deprecated, use HandleTargetPieceCaptureWithDissolve instead)
+    /// </summary>
+    private void HandleTargetPieceCapture(ChessPieceInfo targetPiece)
+    {
+        // Redirect to dissolve version
+        HandleTargetPieceCaptureWithDissolve(targetPiece);
     }
     
     /// <summary>

@@ -406,6 +406,7 @@ public class ChessPieceController : MonoBehaviour
         Debug.Log($"ExecuteMoveSequence - AttackType: {attackType}, TargetPiece: {(targetPiece != null ? targetPiece.name : "null")}");
         Vector3 startPos = transform.position;
         bool isAttackMove = targetPiece != null;
+        bool targetPieceHandled = false; // Flag để track xem target piece đã được handle chưa
         
         Debug.Log($"isAttackMove: {isAttackMove}");
         
@@ -424,6 +425,7 @@ public class ChessPieceController : MonoBehaviour
         {
             Debug.Log("Executing RangedBeforeMove/RangedThenMove");
             yield return StartCoroutine(ExecuteAttackSequence(targetPiece, startPos));
+            targetPieceHandled = true; // Attack sequence đã handle target piece
         }
         
         // Thực hiện cast spell trước khi di chuyển nếu cần
@@ -431,6 +433,7 @@ public class ChessPieceController : MonoBehaviour
         {
             Debug.Log("Executing CastSpellBeforeMove");
             yield return StartCoroutine(ExecuteCastSpellSequence(targetPiece, startPos));
+            targetPieceHandled = true; // Cast spell sequence đã handle target piece
         }
         
         // Thực hiện di chuyển
@@ -440,15 +443,23 @@ public class ChessPieceController : MonoBehaviour
         if (isAttackMove && (attackType == AttackType.MeleeAfterMove || attackType == AttackType.MoveThenRanged))
         {
             yield return StartCoroutine(ExecuteAttackSequence(targetPiece, targetWorldPos));
+            targetPieceHandled = true; // Attack sequence đã handle target piece
         }
         
         // Cập nhật board position
         UpdateBoardPosition(targetWorldPos);
         
-        // Xử lý target piece nếu bị ăn
-        if (isAttackMove && targetPiece != null)
+        // Xử lý target piece nếu bị ăn và chưa được handle
+        if (isAttackMove && targetPiece != null && !targetPieceHandled)
         {
-            HandleTargetPieceCapture(targetPiece);
+            // Fallback: nếu chưa được handle trong attack sequence (shouldn't happen normally)
+            Debug.LogWarning($"Target piece {targetPiece.name} was not handled in attack sequence, triggering dissolve");
+            HandleTargetPieceCaptureWithDissolve(targetPiece);
+            OnAttackCompleted?.Invoke(this, targetPiece);
+        }
+        else if (isAttackMove && targetPiece != null)
+        {
+            // Target piece đã được handle trong attack sequence
             OnAttackCompleted?.Invoke(this, targetPiece);
         }
         else
@@ -713,8 +724,14 @@ public class ChessPieceController : MonoBehaviour
         // Spawn projectile và đợi nó đến target
         yield return StartCoroutine(CastProjectileToTarget(targetPiece, castFromPos));
         
-        // Đợi target piece dissolve hoàn toàn
-        yield return StartCoroutine(WaitForTargetDissolve(targetPiece));
+        // Đợi một chút để đảm bảo dissolve được trigger
+        yield return new WaitForSeconds(0.1f);
+        
+        // Đợi target piece dissolve hoàn toàn (chỉ nếu target piece còn tồn tại)
+        if (targetPiece != null && targetPiece.gameObject != null)
+        {
+            yield return StartCoroutine(WaitForTargetDissolve(targetPiece));
+        }
         
         // Reset skin state
         if (skinController != null)
@@ -746,9 +763,18 @@ public class ChessPieceController : MonoBehaviour
         }
         
         // Apply damage to target (trigger dissolve effect)
-        if (targetPiece.GetComponent<ChessPieceSkinController>() != null)
+        // Note: Destroy sẽ được gọi trong callback của TriggerDissolveOut
+        ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
+        if (targetSkin != null)
         {
-            targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
+            targetSkin.TriggerDissolveOut(() => {
+                HandleTargetPieceCapture(targetPiece);
+            });
+        }
+        else
+        {
+            // Fallback: try to trigger dissolve with HandleTargetPieceCaptureWithDissolve
+            HandleTargetPieceCaptureWithDissolve(targetPiece);
         }
         
         // Return to original position
@@ -780,10 +806,19 @@ public class ChessPieceController : MonoBehaviour
         {
             float projectileSpeed = attackRange / attackDuration;
             projectileVFX.gameObject.transform.DOMove(targetPos, attackDuration).OnComplete(() => {
-                // Apply damage to target
-                if (targetPiece.GetComponent<ChessPieceSkinController>() != null)
+                // Apply damage to target (trigger dissolve effect)
+                // Note: Destroy sẽ được gọi trong callback của TriggerDissolveOut
+                ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
+                if (targetSkin != null)
                 {
-                    targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
+                    targetSkin.TriggerDissolveOut(() => {
+                        HandleTargetPieceCapture(targetPiece);
+                    });
+                }
+                else
+                {
+                    // Fallback: try to trigger dissolve with HandleTargetPieceCaptureWithDissolve
+                    HandleTargetPieceCaptureWithDissolve(targetPiece);
                 }
                 
                 // Despawn projectile VFX
@@ -792,6 +827,11 @@ public class ChessPieceController : MonoBehaviour
                     VFXManager.Instance.DespawnVFX(projectileVFX, true);
                 }
             });
+        }
+        else
+        {
+            // Fallback: trigger dissolve immediately if no projectile VFX
+            HandleTargetPieceCaptureWithDissolve(targetPiece);
         }
         
         yield return new WaitForSeconds(attackDuration);
@@ -810,23 +850,27 @@ public class ChessPieceController : MonoBehaviour
     }
     
     /// <summary>
-    /// Xử lý việc ăn quân
+    /// Xử lý việc ăn quân (cleanup board sau khi dissolve)
     /// </summary>
     private void HandleTargetPieceCapture(ChessPieceInfo targetPiece)
     {
         if (targetPiece == null) return;
         
-        // Trigger dissolve effect if has skin controller
-        ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
-        if (targetSkin != null)
+        Debug.Log($"HandleTargetPieceCapture called for {targetPiece.name} - cleaning up board");
+        
+        // Cleanup board position
+        if (ChessBoardManager.Instance != null)
         {
-            targetSkin.TriggerDissolveOut(() => {
-                Destroy(targetPiece.gameObject);
-            });
+            Vector2Int boardPos = targetPiece.boardPosition;
+            if (boardPos.x >= 0 && boardPos.x < 8 && boardPos.y >= 0 && boardPos.y < 8)
+            {
+                ChessBoardManager.Instance.board[boardPos.x, boardPos.y] = null;
+            }
         }
-        else
+        
+        // Destroy game object (should only be called after dissolve completes)
+        if (targetPiece.gameObject != null)
         {
-            // Fallback to immediate destruction
             Destroy(targetPiece.gameObject);
         }
     }
@@ -975,6 +1019,10 @@ public class ChessPieceController : MonoBehaviour
         
         Debug.Log($"ProjectileType: {projectileType}, Speed: {projectileSpeed}");
         
+        // Store reference to target piece for fallback
+        bool hitOccurred = false;
+        ChessPieceInfo targetPieceRef = targetPiece; // Store reference
+        
         // Spawn projectile từ ProjectileManager
         GameObject projectile = null;
         if (ProjectileManager.Instance != null)
@@ -993,9 +1041,14 @@ public class ChessPieceController : MonoBehaviour
             ProjectileController controller = projectile.GetComponent<ProjectileController>();
             if (controller != null)
             {
-            // Subscribe to hit event
-            controller.OnHit += OnProjectileHit;
-            controller.OnExplode += OnProjectileExplode;
+                // Subscribe to hit event
+                System.Action<ProjectileController, GameObject> onHitWrapper = (proj, target) => {
+                    hitOccurred = true;
+                    OnProjectileHit(proj, target);
+                };
+                
+                controller.OnHit += onHitWrapper;
+                controller.OnExplode += OnProjectileExplode;
                 
                 // Đợi projectile đến target hoặc hit
                 float maxWaitTime = ProjectileInfo.GetDefaultLifetime(projectileType);
@@ -1007,16 +1060,27 @@ public class ChessPieceController : MonoBehaviour
                     yield return null;
                 }
                 
-            // Unsubscribe from events
-            controller.OnHit -= OnProjectileHit;
-            controller.OnExplode -= OnProjectileExplode;
+                // Unsubscribe from events
+                controller.OnHit -= onHitWrapper;
+                controller.OnExplode -= OnProjectileExplode;
+                
+                // Fallback: nếu projectile đã đến target nhưng không có hit event (có thể collision không trigger)
+                if (!hitOccurred && targetPieceRef != null && targetPieceRef.gameObject != null)
+                {
+                    Debug.LogWarning($"Projectile reached target but no hit event occurred. Manually triggering dissolve for {targetPieceRef.name}");
+                    HandleTargetPieceCaptureWithDissolve(targetPieceRef);
+                }
             }
         }
         else
         {
-            // Fallback: đợi thời gian cố định
-            float fallbackDuration = 2f;
-            yield return new WaitForSeconds(fallbackDuration);
+            // Fallback: nếu không spawn được projectile, trigger dissolve ngay
+            Debug.LogWarning("Could not spawn projectile, triggering dissolve directly");
+            if (targetPieceRef != null && targetPieceRef.gameObject != null)
+            {
+                HandleTargetPieceCaptureWithDissolve(targetPieceRef);
+                yield return new WaitForSeconds(1.5f); // Wait for dissolve duration
+            }
         }
     }
     
@@ -1025,23 +1089,96 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private void OnProjectileHit(ProjectileController projectile, GameObject target)
     {
-        Debug.Log($"Projectile {projectile.Type} hit {target.name}");
+        Debug.Log($"OnProjectileHit called - Projectile {projectile.Type} hit {target.name}");
         
-        // Trigger dissolve và die animation cho target
         ChessPieceInfo targetPiece = target.GetComponent<ChessPieceInfo>();
-        if (targetPiece != null && targetPiece.GetComponent<ChessPieceSkinController>() != null)
+        if (targetPiece == null)
         {
-            targetPiece.GetComponent<ChessPieceSkinController>().SetSkinStateImmediate(SkinState.Dissolving);
+            Debug.LogWarning($"Target {target.name} does not have ChessPieceInfo component");
+            return;
         }
         
-        // Trigger die animation
-        StartCoroutine(TriggerDieAnimation(targetPiece));
+        Debug.Log($"Target piece found: {targetPiece.name}, Type: {targetPiece.type}, IsWhite: {targetPiece.isWhite}");
         
         // Spawn impact VFX
         if (VFXManager.Instance != null)
         {
             VFXManager.Instance.SpawnVFX(VFXType.Hit, target.transform.position);
         }
+        
+        // Trigger dissolve effect - luôn ưu tiên trigger dissolve trước khi destroy
+        HandleTargetPieceCaptureWithDissolve(targetPiece);
+    }
+    
+    /// <summary>
+    /// Handle target piece capture với dissolve effect
+    /// </summary>
+    private void HandleTargetPieceCaptureWithDissolve(ChessPieceInfo targetPiece)
+    {
+        if (targetPiece == null) return;
+        
+        Debug.Log($"HandleTargetPieceCaptureWithDissolve called for {targetPiece.name}");
+        
+        // Kiểm tra PawnController trước - nếu có thì dùng StartDissolveOut để có animation đầy đủ
+        PawnController pawnController = targetPiece.GetComponent<PawnController>();
+        if (pawnController != null)
+        {
+            Debug.Log($"PawnController found on {targetPiece.name}, using PawnController.StartDissolveOut");
+            
+            // Trigger dissolve state cho skin controller
+            ChessPieceSkinController targetSkin = targetPiece.GetComponent<ChessPieceSkinController>();
+            if (targetSkin != null)
+            {
+                targetSkin.SetSkinStateImmediate(SkinState.Dissolving);
+            }
+            
+            // Trigger die animation (fall down, rotate, scale)
+            StartCoroutine(TriggerDieAnimation(targetPiece));
+            
+            // Kích hoạt dissolve out animation từ PawnController (sẽ destroy sau khi hoàn thành)
+            pawnController.StartDissolveOut(() => {
+                Debug.Log($"Destroying {targetPiece.name} after PawnController dissolve");
+                HandleTargetPieceCapture(targetPiece);
+            });
+            return;
+        }
+        
+        // Fallback: Trigger dissolve và die animation cho target không có PawnController
+        Debug.Log($"No PawnController found, using ChessPieceSkinController.TriggerDissolveOut");
+        ChessPieceSkinController targetSkinFallback = targetPiece.GetComponent<ChessPieceSkinController>();
+        if (targetSkinFallback != null)
+        {
+            Debug.Log($"ChessPieceSkinController found, triggering dissolve out");
+            targetSkinFallback.SetSkinStateImmediate(SkinState.Dissolving);
+            targetSkinFallback.TriggerDissolveOut(() => {
+                Debug.Log($"Destroying {targetPiece.name} after ChessPieceSkinController dissolve");
+                HandleTargetPieceCapture(targetPiece);
+            });
+        }
+        else
+        {
+            Debug.LogWarning($"No ChessPieceSkinController found on {targetPiece.name}, trying to add one...");
+            
+            // Try to add ChessPieceSkinController if it doesn't exist
+            ChessPieceSkinController newSkinController = targetPiece.gameObject.AddComponent<ChessPieceSkinController>();
+            if (newSkinController != null)
+            {
+                Debug.Log($"Added ChessPieceSkinController to {targetPiece.name}, triggering dissolve out");
+                newSkinController.SetSkinStateImmediate(SkinState.Dissolving);
+                newSkinController.TriggerDissolveOut(() => {
+                    Debug.Log($"Destroying {targetPiece.name} after newly added ChessPieceSkinController dissolve");
+                    HandleTargetPieceCapture(targetPiece);
+                });
+            }
+            else
+            {
+                Debug.LogWarning($"Could not add ChessPieceSkinController to {targetPiece.name}, destroying immediately");
+                HandleTargetPieceCapture(targetPiece);
+            }
+        }
+        
+        // Trigger die animation cho fallback
+        StartCoroutine(TriggerDieAnimation(targetPiece));
     }
     
     /// <summary>
@@ -1082,20 +1219,36 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private IEnumerator WaitForTargetDissolve(ChessPieceInfo targetPiece)
     {
-        // Đợi dissolve effect hoàn thành
-        float dissolveDuration = 2f; // Thời gian dissolve từ ChessPieceSkinController
+        if (targetPiece == null) yield break;
         
-        // Có thể check dissolve progress thực tế từ skin controller
+        // Store reference to GameObject to check if destroyed
+        GameObject targetObj = targetPiece.gameObject;
+        if (targetObj == null) yield break;
+        
+        // Đợi dissolve effect hoàn thành
+        float dissolveDuration = 1.5f; // Thời gian dissolve từ ChessPieceSkinController (dissolveOutDuration)
+        
+        // Check if piece is still alive and dissolving
         ChessPieceSkinController targetSkinController = targetPiece.GetComponent<ChessPieceSkinController>();
         if (targetSkinController != null)
         {
-            // Đợi dissolve hoàn thành (có thể implement callback từ skin controller)
-            yield return new WaitForSeconds(dissolveDuration);
+            // Đợi dissolve hoàn thành
+            float elapsed = 0f;
+            while (elapsed < dissolveDuration && targetObj != null)
+            {
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
         }
         else
         {
             // Fallback: đợi thời gian cố định
             yield return new WaitForSeconds(dissolveDuration);
+        }
+        
+        if (targetObj != null)
+        {
+            Debug.Log($"WaitForTargetDissolve completed for {targetObj.name}");
         }
     }
     

@@ -127,8 +127,8 @@
     <Compile Include="Assets/_App/Scripts/ProjectileController.cs" />
     <Compile Include="Assets/Dark UI/Scripts/CustomDropdown.cs" />
     <Compile Include="Assets/Dark UI/Scripts/SliderGamepadManager.cs" />
-    <Compile Include="Assets/_App/Scripts/ChessLegalMovesTest.cs" />
     <Compile Include="Assets/_App/Scripts/UI/StageSelectionPanel.cs" />
+    <Compile Include="Assets/_App/Scripts/ChessLegalMovesTest.cs" />
     <Compile Include="Assets/MasterStylizedProjectiles/Scripts/BulletShooter.cs" />
     <Compile Include="Assets/Dark UI/Scripts/ScrollGamepadManager.cs" />
     <Compile Include="Assets/Dark UI/Scripts/LayoutGroupPositionFix.cs" />

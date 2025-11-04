@@ -150,41 +150,49 @@ public class PawnController : MonoBehaviour
         
         isActive = false;
         
-        // Reverse dissolve effect - từ 1 về 0
+        // Initialize nếu chưa có
+        if (!isInitialized)
+        {
+            Initialize();
+        }
+        
+        // Dissolve out effect - từ 0 (không dissolve) về 1 (dissolve hoàn toàn)
         if (EffectManager.Instance != null)
         {
-            var parameters = new System.Collections.Generic.Dictionary<string, object>
+            // Reset dissolve amount về 0 trước khi bắt đầu
+            if (dissolveInEffect != null)
             {
-                { "duration", dissolveOutDuration },
-                { "dissolveamount", 0f } // Start from current and go to 0
-            };
+                dissolveInEffect.ResetEffect();
+            }
             
-            var effect = EffectManager.Instance.PlayEffect<DissolveInEffect>(gameObject, parameters, () => {
+            // Play dissolve effect với duration dissolveOutDuration
+            dissolveInEffect.Duration = dissolveOutDuration;
+            dissolveInEffect.PlayEffect(() => {
                 OnDissolveOutComplete?.Invoke(this);
                 onComplete?.Invoke();
                 DestroyPawn();
             });
-            
-            // Manually animate from current dissolve amount to 0
-            if (effect != null)
-            {
-                float currentDissolve = 1f;
-                DOTween.To(() => currentDissolve, x => {
-                    currentDissolve = x;
-                    var param = new System.Collections.Generic.Dictionary<string, object>
-                    {
-                        { "dissolveamount", x }
-                    };
-                    effect.SetParameters(param);
-                }, 0f, dissolveOutDuration);
-            }
         }
         else
         {
-            // Fallback
-            OnDissolveOutComplete?.Invoke(this);
-            onComplete?.Invoke();
-            DestroyPawn();
+            // Fallback: dùng dissolve effect trực tiếp
+            if (dissolveInEffect != null)
+            {
+                dissolveInEffect.Duration = dissolveOutDuration;
+                dissolveInEffect.ResetEffect(); // Reset về 0
+                dissolveInEffect.PlayEffect(() => {
+                    OnDissolveOutComplete?.Invoke(this);
+                    onComplete?.Invoke();
+                    DestroyPawn();
+                });
+            }
+            else
+            {
+                // Last fallback
+                OnDissolveOutComplete?.Invoke(this);
+                onComplete?.Invoke();
+                DestroyPawn();
+            }
         }
     }
     

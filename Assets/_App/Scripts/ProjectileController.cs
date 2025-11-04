@@ -25,6 +25,7 @@ public class ProjectileController : MonoBehaviour
     
     private Vector3 targetPosition;
     private Tween moveTween;
+    private bool hasHit = false; // Flag to prevent multiple hits
     
     /// <summary>
     /// Initialize projectile
@@ -36,6 +37,7 @@ public class ProjectileController : MonoBehaviour
         projectileType = type;
         targetPosition = target;
         speed = projectileSpeed;
+        hasHit = false; // Reset hit flag
         
         // Calculate direction và face target
         Vector3 direction = (targetPosition - transform.position).normalized;
@@ -62,9 +64,43 @@ public class ProjectileController : MonoBehaviour
         moveTween = transform.DOMove(targetPosition, duration)
             .SetEase(Ease.Linear)
             .OnComplete(() => {
-                Debug.Log($"Projectile {projectileType} reached target, destroying...");
-                Destroy(gameObject);
+                Debug.Log($"Projectile {projectileType} reached target position");
+                
+                // Check for target at position (in case collision didn't trigger)
+                if (!hasHit)
+                {
+                    CheckForTargetAtPosition();
+                }
+                
+                // Destroy projectile if not already destroyed by HandleHit
+                if (!hasHit)
+                {
+                    Destroy(gameObject);
+                }
             });
+    }
+    
+    /// <summary>
+    /// Check for target at final position (fallback if collision didn't trigger)
+    /// </summary>
+    private void CheckForTargetAtPosition()
+    {
+        // Use overlap sphere to find target at position
+        Collider[] colliders = Physics.OverlapSphere(targetPosition, 0.5f);
+        
+        foreach (Collider col in colliders)
+        {
+            if (IsValidTarget(col.gameObject))
+            {
+                Debug.Log($"Found target {col.gameObject.name} at position, triggering hit");
+                HandleHit(col.gameObject);
+                return; // Only hit first valid target
+            }
+        }
+        
+        // If no target found, trigger explode event
+        Debug.Log($"No target found at position, triggering explosion");
+        TriggerExplosion(targetPosition);
     }
     
     /// <summary>
@@ -72,8 +108,8 @@ public class ProjectileController : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
-        // Check if target is valid
-        if (IsValidTarget(other.gameObject))
+        // Check if target is valid and haven't hit yet
+        if (!hasHit && IsValidTarget(other.gameObject))
         {
             HandleHit(other.gameObject);
         }
@@ -105,7 +141,10 @@ public class ProjectileController : MonoBehaviour
     /// </summary>
     private void HandleHit(GameObject target)
     {
-        Debug.Log($"Projectile {projectileType} hit {target.name}");
+        if (hasHit) return; // Prevent multiple hits
+        
+        hasHit = true;
+        Debug.Log($"HandleHit called - Projectile {projectileType} hit {target.name}");
         
         // Stop movement
         moveTween?.Kill();

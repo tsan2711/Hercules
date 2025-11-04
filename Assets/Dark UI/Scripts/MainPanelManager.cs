@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 namespace Michsky.UI.Dark
@@ -16,7 +17,7 @@ namespace Michsky.UI.Dark
         public int currentPanelIndex = 0;
         public bool enableBrushAnimation = true;
         public bool enableHomeBlur = true;
-         
+
         private GameObject currentPanel;
         private GameObject nextPanel;
         private Animator currentPanelAnimator;
@@ -27,6 +28,9 @@ namespace Michsky.UI.Dark
 
         PanelBrushManager currentBrush;
         PanelBrushManager nextBrush;
+
+        public const string MENU_SCENE = "2vs2Scene";
+
 
         void Start()
         {
@@ -54,13 +58,21 @@ namespace Michsky.UI.Dark
             {
                 currentPanel = panels[currentPanelIndex];
 
-                currentPanelIndex = newPanel;
                 nextPanel = panels[currentPanelIndex];
+                currentPanelIndex = newPanel;
 
                 currentPanelAnimator = currentPanel.GetComponent<Animator>();
-                nextPanelAnimator = nextPanel.GetComponent<Animator>();
                 currentPanelAnimator.Play(panelFadeOut);
-                nextPanelAnimator.Play(panelFadeIn);
+
+                if (newPanel != 2)
+                {
+
+                }
+                else
+                {
+                    nextPanelAnimator = nextPanel.GetComponent<Animator>();
+                    nextPanelAnimator.Play(panelFadeIn);
+                }
 
                 if (enableBrushAnimation == true)
                 {
@@ -77,6 +89,16 @@ namespace Michsky.UI.Dark
                 else if (currentPanelIndex != 0 && enableHomeBlur == true)
                     homeBlurManager.BlurOutAnim();
             }
+
+
+            if (newPanel == 2)
+                StartCoroutine(LoadMenuScene());
+        }
+
+        private IEnumerator LoadMenuScene()
+        {
+            yield return new WaitForSeconds(1f);
+            SceneManager.LoadScene(MENU_SCENE);
         }
 
         public void NextPage()
