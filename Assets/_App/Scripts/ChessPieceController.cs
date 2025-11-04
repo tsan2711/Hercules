@@ -1079,7 +1079,7 @@ public class ChessPieceController : MonoBehaviour
             if (targetPieceRef != null && targetPieceRef.gameObject != null)
             {
                 HandleTargetPieceCaptureWithDissolve(targetPieceRef);
-                yield return new WaitForSeconds(1.5f); // Wait for dissolve duration
+                yield return new WaitForSeconds(0.75f); // Wait for dissolve duration
             }
         }
     }
@@ -1226,7 +1226,7 @@ public class ChessPieceController : MonoBehaviour
         if (targetObj == null) yield break;
         
         // Đợi dissolve effect hoàn thành
-        float dissolveDuration = 1.5f; // Thời gian dissolve từ ChessPieceSkinController (dissolveOutDuration)
+        float dissolveDuration = 0.75f; // Thời gian dissolve từ ChessPieceSkinController (dissolveOutDuration)
         
         // Check if piece is still alive and dissolving
         ChessPieceSkinController targetSkinController = targetPiece.GetComponent<ChessPieceSkinController>();

@@ -47,7 +47,7 @@ public class ChessPieceSkinController : MonoBehaviour
     
     [Header("Dissolve Settings")]
     [SerializeField] private float dissolveInDuration = 2f;
-    [SerializeField] private float dissolveOutDuration = 1.5f;
+    [SerializeField] private float dissolveOutDuration = 0.75f;
     [SerializeField] private string dissolvePropertyName = "_DissolveAmount";
     [SerializeField] private string edgeWidthPropertyName = "_EdgeWidth";
     [SerializeField] private string edgeIntensityPropertyName = "_EdgeIntensity";
