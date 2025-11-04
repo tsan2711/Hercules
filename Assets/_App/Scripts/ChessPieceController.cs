@@ -255,20 +255,26 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private void CompleteCastling(ChessPieceInfo rook, Vector2Int kingTarget, Vector2Int rookTarget, Vector2Int kingStart)
     {
-        // Cập nhật board positions
+        // Cập nhật board positions cho vua
         pieceInfo.boardPosition = kingTarget;
         ChessBoardManager.Instance.board[kingStart.x, kingStart.y] = null;
         ChessBoardManager.Instance.board[kingTarget.x, kingTarget.y] = pieceInfo;
         pieceInfo.hasMoved = true;
 
+        // Cập nhật board positions cho xe
+        Vector2Int rookStartPos = rook.boardPosition;
         rook.boardPosition = rookTarget;
-        ChessBoardManager.Instance.board[7, kingStart.y] = null; // or 0 for queenside
+        ChessBoardManager.Instance.board[rookStartPos.x, rookStartPos.y] = null;
         ChessBoardManager.Instance.board[rookTarget.x, rookTarget.y] = rook;
         rook.hasMoved = true;
         
         // Chuyển lượt chơi sau nhập thành
         if (ChessBoardManager.Instance != null)
             ChessBoardManager.Instance.EndTurn();
+        
+        // Kiểm tra trạng thái game (check, checkmate, stalemate)
+        if (ChessCheckSystem.Instance != null)
+            ChessCheckSystem.Instance.CheckGameState();
     }
     
     /// <summary>
@@ -285,6 +291,10 @@ public class ChessPieceController : MonoBehaviour
         // Chuyển lượt chơi
         if (ChessBoardManager.Instance != null)
             ChessBoardManager.Instance.EndTurn();
+        
+        // Kiểm tra trạng thái game (check, checkmate, stalemate)
+        if (ChessCheckSystem.Instance != null)
+            ChessCheckSystem.Instance.CheckGameState();
     }
     
     /// <summary>
