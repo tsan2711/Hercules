@@ -616,7 +616,19 @@ public class ChessPieceSkinController : MonoBehaviour
                     }
                     if (instanceMat.HasProperty("_EdgeColor"))
                     {
-                        instanceMat.SetColor("_EdgeColor", new Color(1f, 0.5f, 0f, 1f)); // Orange edge
+                        // Set dissolve color based on team: White = Blue, Red/Black = Red
+                        Color dissolveColor;
+                        if (pieceInfo != null && pieceInfo.isWhite)
+                        {
+                            // Blue color for white team
+                            dissolveColor = new Color(0f, 0.5f, 1f, 1f); // Blue
+                        }
+                        else
+                        {
+                            // Red color for red/black team
+                            dissolveColor = new Color(1f, 0f, 0f, 1f); // Red
+                        }
+                        instanceMat.SetColor("_EdgeColor", dissolveColor);
                     }
                     
                     instanceMat.name = $"{currentMat?.name ?? "DissolveMaterial"}_Dissolve";
@@ -690,6 +702,32 @@ public class ChessPieceSkinController : MonoBehaviour
                     if (instanceMat.HasProperty("_UseProceduralNoise"))
                     {
                         instanceMat.SetFloat("_UseProceduralNoise", 1.0f);
+                    }
+                    
+                    // Set edge properties if available
+                    if (instanceMat.HasProperty("_EdgeWidth"))
+                    {
+                        instanceMat.SetFloat("_EdgeWidth", 0.1f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeIntensity"))
+                    {
+                        instanceMat.SetFloat("_EdgeIntensity", 2.0f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeColor"))
+                    {
+                        // Set dissolve color based on team: White = Blue, Red/Black = Red
+                        Color dissolveColor;
+                        if (pieceInfo != null && pieceInfo.isWhite)
+                        {
+                            // Blue color for white team
+                            dissolveColor = new Color(0f, 0.5f, 1f, 1f); // Blue
+                        }
+                        else
+                        {
+                            // Red color for red/black team
+                            dissolveColor = new Color(1f, 0f, 0f, 1f); // Red
+                        }
+                        instanceMat.SetColor("_EdgeColor", dissolveColor);
                     }
                     
                     instanceMat.name = $"{currentMat?.name ?? "DissolveMaterial"}_Dissolve";

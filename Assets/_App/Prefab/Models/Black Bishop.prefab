@@ -734,8 +734,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  dissolveInDuration: 2
-  dissolveOutDuration: 1.5
   dissolvePropertyName: _DissolveAmount
   edgeWidthPropertyName: _EdgeWidth
   edgeIntensityPropertyName: _EdgeIntensity
