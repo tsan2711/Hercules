@@ -17,6 +17,12 @@ public class ChessPieceMover : MonoBehaviour
 
     void Update()
     {
+        // Kiểm tra xem game đã sẵn sàng chơi chưa
+        if (GameStartDelayManager.Instance != null && !GameStartDelayManager.Instance.IsGameReady)
+        {
+            return; // Chưa đến lúc chơi, bỏ qua input
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {
             HandleClick();
@@ -231,6 +237,9 @@ public class ChessPieceMover : MonoBehaviour
         
         Debug.Log($"HandleTargetPieceCaptureWithDissolve called for {targetPiece.name} in ChessPieceMover");
         
+        // Trigger explosive effect khi quân cờ bị hạ gục
+        TriggerExplosiveCapture(targetPiece);
+        
         // Kiểm tra PawnController trước
         PawnController pawnController = targetPiece.GetComponent<PawnController>();
         if (pawnController != null)
@@ -283,6 +292,77 @@ public class ChessPieceMover : MonoBehaviour
                 CleanupAndDestroy(targetPiece);
             }
         }
+    }
+    
+    /// <summary>
+    /// Trigger explosive effect khi quân cờ bị hạ gục (captured)
+    /// </summary>
+    private void TriggerExplosiveCapture(ChessPieceInfo targetPiece)
+    {
+        if (targetPiece == null) return;
+        
+        Vector3 explosionPos = targetPiece.transform.position;
+        
+        Debug.Log($"TriggerExplosiveCapture called for {targetPiece.name} at {explosionPos}");
+        
+        // Spawn VFX explosion
+        if (VFXManager.Instance != null)
+        {
+            // Spawn Destroy VFX cho explosive capture
+            VFXManager.Instance.SpawnVFX(VFXType.Destroy, explosionPos);
+            // Spawn Hit VFX để có thêm hiệu ứng
+            VFXManager.Instance.SpawnVFX(VFXType.Hit, explosionPos);
+        }
+        
+        // Apply explosion force trực tiếp lên chính quân cờ bị hạ gục
+        ApplyExplosionForceToCapturedPiece(targetPiece, explosionPos);
+    }
+    
+    /// <summary>
+    /// Apply explosion animation trực tiếp lên chính quân cờ bị capture sử dụng DOTween
+    /// </summary>
+    private void ApplyExplosionForceToCapturedPiece(ChessPieceInfo targetPiece, Vector3 explosionPos)
+    {
+        if (targetPiece == null || targetPiece.gameObject == null) return;
+        
+        float explosionDistance = 2f; // Khoảng cách bay ra
+        float explosionHeight = 1.5f; // Độ cao bay lên
+        float explosionDuration = 0.8f; // Thời gian animation
+        
+        Debug.Log($"Applying explosion animation to {targetPiece.name} using DOTween");
+        
+        // Tính toán hướng nổ ngẫu nhiên để có hiệu ứng tự nhiên hơn
+        Vector3 randomDirection = new Vector3(
+            Random.Range(-1f, 1f),
+            0f,
+            Random.Range(-1f, 1f)
+        ).normalized;
+        
+        // Vị trí đích: bay ra xa và lên cao
+        Vector3 targetExplosionPos = explosionPos + randomDirection * explosionDistance + Vector3.up * explosionHeight;
+        
+        // Tạo sequence animation cho hiệu ứng nổ
+        Sequence explosionSequence = DOTween.Sequence();
+        
+        // Animation bay lên và ra xa
+        explosionSequence.Append(targetPiece.transform.DOMove(targetExplosionPos, explosionDuration)
+            .SetEase(Ease.OutQuad));
+        
+        // Animation xoay khi bay (xoay ngẫu nhiên)
+        Vector3 randomRotation = new Vector3(
+            Random.Range(0f, 360f),
+            Random.Range(0f, 360f),
+            Random.Range(0f, 360f)
+        );
+        explosionSequence.Join(targetPiece.transform.DORotate(randomRotation, explosionDuration)
+            .SetEase(Ease.OutQuad));
+        
+        // Animation scale down nhẹ khi bay (tùy chọn)
+        Vector3 originalScale = targetPiece.transform.localScale;
+        explosionSequence.Join(targetPiece.transform.DOScale(originalScale * 0.9f, explosionDuration * 0.5f)
+            .SetEase(Ease.OutQuad));
+        
+        Debug.Log($"Explosion animation started for {targetPiece.name} - moving to {targetExplosionPos}");
     }
     
     /// <summary>

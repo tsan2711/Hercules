@@ -36,6 +36,12 @@ public class ChessRaycastDebug : MonoBehaviour
         // --- XỬ LÝ CLICK ---
         if (Input.GetMouseButtonDown(0))
         {
+            // Kiểm tra xem game đã sẵn sàng chơi chưa
+            if (GameStartDelayManager.Instance != null && !GameStartDelayManager.Instance.IsGameReady)
+            {
+                return; // Chưa đến lúc chơi, bỏ qua input
+            }
+            
             // Kiểm tra xem có đang trong quá trình move không
             if (isMoving)
             {
@@ -282,11 +288,15 @@ public class ChessRaycastDebug : MonoBehaviour
         }
 
         // --- HOVER LOGIC ---
+        // Kiểm tra xem game đã sẵn sàng chơi chưa
+        bool canInteract = GameStartDelayManager.Instance == null || GameStartDelayManager.Instance.IsGameReady;
+        
         // Hiển thị hover effect khi:
-        // 1. Hover vào chess piece của team mình
-        // 2. Không đang select piece nào (currentSelected == null)
-        // 3. Không đang di chuyển (isMoving == false)
-        if (hitPiece)
+        // 1. Game đã sẵn sàng
+        // 2. Hover vào chess piece của team mình
+        // 3. Không đang select piece nào (currentSelected == null)
+        // 4. Không đang di chuyển (isMoving == false)
+        if (hitPiece && canInteract)
         {
             GameObject pieceObj = hit.collider.gameObject;
             ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();

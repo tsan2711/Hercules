@@ -89,6 +89,7 @@
     <Compile Include="Assets/_App/Scripts/UI/StageConfig.cs" />
     <Compile Include="Assets/Dark UI/Scripts/SliderManager.cs" />
     <Compile Include="Assets/_App/Scripts/ChessMoveGenerator.cs" />
+    <Compile Include="Assets/_App/Scripts/GameStartDelayManager.cs" />
     <Compile Include="Assets/Dark UI/Scripts/PanelTabManager.cs" />
     <Compile Include="Assets/_App/Scripts/ChessBotAI.cs" />
     <Compile Include="Assets/MasterStylizedProjectiles/Scripts/BillBoardParticle.cs" />
