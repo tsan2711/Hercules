@@ -76,6 +76,7 @@
     <Compile Include="Assets/_App/Scripts/MenuManager.cs" />
     <Compile Include="Assets/_App/Scripts/Effects/DissolveInEffect.cs" />
     <Compile Include="Assets/_App/Scripts/ChessPieceMover.cs" />
+    <Compile Include="Assets/_App/Scripts/UI/GameStartText.cs" />
     <Compile Include="Assets/Dark UI/Scripts/LaunchURL.cs" />
     <Compile Include="Assets/_App/Scripts/ChessPieceController.cs" />
     <Compile Include="Assets/_App/Scripts/Managers/EffectManager.cs" />
