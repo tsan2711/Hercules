@@ -120,6 +120,14 @@ public class ChessRaycastDebug : MonoBehaviour
                             
                             pieceController.OnActionSequenceCompleted += OnPieceMoveCompleted;
                             isMoving = true;
+                            
+                            // Tắt tất cả glow khi bắt đầu di chuyển
+                            ResetHover(); // Đảm bảo không có hover glow
+                            if (selectedSkinController != null)
+                            {
+                                selectedSkinController.SetSkinState(SkinState.Normal);
+                            }
+                            
                             pieceController.MovePiece(enemyPos);
                             return;
                         }
@@ -243,6 +251,13 @@ public class ChessRaycastDebug : MonoBehaviour
                         // Set moving flag
                         isMoving = true;
                         
+                        // Tắt tất cả glow khi bắt đầu di chuyển
+                        ResetHover(); // Đảm bảo không có hover glow
+                        if (selectedSkinController != null)
+                        {
+                            selectedSkinController.SetSkinState(SkinState.Normal);
+                        }
+                        
                         pieceController.MovePiece(targetPos);
                         
                         // DON'T reset selection here - wait for completion event
@@ -267,60 +282,9 @@ public class ChessRaycastDebug : MonoBehaviour
         }
 
         // --- HOVER LOGIC ---
-        if (hitPiece)
-        {
-            GameObject pieceObj = hit.collider.gameObject;
-            ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
-
-            // Kiểm tra xem có nên hiển thị hover effect không
-            bool shouldShowHover = false;
-            
-            if (pieceInfo != null && ChessBoardManager.Instance != null)
-            {
-                // Chỉ hiển thị hover cho quân cờ của lượt hiện tại
-                bool isCurrentTurn = ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite);
-                
-                // Trong chế độ level, không hiển thị hover cho quân bot (đen)
-                bool isLevelModeBot = false;
-                if (ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
-                {
-                    isLevelModeBot = !pieceInfo.isWhite; // Quân đen trong chế độ level
-                }
-                
-                shouldShowHover = isCurrentTurn && !isLevelModeBot;
-            }
-
-            if (shouldShowHover && pieceObj != currentHover)
-            {
-                SoundManager.Instance.PlayHover();
-
-                ResetHover();
-                
-                // Use ChessPieceSkinController for hover effect
-                hoverSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
-                if (hoverSkinController != null && hoverSkinController.CurrentState == SkinState.Normal)
-                {
-                    hoverSkinController.SetSkinState(SkinState.Hover);
-                }
-                else if (hoverSkinController == null)
-                {
-                    // Fallback to old method
-                    ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
-                }
-                
-                currentHover = pieceObj;
-            }
-            else if (!shouldShowHover)
-            {
-                // Nếu không nên hiển thị hover, reset hover hiện tại
-                if (currentHover == pieceObj)
-                {
-                    ResetHover();
-                    currentHover = null;
-                }
-            }
-        }
-        else
+        // Tắt hover effect - chỉ hiển thị glow khi select
+        // Không còn hiển thị hover effect nữa
+        if (!hitPiece)
         {
             ResetHover();
             currentHover = null;
@@ -406,7 +370,7 @@ public class ChessRaycastDebug : MonoBehaviour
         // Reset moving flag
         isMoving = false;
         
-        // Reset selection sau khi move hoàn thành
+        // Reset selection sau khi move hoàn thành (tắt glow)
         ResetSelected();
         ClearHighlights();
         

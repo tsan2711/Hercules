@@ -190,7 +190,7 @@ public class ProjectileController : MonoBehaviour
     }
     
     /// <summary>
-    /// Apply explosion force to nearby objects
+    /// Apply explosion force only to knocked down chess pieces (not affecting normal pieces)
     /// </summary>
     private void ApplyExplosionForce(Vector3 explosionPos)
     {
@@ -200,17 +200,80 @@ public class ProjectileController : MonoBehaviour
         {
             if (col.gameObject == gameObject) continue; // Skip self
             
+            // Check if this is a chess piece
+            ChessPieceInfo pieceInfo = col.GetComponent<ChessPieceInfo>();
+            if (pieceInfo == null) continue; // Skip non-chess pieces
+            
+            // Only apply force to knocked down pieces
+            bool isKnockedDown = IsPieceKnockedDown(pieceInfo);
+            if (!isKnockedDown) continue; // Skip normal pieces
+            
+            // Get or add Rigidbody for knocked down pieces
             Rigidbody rb = col.GetComponent<Rigidbody>();
-            if (rb != null)
+            if (rb == null)
             {
-                Vector3 direction = (col.transform.position - explosionPos).normalized;
-                float distance = Vector3.Distance(col.transform.position, explosionPos);
-                float force = knockbackForce * (1f - distance / explosionRadius); // Force decreases with distance
-                
-                rb.AddForce(direction * force, ForceMode.Impulse);
-                Debug.Log($"Applied explosion force {force} to {col.name}");
+                // Add Rigidbody if it doesn't exist (for knocked down pieces)
+                rb = col.gameObject.AddComponent<Rigidbody>();
+                rb.mass = 1f;
+                rb.linearDamping = 0.5f;
+                rb.angularDamping = 0.5f;
             }
+            
+            // Ensure Rigidbody is not kinematic so it can receive forces
+            if (rb.isKinematic)
+            {
+                rb.isKinematic = false;
+            }
+            
+            // Apply explosion force
+            Vector3 direction = (col.transform.position - explosionPos).normalized;
+            float distance = Vector3.Distance(col.transform.position, explosionPos);
+            float force = knockbackForce * (1f - distance / explosionRadius); // Force decreases with distance
+            
+            // Apply force
+            rb.AddForce(direction * force, ForceMode.Impulse);
+            
+            // Add upward force and torque for more dramatic effect on knocked down pieces
+            rb.AddForce(Vector3.up * force * 0.3f, ForceMode.Impulse);
+            rb.AddTorque(new Vector3(
+                Random.Range(-1f, 1f) * force * 0.1f,
+                Random.Range(-1f, 1f) * force * 0.1f,
+                Random.Range(-1f, 1f) * force * 0.1f
+            ), ForceMode.Impulse);
+            
+            Debug.Log($"Applied explosion force {force} to knocked down piece {col.name}");
         }
+    }
+    
+    /// <summary>
+    /// Check if a chess piece is knocked down (dissolving/falling)
+    /// </summary>
+    private bool IsPieceKnockedDown(ChessPieceInfo pieceInfo)
+    {
+        if (pieceInfo == null) return false;
+        
+        // Check ChessPieceSkinController for dissolving state
+        ChessPieceSkinController skinController = pieceInfo.GetComponent<ChessPieceSkinController>();
+        if (skinController != null && skinController.CurrentState == SkinState.Dissolving)
+        {
+            return true;
+        }
+        
+        // Check PawnController for inactive state
+        PawnController pawnController = pieceInfo.GetComponent<PawnController>();
+        if (pawnController != null && !pawnController.IsActive)
+        {
+            return true;
+        }
+        
+        // Check if piece is dissolving (has DissolveInEffect playing)
+        DissolveInEffect dissolveEffect = pieceInfo.GetComponent<DissolveInEffect>();
+        if (dissolveEffect != null && dissolveEffect.IsPlaying)
+        {
+            return true;
+        }
+        
+        return false;
     }
     
     /// <summary>
