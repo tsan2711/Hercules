@@ -282,10 +282,57 @@ public class ChessRaycastDebug : MonoBehaviour
         }
 
         // --- HOVER LOGIC ---
-        // Tắt hover effect - chỉ hiển thị glow khi select
-        // Không còn hiển thị hover effect nữa
-        if (!hitPiece)
+        // Hiển thị hover effect khi:
+        // 1. Hover vào chess piece của team mình
+        // 2. Không đang select piece nào (currentSelected == null)
+        // 3. Không đang di chuyển (isMoving == false)
+        if (hitPiece)
         {
+            GameObject pieceObj = hit.collider.gameObject;
+            ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
+            
+            // Chỉ hover vào quân cờ của team mình và khi không đang select/moving
+            bool canHover = pieceInfo != null &&
+                            ChessBoardManager.Instance != null &&
+                            ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite) &&
+                            currentSelected == null && 
+                            !isMoving;
+            
+            // Trong chế độ level, chỉ cho hover quân trắng (player)
+            if (canHover && ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
+            {
+                canHover = pieceInfo.isWhite;
+            }
+            
+            if (canHover && pieceObj != currentHover)
+            {
+                // Reset hover cũ nếu có
+                ResetHover();
+                
+                // Apply hover effect cho piece mới
+                currentHover = pieceObj;
+                hoverSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
+                
+                if (hoverSkinController != null)
+                {
+                    hoverSkinController.SetSkinState(SkinState.Hover);
+                }
+                else
+                {
+                    // Fallback to old method if no skin controller
+                    ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
+                }
+            }
+            else if (!canHover && currentHover != null)
+            {
+                // Nếu không thể hover (đang select/moving) thì reset hover
+                ResetHover();
+                currentHover = null;
+            }
+        }
+        else
+        {
+            // Không hover vào gì cả => reset hover
             ResetHover();
             currentHover = null;
         }

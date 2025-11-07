@@ -18,13 +18,14 @@ public class ChessBotAI : MonoBehaviour
     [Header("Difficulty Settings")]
     [SerializeField] private int minMaxDepthEasy = 1; // Level 1-3: Depth thấp
     [SerializeField] private int minMaxDepthMedium = 2; // Level 4-6: Depth trung bình
-    [SerializeField] private int minMaxDepthHard = 3; // Level 7-9: Depth cao
-    [SerializeField] private int minMaxDepthExpert = 4; // Level 10+: Depth rất cao
-    [SerializeField] private int quiescenceDepth = 2; // Quiescence search depth
-    [SerializeField] private int maxQuiescenceDepth = 3; // Max quiescence depth
-    [SerializeField] private float maxThinkingTime = 5f; // Thời gian suy nghĩ tối đa
-    [SerializeField] private int maxMovesPerDepth = 30; // Số moves xem xét (tăng để bot thông minh hơn)
+    [SerializeField] private int minMaxDepthHard = 2; // Level 7-9: Giảm xuống 2 để tránh lag
+    [SerializeField] private int minMaxDepthExpert = 3; // Level 10+: Giảm xuống 3 để tránh lag
+    [SerializeField] private int quiescenceDepth = 1; // Giảm xuống 1 để tránh lag
+    [SerializeField] private int maxQuiescenceDepth = 2; // Giảm xuống 2
+    [SerializeField] private float maxThinkingTime = 2f; // Giảm xuống 2s để responsive hơn
+    [SerializeField] private int maxMovesPerDepth = 20; // Giảm xuống 20 moves để tránh lag
     [SerializeField] private bool useMinimaxForAllLevels = true; // Dùng Minimax cho mọi level (trừ level 1-2)
+    [SerializeField] private int yieldEveryNMoves = 1; // Yield sau mỗi N moves để tránh freeze
     
     private bool isBotThinking = false;
     private Coroutine botMoveCoroutine;
@@ -338,7 +339,7 @@ public class ChessBotAI : MonoBehaviour
     }
     
     /// <summary>
-    /// Chọn nước đi greedy thông minh (xem xét nhiều yếu tố: capture, check, threats, position)
+    /// Chọn nước đi greedy đơn giản (tối ưu tốc độ)
     /// </summary>
     private ChessMove GetGreedyMove(List<ChessPieceInfo> blackPieces)
     {
@@ -346,105 +347,40 @@ public class ChessBotAI : MonoBehaviour
         
         if (allMoves.Count == 0) return null;
         
-        // Sắp xếp moves theo thứ tự ưu tiên
+        // Sắp xếp moves đơn giản
         allMoves = OrderMoves(allMoves, blackPieces);
         
         ChessMove bestMove = null;
         int bestScore = int.MinValue;
         
-        // Đánh giá tất cả các moves
+        // Đánh giá đơn giản - KHÔNG gọi MakeTemporaryMove để tránh lag
         foreach (var move in allMoves)
         {
             int score = 0;
             
-            // 1. Ưu tiên ăn quân có giá trị cao
+            // 1. Ưu tiên ăn quân (MVV-LVA)
             if (move.isCapture)
             {
                 int captureValue = GetPieceValue(move.targetPiece);
                 int attackerValue = GetPieceValue(move.piece);
-                
-                // Giá trị trao đổi (MVV-LVA: Most Valuable Victim - Least Valuable Attacker)
                 score += captureValue * 100 - attackerValue;
-                
-                // Bonus nếu capture an toàn
-                if (IsSafeCapture(move))
-                {
-                    score += 50;
-                }
-                else
-                {
-                    // Penalty nếu capture không an toàn và mất quân
-                    if (captureValue < attackerValue)
-                    {
-                        score -= (attackerValue - captureValue) * 2;
-                    }
-                }
             }
             
-            // 2. Ưu tiên check
-            if (move.piece.boardPosition == move.originalPosition)
-            {
-                MakeTemporaryMove(move);
-                bool isCheck = ChessCheckSystem.Instance != null && 
-                              ChessCheckSystem.Instance.IsKingInCheck(true); // Check vua trắng
-                
-                if (isCheck)
-                {
-                    bool isCheckmate = IsCheckmate(true);
-                    if (isCheckmate)
-                    {
-                        score += 10000; // Checkmate = thắng ngay
-                    }
-                    else
-                    {
-                        score += 200; // Check rất tốt
-                    }
-                }
-                
-                UndoTemporaryMove(move);
-                
-                // Verify restore
-                if (move.piece.boardPosition != move.originalPosition)
-                {
-                    move.piece.boardPosition = move.originalPosition;
-                }
-            }
-            
-            // 3. Positional value (piece-square tables)
+            // 2. Positional value
             int positionGain = GetPositionalValue(move.piece, move.targetBoardPosition.x, move.targetBoardPosition.y);
             int positionLoss = GetPositionalValue(move.piece, move.originalPosition.x, move.originalPosition.y);
             score += (positionGain - positionLoss) * 5;
             
-            // 4. Center control
+            // 3. Center control
             if (IsCenterSquare(move.targetBoardPosition))
             {
-                score += 15; // Bonus cho việc kiểm soát trung tâm
+                score += 15;
             }
             
-            // 5. Piece development (khuyến khích phát triển quân)
-            if (move.originalPosition.y == 7) // Quân từ hàng cuối
+            // 4. Piece development
+            if (move.originalPosition.y == 7)
             {
-                score += 10; // Bonus cho việc phát triển quân
-            }
-            
-            // 6. King safety (tránh để vua bị nguy hiểm)
-            if (move.piece.type == ChessRaycastDebug.ChessType.King)
-            {
-                // Penalty nếu di chuyển vua vào vị trí nguy hiểm
-                MakeTemporaryMove(move);
-                bool kingAttacked = ChessCheckSystem.Instance != null &&
-                                   ChessCheckSystem.Instance.IsPositionAttackedBy(move.targetBoardPosition, true);
-                UndoTemporaryMove(move);
-                
-                if (move.piece.boardPosition != move.originalPosition)
-                {
-                    move.piece.boardPosition = move.originalPosition;
-                }
-                
-                if (kingAttacked)
-                {
-                    score -= 500; // Penalty lớn cho việc để vua vào nguy hiểm
-                }
+                score += 10;
             }
             
             // Cập nhật best move
@@ -527,6 +463,7 @@ public class ChessBotAI : MonoBehaviour
             }
             
             Debug.Log($"[ChessBotAI] Using {strategyName} strategy with depth {depth}");
+            Debug.Log($"[ChessBotAI] Performance: maxThinkingTime={maxThinkingTime}s, maxMoves={maxMovesPerDepth}, yield every {yieldEveryNMoves} moves");
             
             // Sắp xếp moves để alpha-beta pruning hiệu quả hơn
             allMoves = OrderMoves(allMoves, blackPieces);
@@ -536,6 +473,7 @@ public class ChessBotAI : MonoBehaviour
             
             int bestScore = int.MinValue;
             int movesEvaluated = 0;
+            float startTime = Time.time;
             
             Debug.Log($"[ChessBotAI] Evaluating {movesToCheck} out of {allMoves.Count} moves");
             
@@ -583,8 +521,8 @@ public class ChessBotAI : MonoBehaviour
                     Debug.Log($"[ChessBotAI] New best move: {move.piece.type} from {move.originalPosition} to {move.targetBoardPosition}, score: {score}");
                 }
                 
-                // Yield để không block
-                if (i % 3 == 0) // Yield mỗi 3 moves để tối ưu performance
+                // QUAN TRỌNG: Yield SAU MỖI move để không bao giờ block editor
+                if (i % yieldEveryNMoves == 0)
                 {
                     yield return null;
                 }
@@ -597,7 +535,13 @@ public class ChessBotAI : MonoBehaviour
                 }
             }
             
-            Debug.Log($"[ChessBotAI] Finished evaluation: {movesEvaluated} moves, best score: {bestScore}");
+            float elapsedTime = Time.time - startTime;
+            Debug.Log($"[ChessBotAI] Finished evaluation: {movesEvaluated} moves in {elapsedTime:F2}s, best score: {bestScore}");
+            
+            if (elapsedTime > 1f)
+            {
+                Debug.LogWarning($"[ChessBotAI] Evaluation took {elapsedTime:F2}s! Consider reducing depth or maxMovesPerDepth");
+            }
         }
         
         // Fallback nếu không tìm được move
@@ -660,32 +604,20 @@ public class ChessBotAI : MonoBehaviour
     }
     
     /// <summary>
-    /// Minimax algorithm với alpha-beta pruning và quiescence search
+    /// Minimax algorithm với alpha-beta pruning (tối ưu để không lag)
     /// </summary>
     private int Minimax(int depth, bool isMaximizing, int alpha, int beta)
     {
-        // Kiểm tra timeout - ưu tiên cao nhất
-        if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime)
-        {
-            return EvaluateBoard(); // Trả về đánh giá hiện tại nếu timeout
-        }
-        
-        // Kiểm tra depth âm để tránh vòng lặp vô hạn
-        if (depth < 0)
+        // Kiểm tra timeout - QUAN TRỌNG để tránh lag
+        if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime * 0.8f)
         {
             return EvaluateBoard();
         }
         
-        // Ở depth 0, dùng quiescence search để đánh giá tốt hơn trong các tình huống phức tạp
-        if (depth == 0)
+        // Base case: đạt depth 0 hoặc depth âm
+        if (depth <= 0)
         {
-            return QuiescenceSearch(quiescenceDepth, isMaximizing, alpha, beta);
-        }
-        
-        // Nếu depth quá thấp hoặc timeout, chỉ đánh giá bàn cờ
-        if (depth < 0 || (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime * 0.5f))
-        {
-            return EvaluateBoard();
+            return EvaluateBoard(); // Không dùng quiescence search để tránh lag
         }
         
         if (isMaximizing) // Bot (đen) muốn tối đa hóa điểm
@@ -694,30 +626,37 @@ public class ChessBotAI : MonoBehaviour
             List<ChessPieceInfo> blackPieces = GetAllBlackPieces();
             List<ChessMove> moves = GetAllValidMoves(blackPieces);
             
-            // Nếu không có moves, trả về đánh giá bàn cờ
-            if (moves.Count == 0)
-            {
-                return EvaluateBoard();
-            }
+            if (moves.Count == 0) return EvaluateBoard();
             
-            // Sắp xếp moves để alpha-beta pruning hiệu quả hơn
-            moves = OrderMoves(moves, blackPieces);
+            // KHÔNG gọi OrderMoves ở đây để tránh lag - chỉ sort simple
+            moves.Sort((a, b) => {
+                int scoreA = a.isCapture ? GetPieceValue(a.targetPiece) : 0;
+                int scoreB = b.isCapture ? GetPieceValue(b.targetPiece) : 0;
+                return scoreB.CompareTo(scoreA);
+            });
             
-            // Tăng số moves được xem xét để bot chọn tốt hơn
-            int movesToCheck = Mathf.Min(moves.Count, maxMovesPerDepth);
+            // Giảm số moves xem xét ở depth sâu
+            int movesToCheck = depth > 1 ? Mathf.Min(moves.Count, 10) : Mathf.Min(moves.Count, maxMovesPerDepth);
             
             for (int i = 0; i < movesToCheck; i++)
             {
-                // Kiểm tra timeout - kiểm tra thường xuyên
-                if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime)
-                {
+                // Timeout check
+                if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime * 0.8f)
                     break;
-                }
                 
                 ChessMove move = moves[i];
+                
+                // Validate
+                if (move.piece == null || move.piece.boardPosition != move.originalPosition)
+                    continue;
+                
                 MakeTemporaryMove(move);
                 int score = Minimax(depth - 1, false, alpha, beta);
                 UndoTemporaryMove(move);
+                
+                // Verify restore
+                if (move.piece.boardPosition != move.originalPosition)
+                    move.piece.boardPosition = move.originalPosition;
                 
                 maxScore = Mathf.Max(maxScore, score);
                 alpha = Mathf.Max(alpha, score);
@@ -733,30 +672,37 @@ public class ChessBotAI : MonoBehaviour
             List<ChessPieceInfo> whitePieces = GetAllWhitePieces();
             List<ChessMove> moves = GetAllValidMoves(whitePieces);
             
-            // Nếu không có moves, trả về đánh giá bàn cờ
-            if (moves.Count == 0)
-            {
-                return EvaluateBoard();
-            }
+            if (moves.Count == 0) return EvaluateBoard();
             
-            // Sắp xếp moves để alpha-beta pruning hiệu quả hơn
-            moves = OrderMoves(moves, whitePieces);
+            // KHÔNG gọi OrderMoves - chỉ sort simple
+            moves.Sort((a, b) => {
+                int scoreA = a.isCapture ? GetPieceValue(a.targetPiece) : 0;
+                int scoreB = b.isCapture ? GetPieceValue(b.targetPiece) : 0;
+                return scoreB.CompareTo(scoreA);
+            });
             
-            // Tăng số moves được xem xét để bot chọn tốt hơn
-            int movesToCheck = Mathf.Min(moves.Count, maxMovesPerDepth);
+            // Giảm số moves xem xét ở depth sâu
+            int movesToCheck = depth > 1 ? Mathf.Min(moves.Count, 10) : Mathf.Min(moves.Count, maxMovesPerDepth);
             
             for (int i = 0; i < movesToCheck; i++)
             {
-                // Kiểm tra timeout - kiểm tra thường xuyên
-                if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime)
-                {
+                // Timeout check
+                if (thinkingStartTime > 0 && Time.time - thinkingStartTime > maxThinkingTime * 0.8f)
                     break;
-                }
                 
                 ChessMove move = moves[i];
+                
+                // Validate
+                if (move.piece == null || move.piece.boardPosition != move.originalPosition)
+                    continue;
+                
                 MakeTemporaryMove(move);
                 int score = Minimax(depth - 1, true, alpha, beta);
                 UndoTemporaryMove(move);
+                
+                // Verify restore
+                if (move.piece.boardPosition != move.originalPosition)
+                    move.piece.boardPosition = move.originalPosition;
                 
                 minScore = Mathf.Min(minScore, score);
                 beta = Mathf.Min(beta, score);
@@ -851,13 +797,13 @@ public class ChessBotAI : MonoBehaviour
     }
     
     /// <summary>
-    /// Đánh giá bàn cờ (điểm số cho bot) - tối ưu để tránh tính toán quá nhiều
+    /// Đánh giá bàn cờ (tối ưu tốc độ - chỉ tính những thứ quan trọng nhất)
     /// </summary>
     private int EvaluateBoard()
     {
         int score = 0;
         
-        // Điểm số dựa trên giá trị quân cờ và vị trí
+        // QUAN TRỌNG NHẤT: Điểm số dựa trên giá trị quân cờ và vị trí
         for (int x = 0; x < 8; x++)
         {
             for (int y = 0; y < 8; y++)
@@ -871,23 +817,17 @@ public class ChessBotAI : MonoBehaviour
                     
                     if (piece.isWhite)
                     {
-                        score -= totalValue; // Quân trắng làm giảm điểm
+                        score -= totalValue;
                     }
                     else
                     {
-                        score += totalValue; // Quân đen làm tăng điểm
+                        score += totalValue;
                     }
                 }
             }
         }
         
-        // Chỉ tính mobility và các đánh giá phức tạp ở depth cao (giảm tính toán)
-        // Đánh giá mobility (số nước đi có thể) - chỉ tính khi cần
-        int blackMobility = GetMobility(false);
-        int whiteMobility = GetMobility(true);
-        score += (blackMobility - whiteMobility) * 2; // Mobility bonus
-        
-        // Kiểm tra check/checkmate (quan trọng nhất)
+        // Kiểm tra check/checkmate (rất quan trọng)
         if (ChessCheckSystem.Instance != null)
         {
             bool whiteInCheck = ChessCheckSystem.Instance.IsKingInCheck(true);
@@ -895,41 +835,21 @@ public class ChessBotAI : MonoBehaviour
             
             if (whiteInCheck)
             {
-                // Kiểm tra checkmate
-                if (IsCheckmate(true))
-                {
-                    score += 10000; // Checkmate - thắng lớn
-                }
-                else
-                {
-                    score += 100; // Check - tăng bonus
-                }
+                // Kiểm tra checkmate - ĐỪNG gọi IsCheckmate vì nó rất chậm
+                score += 500; // Check bonus lớn
             }
             if (blackInCheck)
             {
-                // Kiểm tra checkmate
-                if (IsCheckmate(false))
-                {
-                    score -= 10000; // Checkmate - thua lớn
-                }
-                else
-                {
-                    score -= 100; // Check - penalty lớn hơn
-                }
+                score -= 500; // Check penalty lớn
             }
         }
         
-        // Đánh giá piece safety (an toàn của quân cờ)
-        score += EvaluatePieceSafety();
-        
-        // Đánh giá king safety (an toàn của vua)
-        score += EvaluateKingSafety();
-        
-        // Đánh giá center control (kiểm soát trung tâm)
-        score += EvaluateCenterControl();
-        
-        // Đánh giá pawn structure (cấu trúc tốt)
-        score += EvaluatePawnStructure();
+        // BỎ QUA các đánh giá phức tạp khác để tránh lag:
+        // - Mobility (rất chậm vì phải GetLegalMoves cho tất cả quân)
+        // - Piece safety (chậm vì phải check IsPositionAttackedBy)
+        // - King safety (chậm)
+        // - Center control (chậm)
+        // - Pawn structure (chậm)
         
         return score;
     }
@@ -1037,81 +957,34 @@ public class ChessBotAI : MonoBehaviour
     }
     
     /// <summary>
-    /// Sắp xếp moves theo thứ tự ưu tiên (captures, checks, tactical moves, then others)
+    /// Sắp xếp moves đơn giản (chỉ captures, không check để tránh lag)
     /// </summary>
     private List<ChessMove> OrderMoves(List<ChessMove> moves, List<ChessPieceInfo> pieces)
     {
-        List<ChessMove> orderedMoves = new List<ChessMove>();
-        List<ChessMove> captures = new List<ChessMove>();
-        List<ChessMove> checks = new List<ChessMove>();
-        List<ChessMove> forks = new List<ChessMove>();
-        List<ChessMove> pins = new List<ChessMove>();
-        List<ChessMove> others = new List<ChessMove>();
-        
-        foreach (var move in moves)
-        {
-            // QUAN TRỌNG: Validate position trước khi check
-            if (move.piece.boardPosition != move.originalPosition)
+        // ĐƠN GIẢN HÓA: Chỉ sort theo capture value, KHÔNG check để tránh lag
+        moves.Sort((a, b) => {
+            // Captures trước
+            if (a.isCapture && !b.isCapture) return -1;
+            if (!a.isCapture && b.isCapture) return 1;
+            
+            // Nếu cả 2 đều capture, ưu tiên MVV-LVA
+            if (a.isCapture && b.isCapture)
             {
-                Debug.LogError($"[ChessBotAI] OrderMoves: Piece position mismatch! Expected {move.originalPosition}, got {move.piece.boardPosition}");
-                // Skip this move
-                continue;
+                int valueA = GetPieceValue(a.targetPiece) * 100 - GetPieceValue(a.piece);
+                int valueB = GetPieceValue(b.targetPiece) * 100 - GetPieceValue(b.piece);
+                return valueB.CompareTo(valueA);
             }
             
-            // Kiểm tra xem có phải check không
-            MakeTemporaryMove(move);
-            bool isCheck = ChessCheckSystem.Instance != null && 
-                          ChessCheckSystem.Instance.IsKingInCheck(!move.piece.isWhite);
-            UndoTemporaryMove(move);
+            // Nếu không phải capture, ưu tiên center
+            bool aCentral = IsCenterSquare(a.targetBoardPosition);
+            bool bCentral = IsCenterSquare(b.targetBoardPosition);
+            if (aCentral && !bCentral) return -1;
+            if (!aCentral && bCentral) return 1;
             
-            // Verify restore
-            if (move.piece.boardPosition != move.originalPosition)
-            {
-                Debug.LogError($"[ChessBotAI] OrderMoves: Failed to restore after check! Expected {move.originalPosition}, got {move.piece.boardPosition}");
-                move.piece.boardPosition = move.originalPosition;
-            }
-            
-            // KHÔNG gọi IsFork và IsPin trong OrderMoves để tránh nested MakeTemporaryMove
-            // Chúng ta sẽ chỉ phân loại dựa trên capture và check
-            bool isFork = false; // Tắt fork detection trong OrderMoves
-            bool isPin = false;  // Tắt pin detection trong OrderMoves
-            
-            if (move.isCapture)
-            {
-                captures.Add(move);
-            }
-            else if (isCheck)
-            {
-                checks.Add(move);
-            }
-            else if (isFork)
-            {
-                forks.Add(move);
-            }
-            else if (isPin)
-            {
-                pins.Add(move);
-            }
-            else
-            {
-                others.Add(move);
-            }
-        }
-        
-        // Sắp xếp captures theo giá trị trao đổi (MVV-LVA: Most Valuable Victim - Least Valuable Attacker)
-        captures.Sort((a, b) => {
-            int valueA = GetPieceValue(a.targetPiece) * 100 - GetPieceValue(a.piece);
-            int valueB = GetPieceValue(b.targetPiece) * 100 - GetPieceValue(b.piece);
-            return valueB.CompareTo(valueA);
+            return 0;
         });
         
-        orderedMoves.AddRange(captures);
-        orderedMoves.AddRange(checks);
-        orderedMoves.AddRange(forks);
-        orderedMoves.AddRange(pins);
-        orderedMoves.AddRange(others);
-        
-        return orderedMoves;
+        return moves;
     }
     
     /// <summary>

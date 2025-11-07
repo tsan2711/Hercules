@@ -124,33 +124,79 @@ Bot sẽ log các thông tin:
 
 ## Khuyến nghị cấu hình
 
-### Cho Mobile:
+### ⚡ MẶC ĐỊNH (Đã tối ưu - KHUYẾN NGHỊ):
 ```
 minMaxDepthEasy = 1
 minMaxDepthMedium = 2
 minMaxDepthHard = 2
 minMaxDepthExpert = 3
-maxThinkingTime = 3f
+quiescenceDepth = 1
+maxThinkingTime = 2s
 maxMovesPerDepth = 20
+yieldEveryNMoves = 1
+useMinimaxForAllLevels = true
+```
+**Lý do**: Cân bằng giữa hiệu suất và độ thông minh, không lag editor
+
+### 📱 Cho Mobile (Tối ưu performance):
+```
+minMaxDepthEasy = 1
+minMaxDepthMedium = 1
+minMaxDepthHard = 2
+minMaxDepthExpert = 2
+quiescenceDepth = 0
+maxThinkingTime = 1.5s
+maxMovesPerDepth = 15
+yieldEveryNMoves = 1
 ```
 
-### Cho PC:
+### 💻 Cho PC mạnh:
 ```
 minMaxDepthEasy = 1
 minMaxDepthMedium = 2
 minMaxDepthHard = 3
-minMaxDepthExpert = 4
-maxThinkingTime = 5f
-maxMovesPerDepth = 30
+minMaxDepthExpert = 3
+quiescenceDepth = 1
+maxThinkingTime = 3s
+maxMovesPerDepth = 25
+yieldEveryNMoves = 1
 ```
 
-### Cho Tournament (Chất lượng cao nhất):
+### 🏆 Cho Tournament (Chất lượng cao - CÓ THỂ LAG):
 ```
 minMaxDepthEasy = 2
-minMaxDepthMedium = 3
-minMaxDepthHard = 4
-minMaxDepthExpert = 5
-maxThinkingTime = 10f
-maxMovesPerDepth = 50
+minMaxDepthMedium = 2
+minMaxDepthHard = 3
+minMaxDepthExpert = 4
+quiescenceDepth = 1
+maxThinkingTime = 5s
+maxMovesPerDepth = 30
+yieldEveryNMoves = 1
 ```
+**Cảnh báo**: Depth 4 có thể gây lag! Chỉ dùng nếu chấp nhận chờ lâu.
+
+## 🚨 Cảnh báo Performance
+
+### Nguyên nhân gây lag:
+1. **Depth quá cao** (>3): Số lượng tính toán tăng theo cấp số nhân
+2. **maxMovesPerDepth quá lớn** (>30): Quá nhiều moves được xem xét
+3. **Quiescence search** (đã TẮT mặc định): Gây đệ quy vô hạn
+4. **Complex evaluation** (đã TẮT): GetMobility, King safety... rất chậm
+
+### Đã tối ưu:
+- ✅ Yield sau mỗi move để không block editor
+- ✅ Timeout protection (80% maxThinkingTime)
+- ✅ Tắt Quiescence search
+- ✅ Đơn giản hóa EvaluateBoard (chỉ tính piece value + position)
+- ✅ Đơn giản hóa OrderMoves (không check, chỉ sort captures)
+- ✅ Giảm moves xem xét ở depth sâu (10 moves thay vì maxMovesPerDepth)
+- ✅ Alpha-beta pruning để cắt tỉa nhánh
+
+### Giám sát performance:
+```
+[ChessBotAI] Performance: maxThinkingTime=2s, maxMoves=20, yield every 1 moves
+[ChessBotAI] Finished evaluation: 15 moves in 0.45s, best score: 250
+```
+
+Nếu thấy `Evaluation took X.XXs!` > 1s, hãy giảm depth hoặc maxMovesPerDepth!
 
