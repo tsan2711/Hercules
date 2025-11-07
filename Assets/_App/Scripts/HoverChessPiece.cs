@@ -147,6 +147,22 @@ public class ChessRaycastDebug : MonoBehaviour
                     }
                     return;
                 }
+                
+                // Trong chế độ level, chỉ cho phép player (trắng) di chuyển
+                if (pieceInfo != null && ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
+                {
+                    if (!pieceInfo.isWhite)
+                    {
+                        Debug.Log("[HoverChessPiece] Level mode: Only white pieces can be moved by player!");
+                        // Nếu click vào quân cờ đen, vẫn cho phép hủy chọn hiện tại
+                        if (currentSelected != null)
+                        {
+                            ResetSelected();
+                            ClearHighlights();
+                        }
+                        return;
+                    }
+                }
 
                 // Nếu click lại chính quân đang được chọn => hủy chọn
                 if (pieceObj == currentSelected)
@@ -254,8 +270,27 @@ public class ChessRaycastDebug : MonoBehaviour
         if (hitPiece)
         {
             GameObject pieceObj = hit.collider.gameObject;
+            ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
 
-            if (pieceObj != currentHover)
+            // Kiểm tra xem có nên hiển thị hover effect không
+            bool shouldShowHover = false;
+            
+            if (pieceInfo != null && ChessBoardManager.Instance != null)
+            {
+                // Chỉ hiển thị hover cho quân cờ của lượt hiện tại
+                bool isCurrentTurn = ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite);
+                
+                // Trong chế độ level, không hiển thị hover cho quân bot (đen)
+                bool isLevelModeBot = false;
+                if (ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
+                {
+                    isLevelModeBot = !pieceInfo.isWhite; // Quân đen trong chế độ level
+                }
+                
+                shouldShowHover = isCurrentTurn && !isLevelModeBot;
+            }
+
+            if (shouldShowHover && pieceObj != currentHover)
             {
                 SoundManager.Instance.PlayHover();
 
@@ -274,6 +309,15 @@ public class ChessRaycastDebug : MonoBehaviour
                 }
                 
                 currentHover = pieceObj;
+            }
+            else if (!shouldShowHover)
+            {
+                // Nếu không nên hiển thị hover, reset hover hiện tại
+                if (currentHover == pieceObj)
+                {
+                    ResetHover();
+                    currentHover = null;
+                }
             }
         }
         else

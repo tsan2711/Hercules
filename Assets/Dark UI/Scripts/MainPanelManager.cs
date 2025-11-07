@@ -54,25 +54,26 @@ namespace Michsky.UI.Dark
 
         public void PanelAnim(int newPanel)
         {
+            Debug.Log("PanelAnim: " + newPanel);
+            
+            // Nếu index = 2, chỉ load scene và return
+            if (newPanel == 2)
+            {
+                StartCoroutine(LoadMenuScene());
+                return;
+            }
+
             if (newPanel != currentPanelIndex)
             {
                 currentPanel = panels[currentPanelIndex];
-
-                nextPanel = panels[currentPanelIndex];
-                currentPanelIndex = newPanel;
-
                 currentPanelAnimator = currentPanel.GetComponent<Animator>();
                 currentPanelAnimator.Play(panelFadeOut);
 
-                if (newPanel != 2)
-                {
+                currentPanelIndex = newPanel;
+                nextPanel = panels[currentPanelIndex];
 
-                }
-                else
-                {
-                    nextPanelAnimator = nextPanel.GetComponent<Animator>();
-                    nextPanelAnimator.Play(panelFadeIn);
-                }
+                nextPanelAnimator = nextPanel.GetComponent<Animator>();
+                nextPanelAnimator.Play(panelFadeIn);
 
                 if (enableBrushAnimation == true)
                 {
@@ -89,10 +90,6 @@ namespace Michsky.UI.Dark
                 else if (currentPanelIndex != 0 && enableHomeBlur == true)
                     homeBlurManager.BlurOutAnim();
             }
-
-
-            if (newPanel == 2)
-                StartCoroutine(LoadMenuScene());
         }
 
         private IEnumerator LoadMenuScene()

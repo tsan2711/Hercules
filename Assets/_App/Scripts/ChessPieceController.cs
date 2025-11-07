@@ -543,16 +543,46 @@ public class ChessPieceController : MonoBehaviour
     {
         float elapsed = 0f;
         
-        while (elapsed < moveDuration)
+        // Tính toán hướng di chuyển trên mặt phẳng XZ (bỏ qua trục Y)
+        Vector3 direction = new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z);
+        if (direction.magnitude > 0.01f)
         {
-            elapsed += Time.deltaTime;
-            float progress = elapsed / moveDuration;
-            float curveValue = moveCurve.Evaluate(progress);
+            direction.Normalize();
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            Quaternion startRotation = transform.rotation;
             
-            Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
-            transform.position = currentPos;
+            // Xoay ngay lập tức về hướng đích trước khi di chuyển
+            transform.DORotateQuaternion(targetRotation, moveDuration * 0.3f).SetEase(Ease.OutQuad);
             
-            yield return null;
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                transform.position = currentPos;
+                
+                yield return null;
+            }
+            
+            // Đảm bảo rotation cuối cùng đúng
+            transform.rotation = targetRotation;
+        }
+        else
+        {
+            // Nếu không có hướng (vị trí giống nhau), chỉ di chuyển
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                transform.position = currentPos;
+                
+                yield return null;
+            }
         }
         
         transform.position = targetPos;
@@ -565,21 +595,55 @@ public class ChessPieceController : MonoBehaviour
     {
         float elapsed = 0f;
         
-        while (elapsed < moveDuration)
+        // Tính toán hướng di chuyển trên mặt phẳng XZ (bỏ qua trục Y)
+        Vector3 direction = new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z);
+        if (direction.magnitude > 0.01f)
         {
-            elapsed += Time.deltaTime;
-            float progress = elapsed / moveDuration;
-            float curveValue = moveCurve.Evaluate(progress);
+            direction.Normalize();
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
             
-            Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+            // Xoay ngay lập tức về hướng đích trước khi nhảy
+            transform.DORotateQuaternion(targetRotation, moveDuration * 0.3f).SetEase(Ease.OutQuad);
             
-            // Thêm arc jump
-            float jumpProgress = Mathf.Sin(progress * Mathf.PI);
-            currentPos.y += jumpHeight * jumpProgress;
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                
+                // Thêm arc jump
+                float jumpProgress = Mathf.Sin(progress * Mathf.PI);
+                currentPos.y += jumpHeight * jumpProgress;
+                
+                transform.position = currentPos;
+                
+                yield return null;
+            }
             
-            transform.position = currentPos;
-            
-            yield return null;
+            // Đảm bảo rotation cuối cùng đúng
+            transform.rotation = targetRotation;
+        }
+        else
+        {
+            // Nếu không có hướng (vị trí giống nhau), chỉ di chuyển
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                
+                // Thêm arc jump
+                float jumpProgress = Mathf.Sin(progress * Mathf.PI);
+                currentPos.y += jumpHeight * jumpProgress;
+                
+                transform.position = currentPos;
+                
+                yield return null;
+            }
         }
         
         transform.position = targetPos;
@@ -590,7 +654,7 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private IEnumerator SlideMovement(Vector3 startPos, Vector3 targetPos)
     {
-        // Tương tự walk nhưng với curve khác
+        // Tương tự walk nhưng với curve khác - xoay đã được xử lý trong WalkMovement
         yield return StartCoroutine(WalkMovement(startPos, targetPos));
     }
     
@@ -599,6 +663,17 @@ public class ChessPieceController : MonoBehaviour
     /// </summary>
     private IEnumerator TeleportMovement(Vector3 startPos, Vector3 targetPos)
     {
+        // Tính toán hướng di chuyển trên mặt phẳng XZ (bỏ qua trục Y)
+        Vector3 direction = new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z);
+        if (direction.magnitude > 0.01f)
+        {
+            direction.Normalize();
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            
+            // Xoay quân cờ về hướng đích trước khi fade out
+            transform.DORotateQuaternion(targetRotation, moveDuration * 0.2f).SetEase(Ease.OutQuad);
+        }
+        
         // Fade out
         if (skinController != null)
         {
@@ -611,8 +686,12 @@ public class ChessPieceController : MonoBehaviour
         
         yield return new WaitForSeconds(moveDuration * 0.3f);
         
-        // Teleport instantly
+        // Teleport instantly và xoay về hướng đích
         transform.position = targetPos;
+        if (direction.magnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
         
         // Spawn teleport VFX at destination
         SpawnVFX(VFXType.Teleport, targetPos);
@@ -636,18 +715,49 @@ public class ChessPieceController : MonoBehaviour
         float elapsed = 0f;
         float floatHeight = 0.5f;
         
-        while (elapsed < moveDuration)
+        // Tính toán hướng di chuyển trên mặt phẳng XZ (bỏ qua trục Y)
+        Vector3 direction = new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z);
+        if (direction.magnitude > 0.01f)
         {
-            elapsed += Time.deltaTime;
-            float progress = elapsed / moveDuration;
-            float curveValue = moveCurve.Evaluate(progress);
+            direction.Normalize();
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
             
-            Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
-            currentPos.y += floatHeight; // Float above ground
+            // Xoay ngay lập tức về hướng đích trước khi bay
+            transform.DORotateQuaternion(targetRotation, moveDuration * 0.3f).SetEase(Ease.OutQuad);
             
-            transform.position = currentPos;
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                currentPos.y += floatHeight; // Float above ground
+                
+                transform.position = currentPos;
+                
+                yield return null;
+            }
             
-            yield return null;
+            // Đảm bảo rotation cuối cùng đúng
+            transform.rotation = targetRotation;
+        }
+        else
+        {
+            // Nếu không có hướng (vị trí giống nhau), chỉ di chuyển
+            while (elapsed < moveDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = elapsed / moveDuration;
+                float curveValue = moveCurve.Evaluate(progress);
+                
+                Vector3 currentPos = Vector3.Lerp(startPos, targetPos, curveValue);
+                currentPos.y += floatHeight; // Float above ground
+                
+                transform.position = currentPos;
+                
+                yield return null;
+            }
         }
         
         // Land at target position
