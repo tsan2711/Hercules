@@ -69,6 +69,7 @@
     <Compile Include="Assets/_App/Scripts/ProjectileManager.cs" />
     <Compile Include="Assets/Dark UI/Scripts/BlurManager.cs" />
     <Compile Include="Assets/_App/Scripts/UI/StageItemExample.cs" />
+    <Compile Include="Assets/_App/Scripts/UI/GameWinUI.cs" />
     <Compile Include="Assets/_App/Scripts/UI/StageLevelUI.cs" />
     <Compile Include="Assets/Piloto Studio/Scripts/ParticleShowcase.cs" />
     <Compile Include="Assets/Dark UI/Scripts/TimedEvent.cs" />
