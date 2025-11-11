@@ -498,7 +498,15 @@ public class ChessCheckSystem : MonoBehaviour
             Debug.Log($"=== GAME OVER ===\nLý do: {reason}\nKết quả: Hòa");
         }
         
-        // TODO: Implement game end UI hoặc restart logic
+        // Hiển thị UI thông báo người thắng
+        if (GameWinUI.Instance != null)
+        {
+            GameWinUI.Instance.ShowWinUI(winner, reason);
+        }
+        else
+        {
+            Debug.LogWarning("[ChessCheckSystem] GameWinUI.Instance is null! Không thể hiển thị UI thắng.");
+        }
     }
     
     // ===================================

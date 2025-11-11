@@ -119,6 +119,12 @@ public class ChessBoardManager : MonoBehaviour
     {
         isWhiteTurn = !isWhiteTurn;
         Debug.Log($"Turn switched to: {(isWhiteTurn ? "White" : "Black")}");
+        
+        // Kích hoạt bot nếu đến lượt bot (đen) trong chế độ level
+        if (ChessBotAI.Instance != null)
+        {
+            ChessBotAI.Instance.OnTurnEnded();
+        }
     }
 
 }

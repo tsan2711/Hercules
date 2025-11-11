@@ -46,8 +46,8 @@ public class ChessPieceSkinController : MonoBehaviour
     [SerializeField] private AnimationCurve transitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     
     [Header("Dissolve Settings")]
-    [SerializeField] private float dissolveInDuration = 2f;
-    [SerializeField] private float dissolveOutDuration = 1.5f;
+    private float dissolveInDuration = .5f;
+    private float dissolveOutDuration = .5f;
     [SerializeField] private string dissolvePropertyName = "_DissolveAmount";
     [SerializeField] private string edgeWidthPropertyName = "_EdgeWidth";
     [SerializeField] private string edgeIntensityPropertyName = "_EdgeIntensity";
@@ -388,33 +388,355 @@ public class ChessPieceSkinController : MonoBehaviour
     /// <param name="onComplete">Callback khi hoàn thành</param>
     public void TriggerDissolveOut(System.Action onComplete = null)
     {
+        Debug.Log($"TriggerDissolveOut called on {gameObject.name}");
+        
         SetSkinState(SkinState.Dissolving, false);
+        
+        // Lấy material từ ChessRaycastDebug trước khi dissolve (không cần thiết nhưng có thể dùng để reference)
+        Material[] dissolveMaterials = GetDissolveMaterialsFromChessDebug();
+        
+        // Luôn apply dissolve materials (sẽ tạo material mới với dissolve shader từ materials hiện tại)
+        // Nếu không có dissolveMaterials từ ChessRaycastDebug, vẫn sẽ tạo dissolve materials từ materials hiện tại
+        ApplyDissolveMaterials(dissolveMaterials ?? new Material[0]);
+        
+        // Đợi một frame để materials được apply
+        StartCoroutine(DelayedDissolveStart(onComplete));
+    }
+    
+    /// <summary>
+    /// Delay một frame để đảm bảo materials được apply trước khi start dissolve
+    /// </summary>
+    private System.Collections.IEnumerator DelayedDissolveStart(System.Action onComplete)
+    {
+        yield return null; // Wait one frame
+        
+        // Ensure dissolve effect is initialized
+        if (dissolveEffect == null)
+        {
+            dissolveEffect = GetComponent<DissolveInEffect>();
+            if (dissolveEffect == null)
+            {
+                dissolveEffect = gameObject.AddComponent<DissolveInEffect>();
+            }
+        }
         
         if (dissolveEffect != null)
         {
-            // Setup reverse dissolve effect
-            var parameters = new Dictionary<string, object>
+            // Reinitialize materials in case they changed
+            dissolveEffect.ReinitializeMaterials();
+            
+            // Check if materials were found
+            Renderer[] checkRenderers = GetComponentsInChildren<Renderer>();
+            bool hasDissolveProperty = false;
+            foreach (var renderer in checkRenderers)
             {
-                { "duration", dissolveOutDuration },
-                { "dissolveamount", 0f }
-            };
+                if (renderer != null)
+                {
+                    Material[] mats = renderer.materials;
+                    foreach (var mat in mats)
+                    {
+                        if (mat != null && mat.HasProperty(dissolvePropertyName))
+                        {
+                            hasDissolveProperty = true;
+                            Debug.Log($"Found material with dissolve property: {mat.name} on {renderer.name} (Shader: {mat.shader.name})");
+                            
+                            // Log current dissolve amount
+                            float currentAmount = mat.GetFloat(dissolvePropertyName);
+                            Debug.Log($"Current dissolve amount on {mat.name}: {currentAmount}");
+                            break;
+                        }
+                    }
+                    if (hasDissolveProperty) break;
+                }
+            }
             
-            dissolveEffect.SetParameters(parameters);
+            if (!hasDissolveProperty)
+            {
+                Debug.LogWarning($"No materials with {dissolvePropertyName} property found on {gameObject.name}. " +
+                               $"Materials may not use a dissolve shader. Using fallback DOTween method.");
+                
+                // Fallback: dùng DOTween trực tiếp trên materials
+                float currentDissolve = GetDissolveAmount();
+                Debug.Log($"Starting fallback dissolve from {currentDissolve} to 1.0 over {dissolveOutDuration} seconds");
+                
+                DOTween.To(() => currentDissolve, x => {
+                    currentDissolve = x;
+                    SetDissolveAmount(x);
+                }, 1f, dissolveOutDuration).OnComplete(() => {
+                    Debug.Log($"Fallback dissolve out completed on {gameObject.name}");
+                    OnDissolveOutCompleted?.Invoke();
+                    onComplete?.Invoke();
+                });
+                yield break;
+            }
             
-            // Animate from 1 to 0
-            float currentDissolve = 1f;
-            DOTween.To(() => currentDissolve, x => {
-                currentDissolve = x;
-                SetDissolveAmount(x);
-            }, 0f, dissolveOutDuration).OnComplete(() => {
+            // Reset dissolve amount về 0 trước (quân cờ hiện tại không dissolve)
+            dissolveEffect.ResetEffect();
+            
+            // Verify dissolve amount is 0
+            float verifyAmount = GetDissolveAmount();
+            Debug.Log($"Dissolve amount after reset: {verifyAmount}");
+            
+            // Setup dissolve out effect: từ 0 (không dissolve) -> 1 (dissolve hoàn toàn)
+            dissolveEffect.Duration = dissolveOutDuration;
+            
+            Debug.Log($"Starting dissolve out effect on {gameObject.name} with duration {dissolveOutDuration}");
+            
+            // Play dissolve effect (từ 0 -> 1)
+            dissolveEffect.PlayEffect(() => {
+                Debug.Log($"Dissolve out completed on {gameObject.name}");
                 OnDissolveOutCompleted?.Invoke();
                 onComplete?.Invoke();
             });
         }
         else
         {
-            // Fallback
-            onComplete?.Invoke();
+            Debug.LogWarning($"No DissolveInEffect found on {gameObject.name}, using fallback DOTween");
+            
+            // Fallback: dùng DOTween trực tiếp
+            float currentDissolve = GetDissolveAmount();
+            DOTween.To(() => currentDissolve, x => {
+                currentDissolve = x;
+                SetDissolveAmount(x);
+            }, 1f, dissolveOutDuration).OnComplete(() => {
+                Debug.Log($"Fallback dissolve out completed on {gameObject.name}");
+                OnDissolveOutCompleted?.Invoke();
+                onComplete?.Invoke();
+            });
+        }
+    }
+    
+    /// <summary>
+    /// Lấy dissolve materials từ ChessRaycastDebug
+    /// </summary>
+    private Material[] GetDissolveMaterialsFromChessDebug()
+    {
+        if (pieceInfo == null)
+        {
+            Debug.LogWarning($"Cannot get dissolve materials: No ChessPieceInfo found on {gameObject.name}");
+            return null;
+        }
+        
+        ChessRaycastDebug chessDebug = FindObjectOfType<ChessRaycastDebug>();
+        if (chessDebug == null)
+        {
+            Debug.LogWarning($"ChessRaycastDebug not found in scene");
+            return null;
+        }
+        
+        return GetMaterialsFromChessDebug(chessDebug, pieceInfo.isWhite, pieceInfo.type);
+    }
+    
+    /// <summary>
+    /// Áp dụng dissolve materials vào renderers
+    /// </summary>
+    private void ApplyDissolveMaterials(Material[] dissolveMats)
+    {
+        // Tìm dissolve shader trước
+        Shader dissolveShader = Shader.Find("Custom/DissolveIn");
+        if (dissolveShader == null)
+        {
+            dissolveShader = Shader.Find("Unlit/Pawn");
+        }
+        
+        if (dissolveShader == null)
+        {
+            Debug.LogError($"Could not find dissolve shader! Dissolve effect will not work.");
+            return;
+        }
+        
+        Debug.Log($"Using dissolve shader: {dissolveShader.name}");
+        
+        // Reinitialize renderers if needed
+        if (renderers == null || renderers.Length == 0)
+        {
+            renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        }
+        
+        // Apply materials to all renderers
+        foreach (var renderer in renderers)
+        {
+            if (renderer != null)
+            {
+                Material[] currentMats = renderer.materials; // Use instance materials để giữ texture
+                Material[] newMaterials = new Material[currentMats.Length];
+                
+                for (int i = 0; i < newMaterials.Length; i++)
+                {
+                    Material currentMat = i < currentMats.Length ? currentMats[i] : null;
+                    
+                    // Tạo material mới với dissolve shader
+                    Material instanceMat = new Material(dissolveShader);
+                    
+                    // Copy các properties từ material hiện tại để giữ texture và color
+                    if (currentMat != null)
+                    {
+                        // Copy main texture
+                        if (currentMat.HasProperty("_MainTex") && instanceMat.HasProperty("_MainTex"))
+                        {
+                            Texture mainTex = currentMat.GetTexture("_MainTex");
+                            if (mainTex != null)
+                            {
+                                instanceMat.SetTexture("_MainTex", mainTex);
+                            }
+                        }
+                        
+                        // Copy color
+                        if (currentMat.HasProperty("_Color") && instanceMat.HasProperty("_Color"))
+                        {
+                            instanceMat.SetColor("_Color", currentMat.GetColor("_Color"));
+                        }
+                        else if (currentMat.HasProperty("_BaseColor") && instanceMat.HasProperty("_Color"))
+                        {
+                            instanceMat.SetColor("_Color", currentMat.GetColor("_BaseColor"));
+                        }
+                    }
+                    
+                    // Set dissolve properties
+                    instanceMat.SetFloat(dissolvePropertyName, 0f); // Start at 0 (no dissolve)
+                    
+                    // Set noise properties for noise-based dissolve
+                    if (instanceMat.HasProperty("_NoiseScale"))
+                    {
+                        instanceMat.SetFloat("_NoiseScale", 1.0f);
+                    }
+                    if (instanceMat.HasProperty("_UseProceduralNoise"))
+                    {
+                        instanceMat.SetFloat("_UseProceduralNoise", 1.0f); // Use procedural noise
+                    }
+                    
+                    // Set edge properties if available
+                    if (instanceMat.HasProperty("_EdgeWidth"))
+                    {
+                        instanceMat.SetFloat("_EdgeWidth", 0.1f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeIntensity"))
+                    {
+                        instanceMat.SetFloat("_EdgeIntensity", 2.0f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeColor"))
+                    {
+                        // Set dissolve color based on team: White = Blue, Red/Black = Red
+                        Color dissolveColor;
+                        if (pieceInfo != null && pieceInfo.isWhite)
+                        {
+                            // Blue color for white team
+                            dissolveColor = new Color(0f, 0.5f, 1f, 1f); // Blue
+                        }
+                        else
+                        {
+                            // Red color for red/black team
+                            dissolveColor = new Color(1f, 0f, 0f, 1f); // Red
+                        }
+                        instanceMat.SetColor("_EdgeColor", dissolveColor);
+                    }
+                    
+                    instanceMat.name = $"{currentMat?.name ?? "DissolveMaterial"}_Dissolve";
+                    newMaterials[i] = instanceMat;
+                    
+                    Debug.Log($"Created dissolve material {instanceMat.name} with shader {instanceMat.shader.name}, " +
+                             $"has {dissolvePropertyName}: {instanceMat.HasProperty(dissolvePropertyName)}");
+                }
+                
+                // Force instance materials to allow property modification
+                renderer.materials = newMaterials;
+                Debug.Log($"Applied {newMaterials.Length} dissolve materials to {renderer.name}");
+                
+                // Verify materials were applied
+                Material[] verifyMats = renderer.materials;
+                foreach (var mat in verifyMats)
+                {
+                    if (mat != null && mat.HasProperty(dissolvePropertyName))
+                    {
+                        float dissolveAmount = mat.GetFloat(dissolvePropertyName);
+                        Debug.Log($"Verified material {mat.name} on {renderer.name}: dissolve amount = {dissolveAmount}, shader = {mat.shader.name}");
+                    }
+                }
+            }
+        }
+        
+        // Also apply to other renderer types (MeshRenderer, etc.)
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
+        foreach (var renderer in allRenderers)
+        {
+            // Skip if already processed as SkinnedMeshRenderer
+            if (renderer is SkinnedMeshRenderer)
+                continue;
+                
+            if (renderer != null)
+            {
+                Material[] currentMats = renderer.materials;
+                Material[] newMaterials = new Material[currentMats.Length];
+                
+                for (int i = 0; i < newMaterials.Length; i++)
+                {
+                    Material currentMat = i < currentMats.Length ? currentMats[i] : null;
+                    
+                    // Tạo material mới với dissolve shader
+                    Material instanceMat = new Material(dissolveShader);
+                    
+                    // Copy properties từ material hiện tại
+                    if (currentMat != null)
+                    {
+                        if (currentMat.HasProperty("_MainTex") && instanceMat.HasProperty("_MainTex"))
+                        {
+                            Texture mainTex = currentMat.GetTexture("_MainTex");
+                            if (mainTex != null)
+                            {
+                                instanceMat.SetTexture("_MainTex", mainTex);
+                            }
+                        }
+                        if (currentMat.HasProperty("_Color") && instanceMat.HasProperty("_Color"))
+                        {
+                            instanceMat.SetColor("_Color", currentMat.GetColor("_Color"));
+                        }
+                    }
+                    
+                    // Set dissolve properties
+                    instanceMat.SetFloat(dissolvePropertyName, 0f);
+                    
+                    if (instanceMat.HasProperty("_NoiseScale"))
+                    {
+                        instanceMat.SetFloat("_NoiseScale", 1.0f);
+                    }
+                    if (instanceMat.HasProperty("_UseProceduralNoise"))
+                    {
+                        instanceMat.SetFloat("_UseProceduralNoise", 1.0f);
+                    }
+                    
+                    // Set edge properties if available
+                    if (instanceMat.HasProperty("_EdgeWidth"))
+                    {
+                        instanceMat.SetFloat("_EdgeWidth", 0.1f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeIntensity"))
+                    {
+                        instanceMat.SetFloat("_EdgeIntensity", 2.0f);
+                    }
+                    if (instanceMat.HasProperty("_EdgeColor"))
+                    {
+                        // Set dissolve color based on team: White = Blue, Red/Black = Red
+                        Color dissolveColor;
+                        if (pieceInfo != null && pieceInfo.isWhite)
+                        {
+                            // Blue color for white team
+                            dissolveColor = new Color(0f, 0.5f, 1f, 1f); // Blue
+                        }
+                        else
+                        {
+                            // Red color for red/black team
+                            dissolveColor = new Color(1f, 0f, 0f, 1f); // Red
+                        }
+                        instanceMat.SetColor("_EdgeColor", dissolveColor);
+                    }
+                    
+                    instanceMat.name = $"{currentMat?.name ?? "DissolveMaterial"}_Dissolve";
+                    newMaterials[i] = instanceMat;
+                }
+                
+                renderer.materials = newMaterials;
+                Debug.Log($"Applied {newMaterials.Length} dissolve materials to {renderer.name} (non-skinned)");
+            }
         }
     }
     
@@ -423,16 +745,84 @@ public class ChessPieceSkinController : MonoBehaviour
     /// </summary>
     private void SetDissolveAmount(float value)
     {
-        foreach (var rendererGroup in originalMaterials)
+        // Reinitialize renderers if needed
+        if (renderers == null || renderers.Length == 0)
         {
-            foreach (var material in rendererGroup)
+            renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        }
+        
+        // Apply to all skinned mesh renderers
+        foreach (var renderer in renderers)
+        {
+            if (renderer != null)
             {
-                if (material != null && material.HasProperty(dissolvePropertyName))
+                // Force instance materials
+                Material[] materials = renderer.materials;
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    material.SetFloat(dissolvePropertyName, value);
+                    if (materials[i] != null)
+                    {
+                        // Check if material has the property
+                        if (materials[i].HasProperty(dissolvePropertyName))
+                        {
+                            materials[i].SetFloat(dissolvePropertyName, value);
+                        }
+                        else
+                        {
+                            // Try shared material
+                            Material[] sharedMats = renderer.sharedMaterials;
+                            if (i < sharedMats.Length && sharedMats[i] != null && sharedMats[i].HasProperty(dissolvePropertyName))
+                            {
+                                // Create instance material if needed
+                                if (materials[i] == sharedMats[i])
+                                {
+                                    materials[i] = new Material(sharedMats[i]);
+                                    renderer.materials = materials; // Update materials array
+                                }
+                                materials[i].SetFloat(dissolvePropertyName, value);
+                            }
+                        }
+                    }
                 }
             }
         }
+        
+        // Also check for other Renderer types (MeshRenderer, etc.) in case they exist
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>();
+        foreach (var renderer in allRenderers)
+        {
+            // Skip if already processed as SkinnedMeshRenderer
+            if (renderer is SkinnedMeshRenderer)
+                continue;
+                
+            if (renderer != null)
+            {
+                Material[] materials = renderer.materials;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    if (materials[i] != null && materials[i].HasProperty(dissolvePropertyName))
+                    {
+                        materials[i].SetFloat(dissolvePropertyName, value);
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Get dissolve amount hiện tại
+    /// </summary>
+    private float GetDissolveAmount()
+    {
+        if (renderers.Length > 0 && renderers[0] != null)
+        {
+            Material[] materials = renderers[0].materials;
+            if (materials.Length > 0 && materials[0] != null && materials[0].HasProperty(dissolvePropertyName))
+            {
+                return materials[0].GetFloat(dissolvePropertyName);
+            }
+        }
+        return 0f;
     }
     
     /// <summary>

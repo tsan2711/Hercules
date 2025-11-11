@@ -72,27 +72,32 @@ public class ChessMoveGenerator : MonoBehaviour
         int dir = piece.isWhite ? 1 : -1;
         Vector2Int pos = piece.boardPosition;
 
-        // Đi thẳng
+        // Đi thẳng 1 bước
         Vector2Int forward = new Vector2Int(pos.x, pos.y + dir);
         if (IsInsideBoard(forward) && IsEmpty(forward))
         {
             moves.Add(BoardToWorld(forward));
 
-            // Lần đầu được đi 2 ô
-            Vector2Int doubleForward = new Vector2Int(pos.x, pos.y + dir * 2);
+            // Lần đầu được đi 2 ô (chỉ khi chưa di chuyển và đang ở hàng đầu)
             bool startRow = piece.isWhite ? pos.y == 1 : pos.y == 6;
-            if (startRow && IsEmpty(doubleForward))
-                moves.Add(BoardToWorld(doubleForward));
+            if (!piece.hasMoved && startRow)
+            {
+                Vector2Int doubleForward = new Vector2Int(pos.x, pos.y + dir * 2);
+                if (IsInsideBoard(doubleForward) && IsEmpty(doubleForward))
+                {
+                    moves.Add(BoardToWorld(doubleForward));
+                }
+            }
         }
 
         // Ăn chéo trái
         Vector2Int left = new Vector2Int(pos.x - 1, pos.y + dir);
-        if (HasEnemy(left, piece.isWhite))
+        if (IsInsideBoard(left) && HasEnemy(left, piece.isWhite))
             moves.Add(BoardToWorld(left));
 
         // Ăn chéo phải
         Vector2Int right = new Vector2Int(pos.x + 1, pos.y + dir);
-        if (HasEnemy(right, piece.isWhite))
+        if (IsInsideBoard(right) && HasEnemy(right, piece.isWhite))
             moves.Add(BoardToWorld(right));
 
         return moves;
@@ -102,26 +107,35 @@ public class ChessMoveGenerator : MonoBehaviour
     {
         List<Vector3> moves = new List<Vector3>();
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        
         foreach (var dir in directions)
         {
             Vector2Int current = piece.boardPosition;
+            
             while (true)
             {
                 current += dir;
                 if (!IsInsideBoard(current)) break;
 
+                // Nếu ô trống, có thể di chuyển đến đó
                 if (IsEmpty(current))
                 {
                     moves.Add(BoardToWorld(current));
                 }
+                // Nếu có quân địch, có thể ăn và dừng lại
+                else if (HasEnemy(current, piece.isWhite))
+                {
+                    moves.Add(BoardToWorld(current));
+                    break; // Dừng sau khi ăn quân địch
+                }
+                // Nếu có quân đồng minh, không thể đi qua
                 else
                 {
-                    if (HasEnemy(current, piece.isWhite))
-                        moves.Add(BoardToWorld(current));
-                    break; // dừng khi gặp quân cờ
+                    break; // Dừng khi gặp quân đồng minh
                 }
             }
         }
+        
         return moves;
     }
 
@@ -132,26 +146,35 @@ public class ChessMoveGenerator : MonoBehaviour
             new Vector2Int(1,1), new Vector2Int(-1,1),
             new Vector2Int(1,-1), new Vector2Int(-1,-1)
         };
+        
         foreach (var dir in directions)
         {
             Vector2Int current = piece.boardPosition;
+            
             while (true)
             {
                 current += dir;
                 if (!IsInsideBoard(current)) break;
 
+                // Nếu ô trống, có thể di chuyển đến đó
                 if (IsEmpty(current))
                 {
                     moves.Add(BoardToWorld(current));
                 }
+                // Nếu có quân địch, có thể ăn và dừng lại
+                else if (HasEnemy(current, piece.isWhite))
+                {
+                    moves.Add(BoardToWorld(current));
+                    break; // Dừng sau khi ăn quân địch
+                }
+                // Nếu có quân đồng minh, không thể đi qua
                 else
                 {
-                    if (HasEnemy(current, piece.isWhite))
-                        moves.Add(BoardToWorld(current));
-                    break;
+                    break; // Dừng khi gặp quân đồng minh
                 }
             }
         }
+        
         return moves;
     }
 
@@ -161,29 +184,41 @@ public class ChessMoveGenerator : MonoBehaviour
 
         // 8 hướng: N, S, E, W, NE, NW, SE, SW
         Vector2Int[] directions = {
-        new Vector2Int(0,1),  // N
-        new Vector2Int(0,-1), // S
-        new Vector2Int(1,0),  // E
-        new Vector2Int(-1,0), // W
-        new Vector2Int(1,1),  // NE
-        new Vector2Int(-1,1), // NW
-        new Vector2Int(1,-1), // SE
-        new Vector2Int(-1,-1) // SW
-    };
+            new Vector2Int(0,1),   // N
+            new Vector2Int(0,-1),  // S
+            new Vector2Int(1,0),   // E
+            new Vector2Int(-1,0), // W
+            new Vector2Int(1,1),   // NE
+            new Vector2Int(-1,1),  // NW
+            new Vector2Int(1,-1),  // SE
+            new Vector2Int(-1,-1)  // SW
+        };
 
         foreach (var dir in directions)
         {
             Vector2Int current = piece.boardPosition;
+            
             while (true)
             {
                 current += dir;
-
                 if (!IsInsideBoard(current)) break;
-                if (HasAlly(current, piece.isWhite)) break;
 
-                moves.Add(BoardToWorld(current));
-
-                if (HasEnemy(current, piece.isWhite)) break;
+                // Nếu ô trống, có thể di chuyển đến đó
+                if (IsEmpty(current))
+                {
+                    moves.Add(BoardToWorld(current));
+                }
+                // Nếu có quân địch, có thể ăn và dừng lại
+                else if (HasEnemy(current, piece.isWhite))
+                {
+                    moves.Add(BoardToWorld(current));
+                    break; // Dừng sau khi ăn quân địch
+                }
+                // Nếu có quân đồng minh, không thể đi qua
+                else
+                {
+                    break; // Dừng khi gặp quân đồng minh
+                }
             }
         }
 
@@ -216,7 +251,7 @@ public class ChessMoveGenerator : MonoBehaviour
         List<Vector3> moves = new List<Vector3>();
         Vector2Int start = piece.boardPosition;
 
-        // Các nước đi thông thường
+        // Các nước đi thông thường (8 hướng)
         for (int dx = -1; dx <= 1; dx++)
         {
             for (int dy = -1; dy <= 1; dy++)
@@ -224,16 +259,18 @@ public class ChessMoveGenerator : MonoBehaviour
                 if (dx == 0 && dy == 0) continue;
                 Vector2Int target = new Vector2Int(start.x + dx, start.y + dy);
                 if (!IsInsideBoard(target)) continue;
+                // Không thể đi đến ô có quân đồng minh
                 if (HasAlly(target, piece.isWhite)) continue;
                 moves.Add(BoardToWorld(target));
             }
         }
 
-        // === Nhập thành ===
+        // === Nhập thành === (chỉ khi vua chưa di chuyển)
         if (!piece.hasMoved)
         {
             int y = piece.isWhite ? 0 : 7; // hàng của vua
-                                           // Nhập thành nhỏ (king-side)
+            
+            // Nhập thành nhỏ (king-side)
             if (CanCastle(piece, new Vector2Int(7, y)))
             {
                 moves.Add(BoardToWorld(new Vector2Int(start.x + 2, y)));
@@ -251,20 +288,40 @@ public class ChessMoveGenerator : MonoBehaviour
     // Kiểm tra điều kiện nhập thành với một Rook
     private bool CanCastle(ChessPieceInfo king, Vector2Int rookPos)
     {
+        if (ChessBoardManager.Instance == null || ChessCheckSystem.Instance == null) return false;
+        
+        // Kiểm tra xe có tồn tại và chưa di chuyển không
         ChessPieceInfo rook = ChessBoardManager.Instance.board[rookPos.x, rookPos.y];
         if (rook == null || rook.type != ChessRaycastDebug.ChessType.Rook || rook.isWhite != king.isWhite || rook.hasMoved)
             return false;
-
+        
+        // Không thể nhập thành nếu vua đang bị check
+        if (ChessCheckSystem.Instance.IsKingInCheck(king.isWhite))
+            return false;
+        
+        // Xác định hướng và các ô cần kiểm tra
         int dir = rookPos.x > king.boardPosition.x ? 1 : -1;
-        int startX = king.boardPosition.x + dir;
-        int endX = rookPos.x - dir;
-
+        int startX = king.boardPosition.x;
+        int kingTargetX = king.boardPosition.x + dir * 2;
+        int rookTargetX = king.boardPosition.x + dir;
+        
         // Kiểm tra các ô giữa vua và xe trống
-        for (int x = startX; x != endX + dir; x += dir)
+        for (int x = startX + dir; x != rookPos.x; x += dir)
         {
             if (ChessBoardManager.Instance.board[x, king.boardPosition.y] != null)
                 return false;
         }
+        
+        // Kiểm tra vua không đi qua ô bị attack
+        Vector2Int kingIntermediatePos = new Vector2Int(king.boardPosition.x + dir, king.boardPosition.y);
+        if (ChessCheckSystem.Instance.IsPositionAttackedBy(kingIntermediatePos, !king.isWhite))
+            return false;
+        
+        // Kiểm tra vua không kết thúc ở ô bị attack
+        Vector2Int kingTargetPos = new Vector2Int(kingTargetX, king.boardPosition.y);
+        if (ChessCheckSystem.Instance.IsPositionAttackedBy(kingTargetPos, !king.isWhite))
+            return false;
+        
         return true;
     }
 

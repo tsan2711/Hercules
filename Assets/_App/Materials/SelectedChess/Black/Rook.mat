@@ -27,12 +27,23 @@ Material:
         m_Texture: {fileID: 2800000, guid: b7ba345b47f63114aa6e80115f0709d2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DissolveAmount: 0
+    - _DissolveEdgeIntensity: 2
+    - _DissolveEdgeWidth: 0.1
     - _EmissionStrength: 5
+    - _NoiseScale: 1
+    - _PulseAmplitude: 0.3
+    - _PulseSpeed: 2
     - _RimIntensity: 5
     - _RimPower: 3.5
     m_Colors:
+    - _DissolveEdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _RimColor: {r: 0.5849056, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

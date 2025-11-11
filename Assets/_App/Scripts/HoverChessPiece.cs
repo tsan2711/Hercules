@@ -36,6 +36,12 @@ public class ChessRaycastDebug : MonoBehaviour
         // --- XỬ LÝ CLICK ---
         if (Input.GetMouseButtonDown(0))
         {
+            // Kiểm tra xem game đã sẵn sàng chơi chưa
+            if (GameStartDelayManager.Instance != null && !GameStartDelayManager.Instance.IsGameReady)
+            {
+                return; // Chưa đến lúc chơi, bỏ qua input
+            }
+            
             // Kiểm tra xem có đang trong quá trình move không
             if (isMoving)
             {
@@ -44,7 +50,192 @@ public class ChessRaycastDebug : MonoBehaviour
             }
             
             SoundManager.Instance.PlayClick();
-            if (hitSquare && selectedInfo != null) // Click vào ô highlight
+            
+            // Xử lý click vào quân cờ
+            if (hitPiece)
+            {
+                GameObject pieceObj = hit.collider.gameObject;
+                ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
+
+                // Nếu đã có quân cờ được chọn và click vào quân cờ địch đứng trên ô có thể di chuyển đến
+                // => Di chuyển/tấn công đến đó
+                if (selectedInfo != null && pieceInfo != null && 
+                    selectedInfo.isWhite != pieceInfo.isWhite)
+                {
+                    // Kiểm tra xem vị trí của quân cờ địch có nằm trong danh sách nước đi hợp lệ không
+                    Vector3 enemyPos = pieceObj.transform.position;
+                    Vector2Int enemyBoardPos = pieceInfo.boardPosition;
+                    bool isValidMove = false;
+                    
+                    // Kiểm tra bằng board position (chính xác hơn)
+                    if (ChessBoardManager.Instance != null)
+                    {
+                        foreach (var movePos in currentMoves)
+                        {
+                            Vector2Int moveBoardPos = ChessBoardManager.Instance.WorldToBoard(movePos);
+                            if (moveBoardPos == enemyBoardPos)
+                            {
+                                isValidMove = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Fallback: So sánh với tolerance để tránh lỗi floating point
+                    if (!isValidMove)
+                    {
+                        foreach (var movePos in currentMoves)
+                        {
+                            if (Vector3.Distance(enemyPos, movePos) < 0.1f)
+                            {
+                                isValidMove = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Hoặc kiểm tra xem có hitSquare ở vị trí đó không (có ô highlight)
+                    if (!isValidMove && hitSquare)
+                    {
+                        Vector3 squarePos = squareHit.collider.transform.position;
+                        if (ChessBoardManager.Instance != null)
+                        {
+                            Vector2Int squareBoardPos = ChessBoardManager.Instance.WorldToBoard(squarePos);
+                            if (squareBoardPos == enemyBoardPos)
+                            {
+                                isValidMove = true;
+                            }
+                        }
+                        else if (Vector3.Distance(enemyPos, squarePos) < 0.1f)
+                        {
+                            isValidMove = true;
+                        }
+                    }
+                    
+                    if (isValidMove)
+                    {
+                        // Di chuyển/tấn công đến quân cờ địch
+                        ChessPieceController pieceController = selectedInfo.GetComponent<ChessPieceController>();
+                        if (pieceController != null)
+                        {
+                            if (pieceController.IsBusy)
+                            {
+                                Debug.LogWarning($"Piece {selectedInfo.name} is busy, cannot move!");
+                                return;
+                            }
+                            
+                            pieceController.OnActionSequenceCompleted += OnPieceMoveCompleted;
+                            isMoving = true;
+                            
+                            // Tắt tất cả glow khi bắt đầu di chuyển
+                            ResetHover(); // Đảm bảo không có hover glow
+                            if (selectedSkinController != null)
+                            {
+                                selectedSkinController.SetSkinState(SkinState.Normal);
+                            }
+                            
+                            pieceController.MovePiece(enemyPos);
+                            return;
+                        }
+                        else
+                        {
+                            // Fallback
+                            pieceMover.MovePiece(selectedInfo, enemyPos);
+                            ResetSelected();
+                            ClearHighlights();
+                            return;
+                        }
+                    }
+                }
+
+                // Kiểm tra lượt chơi
+                if (pieceInfo != null && ChessBoardManager.Instance != null &&
+                    !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
+                {
+                    Debug.Log($"It's not {(pieceInfo.isWhite ? "White" : "Black")}'s turn!");
+                    // Nếu click vào quân cờ không phải lượt chơi, vẫn cho phép hủy chọn hiện tại
+                    if (currentSelected != null)
+                    {
+                        ResetSelected();
+                        ClearHighlights();
+                    }
+                    return;
+                }
+                
+                // Trong chế độ level, chỉ cho phép player (trắng) di chuyển
+                if (pieceInfo != null && ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
+                {
+                    if (!pieceInfo.isWhite)
+                    {
+                        Debug.Log("[HoverChessPiece] Level mode: Only white pieces can be moved by player!");
+                        // Nếu click vào quân cờ đen, vẫn cho phép hủy chọn hiện tại
+                        if (currentSelected != null)
+                        {
+                            ResetSelected();
+                            ClearHighlights();
+                        }
+                        return;
+                    }
+                }
+
+                // Nếu click lại chính quân đang được chọn => hủy chọn
+                if (pieceObj == currentSelected)
+                {
+                    ResetSelected();
+                    ClearHighlights();
+                    return;
+                }
+                
+                // Click vào quân cờ khác => chọn quân cờ mới
+                ResetSelected();
+                ResetHover();
+
+                // Use ChessPieceSkinController instead of manual material handling
+                selectedSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
+                if (selectedSkinController != null)
+                {
+                    selectedSkinController.SetSkinState(SkinState.Selected);
+                }
+                else
+                {
+                    // Fallback to old method if no skin controller
+                    Debug.LogWarning($"No ChessPieceSkinController found on {pieceObj.name}, using fallback");
+                    ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
+                }
+                currentSelected = pieceObj;
+
+                selectedInfo = pieceObj.GetComponent<ChessPieceInfo>();
+                if (selectedInfo != null)
+                {
+                    // Sử dụng ChessCheckSystem để chỉ lấy những nước đi hợp lệ
+                    if (ChessCheckSystem.Instance != null)
+                    {
+                        currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
+                    }
+                    else
+                    {
+                        // Fallback nếu ChessCheckSystem chưa có
+                        currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
+                    }
+                    
+                    ClearHighlights();
+                    GameObject prefabToUse = selectedInfo.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
+
+                    // Chỉ tạo highlight cho những nước đi hợp lệ
+                    foreach (var pos in currentMoves)
+                    {
+                        GameObject obj = Instantiate(prefabToUse, pos, Quaternion.identity);
+                        activeSquares.Add(obj);
+                    }
+                    
+                    // Debug log
+                    Debug.Log($"[Legal Moves] {selectedInfo.type} {(selectedInfo.isWhite ? "Trắng" : "Đen")} có {currentMoves.Count} nước đi hợp lệ");
+                }
+                return; // Return ngay sau khi xử lý click vào quân cờ
+            }
+            
+            // Xử lý click vào ô highlight để di chuyển (chỉ khi không click vào quân cờ)
+            if (hitSquare && selectedInfo != null)
             {
                 Vector3 targetPos = squareHit.collider.transform.position;
                 if (currentMoves.Contains(targetPos))
@@ -66,6 +257,13 @@ public class ChessRaycastDebug : MonoBehaviour
                         // Set moving flag
                         isMoving = true;
                         
+                        // Tắt tất cả glow khi bắt đầu di chuyển
+                        ResetHover(); // Đảm bảo không có hover glow
+                        if (selectedSkinController != null)
+                        {
+                            selectedSkinController.SetSkinState(SkinState.Normal);
+                        }
+                        
                         pieceController.MovePiece(targetPos);
                         
                         // DON'T reset selection here - wait for completion event
@@ -83,107 +281,68 @@ public class ChessRaycastDebug : MonoBehaviour
                     return;
                 }
             }
-
-            if (hitPiece) // Click vào quân cờ
-            {
-                GameObject pieceObj = hit.collider.gameObject;
-                ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
-
-                if (pieceInfo != null && ChessBoardManager.Instance != null &&
-                    !ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite))
-                {
-                    Debug.Log($"It's not {(pieceInfo.isWhite ? "White" : "Black")}'s turn!");
-                    return;
-                }
-
-                if (pieceObj == currentSelected)
-                {
-                    // Đã click lại chính quân đang được chọn => không làm gì hết
-                    return;
-                }
-                else
-                {
-                    ResetSelected();
-                    ResetHover();
-
-                    // Use ChessPieceSkinController instead of manual material handling
-                    selectedSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
-                    if (selectedSkinController != null)
-                    {
-                        selectedSkinController.SetSkinState(SkinState.Selected);
-                    }
-                    else
-                    {
-                        // Fallback to old method if no skin controller
-                        Debug.LogWarning($"No ChessPieceSkinController found on {pieceObj.name}, using fallback");
-                        ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
-                    }
-                    currentSelected = pieceObj;
-
-                    selectedInfo = pieceObj.GetComponent<ChessPieceInfo>();
-                    if (selectedInfo != null)
-                    {
-                        // Sử dụng ChessCheckSystem để chỉ lấy những nước đi hợp lệ
-                        if (ChessCheckSystem.Instance != null)
-                        {
-                            currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
-                        }
-                        else
-                        {
-                            // Fallback nếu ChessCheckSystem chưa có
-                            currentMoves = ChessCheckSystem.Instance.GetLegalMoves(selectedInfo);
-                        }
-                        
-                        ClearHighlights();
-                        GameObject prefabToUse = selectedInfo.isWhite ? whiteHighlightPrefab : blackHighlightPrefab;
-
-                        // Chỉ tạo highlight cho những nước đi hợp lệ
-                        foreach (var pos in currentMoves)
-                        {
-                            GameObject obj = Instantiate(prefabToUse, pos, Quaternion.identity);
-                            activeSquares.Add(obj);
-                        }
-                        
-                        // Debug log
-                        Debug.Log($"[Legal Moves] {selectedInfo.type} {(selectedInfo.isWhite ? "Trắng" : "Đen")} có {currentMoves.Count} nước đi hợp lệ");
-                    }
-                }
-            }
-            else
-            {
-                ResetSelected();
-                ClearHighlights();
-            }
+            
+            // Click vào chỗ trống (không phải quân cờ, không phải ô highlight) => hủy chọn
+            ResetSelected();
+            ClearHighlights();
         }
 
         // --- HOVER LOGIC ---
-        if (hitPiece)
+        // Kiểm tra xem game đã sẵn sàng chơi chưa
+        bool canInteract = GameStartDelayManager.Instance == null || GameStartDelayManager.Instance.IsGameReady;
+        
+        // Hiển thị hover effect khi:
+        // 1. Game đã sẵn sàng
+        // 2. Hover vào chess piece của team mình
+        // 3. Không đang select piece nào (currentSelected == null)
+        // 4. Không đang di chuyển (isMoving == false)
+        if (hitPiece && canInteract)
         {
             GameObject pieceObj = hit.collider.gameObject;
-
-            if (pieceObj != currentHover)
+            ChessPieceInfo pieceInfo = pieceObj.GetComponent<ChessPieceInfo>();
+            
+            // Chỉ hover vào quân cờ của team mình và khi không đang select/moving
+            bool canHover = pieceInfo != null &&
+                            ChessBoardManager.Instance != null &&
+                            ChessBoardManager.Instance.CanPlayerMove(pieceInfo.isWhite) &&
+                            currentSelected == null && 
+                            !isMoving;
+            
+            // Trong chế độ level, chỉ cho hover quân trắng (player)
+            if (canHover && ChessBotAI.Instance != null && ChessBotAI.Instance.IsLevelMode())
             {
-                SoundManager.Instance.PlayHover();
-
+                canHover = pieceInfo.isWhite;
+            }
+            
+            if (canHover && pieceObj != currentHover)
+            {
+                // Reset hover cũ nếu có
                 ResetHover();
                 
-                // Use ChessPieceSkinController for hover effect
+                // Apply hover effect cho piece mới
+                currentHover = pieceObj;
                 hoverSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
-                if (hoverSkinController != null && hoverSkinController.CurrentState == SkinState.Normal)
+                
+                if (hoverSkinController != null)
                 {
                     hoverSkinController.SetSkinState(SkinState.Hover);
                 }
-                else if (hoverSkinController == null)
+                else
                 {
-                    // Fallback to old method
+                    // Fallback to old method if no skin controller
                     ApplyHighlight(pieceObj, ref hoverOriginalMaterials);
                 }
-                
-                currentHover = pieceObj;
+            }
+            else if (!canHover && currentHover != null)
+            {
+                // Nếu không thể hover (đang select/moving) thì reset hover
+                ResetHover();
+                currentHover = null;
             }
         }
         else
         {
+            // Không hover vào gì cả => reset hover
             ResetHover();
             currentHover = null;
         }
@@ -268,7 +427,7 @@ public class ChessRaycastDebug : MonoBehaviour
         // Reset moving flag
         isMoving = false;
         
-        // Reset selection sau khi move hoàn thành
+        // Reset selection sau khi move hoàn thành (tắt glow)
         ResetSelected();
         ClearHighlights();
         
