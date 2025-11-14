@@ -430,23 +430,29 @@ public class ChessPieceController : MonoBehaviour
             OnMoveStarted?.Invoke(this);
         }
         
-        // Thực hiện pre-move attack nếu cần
+        // Thực hiện pre-move attack nếu cần (ưu tiên hiển thị chiêu trước)
         if (isAttackMove && (attackType == AttackType.RangedBeforeMove || attackType == AttackType.RangedThenMove))
         {
             Debug.Log("Executing RangedBeforeMove/RangedThenMove");
             yield return StartCoroutine(ExecuteAttackSequence(targetPiece, startPos));
             targetPieceHandled = true; // Attack sequence đã handle target piece
+            
+            // Delay nhỏ sau attack để người chơi thấy rõ chiêu trước khi di chuyển
+            yield return new WaitForSeconds(0.2f);
         }
         
-        // Thực hiện cast spell trước khi di chuyển nếu cần
+        // Thực hiện cast spell trước khi di chuyển nếu cần (ưu tiên hiển thị chiêu trước)
         if (isAttackMove && attackType == AttackType.CastSpellBeforeMove)
         {
             Debug.Log("Executing CastSpellBeforeMove");
             yield return StartCoroutine(ExecuteCastSpellSequence(targetPiece, startPos));
             targetPieceHandled = true; // Cast spell sequence đã handle target piece
+            
+            // Delay nhỏ sau cast spell để người chơi thấy rõ chiêu trước khi di chuyển
+            yield return new WaitForSeconds(0.2f);
         }
         
-        // Thực hiện di chuyển
+        // Thực hiện di chuyển (sau khi attack animation đã hiển thị rõ)
         yield return StartCoroutine(ExecuteMoveAnimation(startPos, targetWorldPos));
         
         // Thực hiện post-move attack nếu cần
@@ -779,8 +785,16 @@ public class ChessPieceController : MonoBehaviour
             skinController.SetSkinState(SkinState.Attacking);
         }
         
-        // Play attack VFX
-        currentAttackVFX = SpawnVFX(VFXType.Attack, vfxSpawnPoint.position);
+        // Play attack VFX - ưu tiên hiển thị rõ ràng
+        // Spawn VFX ở vị trí tốt để dễ nhìn (giữa quân cờ và target)
+        Vector3 vfxPosition = vfxSpawnPoint != null ? vfxSpawnPoint.position : attackFromPos;
+        if (targetPiece != null)
+        {
+            // Spawn VFX ở giữa quân cờ và target để dễ nhìn hơn
+            vfxPosition = Vector3.Lerp(attackFromPos, targetPiece.transform.position, 0.3f);
+            vfxPosition.y = Mathf.Max(attackFromPos.y, targetPiece.transform.position.y) + 0.5f; // Nâng cao một chút để nổi bật
+        }
+        currentAttackVFX = SpawnVFX(VFXType.Attack, vfxPosition);
         
         // Play attack sound
         PlaySound(attackSound);
@@ -807,6 +821,9 @@ public class ChessPieceController : MonoBehaviour
                 break;
         }
         
+        // Delay nhỏ để đảm bảo attack animation được hiển thị rõ ràng
+        yield return new WaitForSeconds(0.15f);
+        
         // Reset skin state
         if (skinController != null)
         {
@@ -832,8 +849,16 @@ public class ChessPieceController : MonoBehaviour
             skinController.SetSkinState(SkinState.Attacking);
         }
         
-        // Spawn spell VFX tại vị trí cast
-        currentAttackVFX = SpawnVFX(VFXType.Attack, castFromPos);
+        // Spawn spell VFX tại vị trí cast - ưu tiên hiển thị rõ ràng
+        // Spawn VFX ở vị trí tốt để dễ nhìn (giữa quân cờ và target)
+        Vector3 spellVfxPosition = castFromPos;
+        if (targetPiece != null)
+        {
+            // Spawn VFX ở giữa quân cờ và target để dễ nhìn hơn
+            spellVfxPosition = Vector3.Lerp(castFromPos, targetPiece.transform.position, 0.3f);
+            spellVfxPosition.y = Mathf.Max(castFromPos.y, targetPiece.transform.position.y) + 0.5f; // Nâng cao một chút để nổi bật
+        }
+        currentAttackVFX = SpawnVFX(VFXType.Attack, spellVfxPosition);
         
         // Play cast sound
         PlaySound(attackSound);
