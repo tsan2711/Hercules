@@ -24,11 +24,28 @@ public class ChessPieceController : MonoBehaviour
     
     [Header("VFX Settings")]
     [SerializeField] private Transform vfxSpawnPoint; // VFX spawn point (VFX prefabs managed by VFXManager)
+    [SerializeField] private GameObject selectionVFXPrefab;
+    [SerializeField] private Vector3 selectionVFXOffset = Vector3.zero;
+    [SerializeField] private bool selectionVFXFollowPiece = true;
     
     [Header("Audio Settings")]
     [SerializeField] private AudioClip moveSound;
+    [SerializeField, Range(0f, 1f)] private float moveVolume = 1f;
     [SerializeField] private AudioClip attackSound;
+    [SerializeField, Range(0f, 1f)] private float attackVolume = 1f;
     [SerializeField] private AudioClip teleportSound;
+    [SerializeField, Range(0f, 1f)] private float teleportVolume = 1f;
+    [SerializeField] private AudioClip captureSound;
+    [SerializeField, Range(0f, 1f)] private float captureVolume = 1f;
+    [SerializeField] private bool loopMoveSound = true;
+    
+    [Header("Camera Shake Settings")]
+    [SerializeField] private bool enableCameraShakeOnCapture = true;
+    [SerializeField, Tooltip("Thời gian rung camera khi ăn quân")] private float shakeDuration = 0.25f;
+    [SerializeField, Tooltip("Độ mạnh của rung camera")] private float shakeStrength = 0.35f;
+    [SerializeField, Tooltip("Vibrato (số lần rung)")] private int shakeVibrato = 15;
+    [SerializeField, Tooltip("Độ ngẫu nhiên của hướng rung")] private float shakeRandomness = 90f;
+    [SerializeField] private bool shakeFadeOut = true;
     
     // Private fields
     private ChessPieceInfo pieceInfo;
@@ -42,6 +59,14 @@ public class ChessPieceController : MonoBehaviour
     private VFXInstance currentMoveVFX;
     private VFXInstance currentAttackVFX;
     private VFXInstance currentTeleportVFX;
+    private GameObject selectionVFXInstance;
+    
+    // Camera shake cache
+    private Transform cachedCameraTransform;
+    private Tween cameraShakeTween;
+    
+    // Audio
+    private AudioSource moveAudioSource;
     
     // Events
     public System.Action<ChessPieceController> OnMoveStarted;
@@ -83,8 +108,44 @@ public class ChessPieceController : MonoBehaviour
             vfxSpawnPoint = transform;
         }
         
+        CacheCamera();
+        SetupMoveAudioSource();
+        
         // Set move and attack types based on piece type
         SetupPieceTypeDefaults();
+    }
+
+    private void SetupMoveAudioSource()
+    {
+        if (!loopMoveSound || moveSound == null)
+        {
+            return;
+        }
+
+        if (moveAudioSource == null)
+        {
+            moveAudioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        moveAudioSource.loop = true;
+        moveAudioSource.playOnAwake = false;
+        moveAudioSource.spatialBlend = 0f;
+        moveAudioSource.volume = 1f;
+        moveAudioSource.pitch = 1f;
+        moveAudioSource.volume = GetEffectiveVolume(moveVolume);
+    }
+
+    private void CacheCamera()
+    {
+        if (cachedCameraTransform != null)
+        {
+            return;
+        }
+
+        if (Camera.main != null)
+        {
+            cachedCameraTransform = Camera.main.transform;
+        }
     }
     
     /// <summary>
@@ -501,8 +562,15 @@ public class ChessPieceController : MonoBehaviour
         // Play move VFX
         currentMoveVFX = SpawnVFX(VFXType.Move, vfxSpawnPoint.position);
         
-        // Play move sound
-        PlaySound(moveSound);
+        // Play move sound (loop nếu được bật)
+        if (loopMoveSound)
+        {
+            StartMoveSoundLoop();
+        }
+        else
+        {
+            PlaySound(moveSound, moveVolume);
+        }
         
         // Set skin to moving state
         if (skinController != null)
@@ -539,6 +607,7 @@ public class ChessPieceController : MonoBehaviour
             skinController.SetSkinState(SkinState.Normal);
         }
         
+        StopMoveSoundLoop();
         isMoving = false;
     }
     
@@ -688,7 +757,7 @@ public class ChessPieceController : MonoBehaviour
         
         // Play teleport VFX và sound
         currentTeleportVFX = SpawnVFX(VFXType.Teleport, startPos);
-        PlaySound(teleportSound);
+        PlaySound(teleportSound, teleportVolume);
         
         yield return new WaitForSeconds(moveDuration * 0.3f);
         
@@ -797,7 +866,7 @@ public class ChessPieceController : MonoBehaviour
         currentAttackVFX = SpawnVFX(VFXType.Attack, vfxPosition);
         
         // Play attack sound
-        PlaySound(attackSound);
+        PlaySound(attackSound, attackVolume);
         
         // Determine attack direction
         Vector3 attackDirection = (targetPiece.transform.position - attackFromPos).normalized;
@@ -861,7 +930,7 @@ public class ChessPieceController : MonoBehaviour
         currentAttackVFX = SpawnVFX(VFXType.Attack, spellVfxPosition);
         
         // Play cast sound
-        PlaySound(attackSound);
+        PlaySound(attackSound, attackVolume);
         
         // Cast spell animation (piece có thể có animation cast)
         yield return StartCoroutine(CastSpellAnimation(targetPiece, castFromPos));
@@ -1081,11 +1150,11 @@ public class ChessPieceController : MonoBehaviour
     /// <summary>
     /// Play sound effect
     /// </summary>
-    private void PlaySound(AudioClip clip)
+    private void PlaySound(AudioClip clip, float volume = 1f)
     {
         if (clip != null && SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX(clip);
+            SoundManager.Instance.PlaySFX(clip, Mathf.Clamp01(volume));
         }
     }
     
@@ -1264,6 +1333,9 @@ public class ChessPieceController : MonoBehaviour
         
         Debug.Log($"HandleTargetPieceCaptureWithDissolve called for {targetPiece.name}");
         
+        PlaySound(captureSound, captureVolume);
+        TriggerCameraShake();
+        
         // Trigger explosive effect khi quân cờ bị hạ gục
         TriggerExplosiveCapture(targetPiece);
         
@@ -1328,6 +1400,132 @@ public class ChessPieceController : MonoBehaviour
         // Trigger die animation cho fallback
         StartCoroutine(TriggerDieAnimation(targetPiece));
     }
+
+    private void TriggerCameraShake()
+    {
+        if (!enableCameraShakeOnCapture)
+        {
+            return;
+        }
+
+        if (cachedCameraTransform == null || cachedCameraTransform.gameObject == null)
+        {
+            CacheCamera();
+        }
+
+        if (cachedCameraTransform == null)
+        {
+            Debug.LogWarning("[ChessPieceController] Không tìm thấy camera để rung.");
+            return;
+        }
+
+        if (cameraShakeTween != null && cameraShakeTween.IsActive())
+        {
+            cameraShakeTween.Kill();
+        }
+
+        Vector3 originalPos = cachedCameraTransform.position;
+        cameraShakeTween = cachedCameraTransform
+            .DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, shakeRandomness, false, shakeFadeOut)
+            .OnComplete(() =>
+            {
+                if (cachedCameraTransform != null)
+                {
+                    cachedCameraTransform.position = originalPos;
+                }
+            });
+    }
+
+    private void StartMoveSoundLoop()
+    {
+        if (!loopMoveSound || moveSound == null)
+        {
+            return;
+        }
+
+        if (moveAudioSource == null)
+        {
+            SetupMoveAudioSource();
+        }
+
+        if (moveAudioSource == null)
+        {
+            return;
+        }
+
+        if (moveAudioSource.isPlaying)
+        {
+            moveAudioSource.Stop();
+        }
+
+        moveAudioSource.clip = moveSound;
+        moveAudioSource.volume = GetEffectiveVolume(moveVolume);
+        moveAudioSource.Play();
+    }
+
+    private void StopMoveSoundLoop()
+    {
+        if (moveAudioSource != null && moveAudioSource.isPlaying)
+        {
+            moveAudioSource.Stop();
+        }
+    }
+
+    private float GetEffectiveVolume(float localVolume)
+    {
+        float volume = Mathf.Clamp01(localVolume);
+
+        if (SoundManager.Instance != null)
+        {
+            volume *= Mathf.Clamp01(SoundManager.Instance.GetSFXVolume());
+            volume *= Mathf.Clamp01(SoundManager.Instance.GetMasterVolume());
+        }
+
+        return volume;
+    }
+
+    #region Selection VFX
+
+    public void ShowSelectionVFX()
+    {
+        if (selectionVFXPrefab == null)
+        {
+            return;
+        }
+
+        if (selectionVFXInstance == null)
+        {
+            if (selectionVFXFollowPiece)
+            {
+                selectionVFXInstance = Instantiate(selectionVFXPrefab, transform);
+                selectionVFXInstance.transform.localPosition = selectionVFXOffset;
+            }
+            else
+            {
+                selectionVFXInstance = Instantiate(selectionVFXPrefab, transform.position + selectionVFXOffset, Quaternion.identity);
+            }
+        }
+        else
+        {
+            selectionVFXInstance.SetActive(true);
+        }
+    }
+
+    public void HideSelectionVFX()
+    {
+        if (selectionVFXInstance != null)
+        {
+            Destroy(selectionVFXInstance);
+            selectionVFXInstance = null;
+        }
+    }
+
+    private void OnDisable()
+    {
+        HideSelectionVFX();
+    }
+
+    #endregion
     
     /// <summary>
     /// Trigger explosive effect khi quân cờ bị hạ gục (captured)

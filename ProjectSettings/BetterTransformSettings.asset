@@ -16,7 +16,7 @@ MonoBehaviour:
   _inspectorColor: {r: 0, g: 0, b: 1, a: 0.025}
   _overrideFoldoutColor: 0
   _foldoutColor: {r: 0, g: 1, b: 0, a: 0.025}
-  _currentWorkSpace: 1
+  _currentWorkSpace: 0
   _showCopyPasteButtons: 1
   _showAllVariableCopyPasteButtons: 0
   _fieldRoundingAmount: 5

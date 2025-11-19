@@ -7,6 +7,7 @@ public class ChessRaycastDebug : MonoBehaviour
 {
     private GameObject currentSelected;
     private ChessPieceSkinController selectedSkinController;
+    private ChessPieceController selectedPieceController;
     private bool isMoving = false; // Flag để track move state
 
     private GameObject currentHover;
@@ -276,6 +277,7 @@ public class ChessRaycastDebug : MonoBehaviour
 
                 // Use ChessPieceSkinController instead of manual material handling
                 selectedSkinController = pieceObj.GetComponent<ChessPieceSkinController>();
+                selectedPieceController = pieceObj.GetComponent<ChessPieceController>();
                 if (selectedSkinController != null)
                 {
                     selectedSkinController.SetSkinState(SkinState.Selected);
@@ -285,6 +287,11 @@ public class ChessRaycastDebug : MonoBehaviour
                     // Fallback to old method if no skin controller
                     Debug.LogWarning($"No ChessPieceSkinController found on {pieceObj.name}, using fallback");
                     ApplyHighlight(pieceObj, ref selectedOriginalMaterials);
+                }
+
+                if (selectedPieceController != null)
+                {
+                    selectedPieceController.ShowSelectionVFX();
                 }
                 currentSelected = pieceObj;
 
@@ -672,6 +679,11 @@ public class ChessRaycastDebug : MonoBehaviour
         {
             selectedSkinController.SetSkinState(SkinState.Normal);
             selectedSkinController = null;
+        }
+        if (selectedPieceController != null)
+        {
+            selectedPieceController.HideSelectionVFX();
+            selectedPieceController = null;
         }
         else
         {

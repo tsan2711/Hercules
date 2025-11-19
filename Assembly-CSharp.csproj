@@ -108,6 +108,7 @@
     <Compile Include="Assets\Dark UI\Scripts\UIDissolveEffect.cs" />
     <Compile Include="Assets\_App\Scripts\Effects\IEffect.cs" />
     <Compile Include="Assets\_App\Scripts\CheckmateTestScenario.cs" />
+    <Compile Include="Assets\Vefects\Trails VFX URP\Scripts\Demo_FreeCam.cs" />
     <Compile Include="Assets\_App\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Dark UI\Scripts\SplashScreenManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Assets\_App\Scripts\ChessLegalMovesTest.cs" />
     <Compile Include="Assets\MasterStylizedProjectiles\Scripts\BulletShooter.cs" />
     <Compile Include="Assets\Dark UI\Scripts\ScrollGamepadManager.cs" />
+    <Compile Include="Assets\Vefects\Trails VFX URP\Scripts\Demo_TurningAround.cs" />
     <Compile Include="Assets\Dark UI\Scripts\LayoutGroupPositionFix.cs" />
     <Compile Include="Assets\Dark UI\Scripts\VirtualCursorAnimate.cs" />
     <Compile Include="Assets\_App\Scripts\UI\StageLevelManager.cs" />
@@ -143,6 +145,7 @@
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\MasterStylizedProjectiles\ReadMe.txt" />
+    <None Include="Assets\Vefects\Trails VFX URP\Demo\Resources\Character\Shaders\SH_Vefects_URP_VFX_Character_Showoff.shader" />
     <None Include="Assets\Tiny Chess\Readme Eng.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\SwordBeam.shader" />
@@ -154,6 +157,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Dark UI\Shaders\Masked UI Blur.shader" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\PowDissolveSharp.shader" />
+    <None Include="Assets\Vefects\Trails VFX URP\VFX\Shaders\SH_Vefects_VFX_URP_Trail_Distortion.shader" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\ExpSphere.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX Remaster\CFXR Assets\Shaders\CFXR.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
@@ -165,6 +169,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\Smoke.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Vefects\Trails VFX URP\_ Extra\Shaders\SH_Vefects_Extra_Billboard_01.shader" />
     <None Include="Assets\Dark UI\Shaders\UI Dissolve Effect.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
@@ -176,11 +181,14 @@
     <None Include="Assets\MasterStylizedProjectiles\Shaders\Icicle.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\JMO Assets\Cartoon FX Remaster\CFXR Prefabs\Texts\_Make your own text effect.txt" />
+    <None Include="Assets\Vefects\Trails VFX URP\VFX\Shaders\SH_Vefects_VFX_URP_Trail_New.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX Remaster\CFXR Assets\Shaders\CFXR_PASSES.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\_App\Shader\Pawn.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Vefects\Trails VFX URP\Demo\Resources\Environment\Shaders\SH_Vefects_Grid_01.shader" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\PowDissolve.shader" />
+    <None Include="Assets\Vefects\Trails VFX URP\_ Extra\Shaders\SH_Vefects_Extra_Grid_01.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\MasterStylizedProjectiles\Shaders\SimpleEmissive.shader" />
     <None Include="Assets\Dark UI\Shaders\Fast UI Blur.shader" />

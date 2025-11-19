@@ -206,8 +206,7 @@ public class ChessBotAI : MonoBehaviour
         if (bestMove == null)
         {
             Debug.LogError("[ChessBotAI] No valid move found at all!");
-            isBotThinking = false;
-            moveCount = 0;
+            HandleBotNoMove();
             yield break;
         }
         
@@ -266,6 +265,24 @@ public class ChessBotAI : MonoBehaviour
         
         isBotThinking = false;
     }
+
+    private void HandleBotNoMove()
+    {
+        isBotThinking = false;
+        moveCount = 0;
+
+        if (ChessCheckSystem.Instance != null)
+        {
+            ChessCheckSystem.Instance.ForceGameEnd(true, "Bot No Moves");
+            return;
+        }
+
+        if (GameWinUI.Instance != null)
+        {
+            GameWinUI.Instance.ShowWinUI(true, "Bot No Moves");
+        }
+    }
+    
     
     /// <summary>
     /// Lấy tất cả quân đen trên bàn cờ
@@ -1757,7 +1774,9 @@ public class ChessBotAI : MonoBehaviour
         ChessPieceController pieceController = move.piece.GetComponent<ChessPieceController>();
         if (pieceController != null)
         {
+            pieceController.ShowSelectionVFX();
             pieceController.MovePiece(move.targetPosition);
+            StartCoroutine(HideBotSelectionVFXWhenDone(pieceController));
         }
         else
         {
@@ -1770,6 +1789,34 @@ public class ChessBotAI : MonoBehaviour
         }
         
         Debug.Log($"[ChessBotAI] Bot moved {move.piece.type} from {move.originalPosition} to {move.targetBoardPosition}");
+    }
+
+    private IEnumerator HideBotSelectionVFXWhenDone(ChessPieceController pieceController)
+    {
+        if (pieceController == null)
+        {
+            yield break;
+        }
+
+        bool moveCompleted = false;
+        System.Action<ChessPieceController> handler = null;
+        handler = (pc) =>
+        {
+            if (pc == pieceController)
+            {
+                moveCompleted = true;
+            }
+        };
+
+        pieceController.OnActionSequenceCompleted += handler;
+
+        while (!moveCompleted)
+        {
+            yield return null;
+        }
+
+        pieceController.OnActionSequenceCompleted -= handler;
+        pieceController.HideSelectionVFX();
     }
     
     /// <summary>

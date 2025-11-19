@@ -487,6 +487,11 @@ public class ChessCheckSystem : MonoBehaviour
     }
 
     
+    public void ForceGameEnd(bool? winner, string reason = "Manual")
+    {
+        OnGameEnd(reason, winner);
+    }
+
     private void OnGameEnd(string reason, bool? winner)
     {
         if (winner.HasValue)
