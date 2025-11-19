@@ -1,21 +1,17 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 /// <summary>
-/// UI hiển thị thông báo người thắng và tự động chuyển về menu sau 5 giây
+/// UI that displays the winner notification and automatically returns to menu after 5 seconds
 /// </summary>
 public class GameWinUI : MonoBehaviour
 {
     public static GameWinUI Instance { get; private set; }
     
     [Header("UI Components")]
-    [SerializeField] private GameObject winPanel;
-    [SerializeField] private TextMeshProUGUI winnerText; // Text hiển thị người thắng
-    [SerializeField] private TextMeshProUGUI reasonText; // Text hiển thị lý do (Checkmate, Stalemate)
-    [SerializeField] private TextMeshProUGUI countdownText; // Text đếm ngược
+    [SerializeField] private TextMeshProUGUI winnerText; // Text displaying the winner
     
     [Header("Animation Settings")]
     [SerializeField] private float fadeInDuration = 0.5f;
@@ -24,17 +20,19 @@ public class GameWinUI : MonoBehaviour
     [SerializeField] private float bounceDuration = 0.3f;
     
     [Header("Scene Settings")]
-    [SerializeField] private string menuSceneName = "Menu"; // Tên scene menu
-    [SerializeField] private float delayBeforeSceneChange = 5f; // Delay 5 giây trước khi chuyển scene
+    [SerializeField] private string menuSceneName = "Menu"; // Menu scene name
+    [SerializeField] private float delayBeforeSceneChange = 5f; // Delay 5 seconds before changing scene
     
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
     
-    private CanvasGroup canvasGroup;
-    private RectTransform panelRectTransform;
     private Sequence animationSequence;
     private bool isShowing = false;
-    private float countdownTimer = 0f;
+    
+    /// <summary>
+    /// Check if the win UI is currently showing
+    /// </summary>
+    public bool IsShowing => isShowing;
     
     private void Awake()
     {
@@ -47,72 +45,29 @@ public class GameWinUI : MonoBehaviour
         
         Instance = this;
         
-        // Tự động tìm components nếu chưa assign
-        if (winPanel == null)
+        // Hide text initially
+        if (winnerText != null)
         {
-            winPanel = gameObject;
-        }
-        
-        // Tạo CanvasGroup nếu chưa có
-        canvasGroup = winPanel.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            canvasGroup = winPanel.AddComponent<CanvasGroup>();
-        }
-        
-        // Lấy RectTransform
-        panelRectTransform = winPanel.GetComponent<RectTransform>();
-        if (panelRectTransform == null)
-        {
-            panelRectTransform = winPanel.AddComponent<RectTransform>();
-        }
-        
-        // Ẩn panel ban đầu
-        canvasGroup.alpha = 0f;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
-        
-        if (winPanel != null)
-        {
-            winPanel.SetActive(false);
-        }
-    }
-    
-    private void Start()
-    {
-        // Subscribe vào event từ ChessCheckSystem
-        // Note: ChessCheckSystem sẽ gọi ShowWinUI trực tiếp
-    }
-    
-    private void Update()
-    {
-        // Đếm ngược nếu đang hiển thị
-        if (isShowing && countdownText != null)
-        {
-            countdownTimer -= Time.deltaTime;
-            
-            if (countdownTimer > 0f)
-            {
-                int seconds = Mathf.CeilToInt(countdownTimer);
-                countdownText.text = $"Quay về menu sau {seconds} giây...";
-            }
-            else
-            {
-                countdownText.text = "Đang chuyển về menu...";
-            }
+            winnerText.gameObject.SetActive(false);
         }
     }
     
     /// <summary>
-    /// Hiển thị UI thông báo người thắng
+    /// Display the winner notification UI
     /// </summary>
-    /// <param name="winner">true = Trắng thắng, false = Đen thắng, null = Hòa</param>
-    /// <param name="reason">Lý do kết thúc (Checkmate, Stalemate, etc.)</param>
+    /// <param name="winner">true = White , false = Black win, null = Draw</param>
+    /// <param name="reason">End reason (Checkmate, Stalemate, etc.)</param>
     public void ShowWinUI(bool? winner, string reason = "Checkmate")
     {
         if (isShowing)
         {
-            return; // Đã đang hiển thị, bỏ qua
+            return; // Already showing, skip
+        }
+        
+        if (winnerText == null)
+        {
+            Debug.LogError("[GameWinUI] winnerText is null! Please assign in Inspector.");
+            return;
         }
         
         isShowing = true;
@@ -120,105 +75,101 @@ public class GameWinUI : MonoBehaviour
         if (showDebugLogs)
         {
             string winnerName = winner.HasValue 
-                ? (winner.Value ? "Trắng" : "Đen") 
-                : "Hòa";
-            Debug.Log($"[GameWinUI] Hiển thị UI thắng: {winnerName}, Lý do: {reason}");
-        }
-        
-        // Kích hoạt panel
-        if (winPanel != null)
-        {
-            winPanel.SetActive(true);
+                ? (winner.Value ? "White" : "Black") 
+                : "Draw";
+            Debug.Log($"[GameWinUI] Showing win UI: {winnerName}, Reason: {reason}");
         }
         
         // Set text
-        if (winnerText != null)
+        if (winner.HasValue)
         {
-            if (winner.HasValue)
-            {
-                winnerText.text = winner.Value ? "QUÂN TRẮNG THẮNG!" : "QUÂN ĐEN THẮNG!";
-            }
-            else
-            {
-                winnerText.text = "HÒA CỜ!";
-            }
+            winnerText.text = winner.Value ? "WHITE WIN!" : "BLACK WIN!";
+        }
+        else
+        {
+            winnerText.text = "DRAW!";
         }
         
-        if (reasonText != null)
-        {
-            reasonText.text = reason;
-        }
+        // Activate text
+        winnerText.gameObject.SetActive(true);
         
-        // Reset countdown
-        countdownTimer = delayBeforeSceneChange;
-        if (countdownText != null)
-        {
-            countdownText.text = $"Quay về menu sau {Mathf.CeilToInt(countdownTimer)} giây...";
-        }
-        
-        // Enable canvas group
-        canvasGroup.blocksRaycasts = true;
-        canvasGroup.interactable = true;
-        
-        // Kill sequence cũ nếu có
+        // Kill old sequence if exists
         if (animationSequence != null && animationSequence.IsActive())
         {
             animationSequence.Kill();
         }
         
-        // Reset về trạng thái ban đầu
-        canvasGroup.alpha = 0f;
-        panelRectTransform.localScale = Vector3.zero;
+        // Get RectTransform of text (TextMeshProUGUI already has it)
+        RectTransform textRectTransform = winnerText.rectTransform;
         
-        // Tạo animation sequence
+        // Get CanvasGroup of text (or create new if doesn't exist)
+        CanvasGroup textCanvasGroup = winnerText.GetComponent<CanvasGroup>();
+        if (textCanvasGroup == null)
+        {
+            textCanvasGroup = winnerText.gameObject.AddComponent<CanvasGroup>();
+        }
+        
+        // Reset to initial state
+        textCanvasGroup.alpha = 0f;
+        textRectTransform.localScale = Vector3.zero;
+        
+        // Create animation sequence
         animationSequence = DOTween.Sequence();
         
         // Fade in
-        animationSequence.Append(canvasGroup.DOFade(1f, fadeInDuration).SetEase(Ease.OutQuad));
+        animationSequence.Append(textCanvasGroup.DOFade(1f, fadeInDuration).SetEase(Ease.OutQuad));
         
-        // Scale up với bounce
-        animationSequence.Join(panelRectTransform.DOScale(Vector3.one * bounceScale, scaleInDuration)
+        // Scale up with bounce
+        animationSequence.Join(textRectTransform.DOScale(Vector3.one * bounceScale, scaleInDuration)
             .SetEase(Ease.OutBack));
         
-        // Bounce back về scale gốc
-        animationSequence.Append(panelRectTransform.DOScale(Vector3.one, bounceDuration)
+        // Bounce back to original scale
+        animationSequence.Append(textRectTransform.DOScale(Vector3.one, bounceDuration)
             .SetEase(Ease.OutBounce));
         
-        // Sau khi animation xong, bắt đầu đếm ngược để chuyển scene
+        // After animation completes, start countdown to change scene
         animationSequence.OnComplete(() => {
             StartCoroutine(CountdownAndLoadScene());
         });
     }
     
     /// <summary>
-    /// Coroutine đếm ngược và chuyển scene
+    /// Coroutine that counts down and changes scene
     /// </summary>
     private System.Collections.IEnumerator CountdownAndLoadScene()
     {
-        // Đợi hết thời gian delay
+        // Wait for delay time
         yield return new WaitForSeconds(delayBeforeSceneChange);
         
         if (showDebugLogs)
         {
-            Debug.Log($"[GameWinUI] Chuyển về scene menu: {menuSceneName}");
+            Debug.Log($"[GameWinUI] Changing to menu scene: {menuSceneName}");
         }
         
-        // Fade out trước khi chuyển scene
+        // Fade out before changing scene
         if (animationSequence != null && animationSequence.IsActive())
         {
             animationSequence.Kill();
         }
         
-        animationSequence = DOTween.Sequence();
-        animationSequence.Append(canvasGroup.DOFade(0f, 0.3f).SetEase(Ease.InQuad));
-        animationSequence.OnComplete(() => {
-            // Chuyển scene
+        CanvasGroup textCanvasGroup = winnerText.GetComponent<CanvasGroup>();
+        if (textCanvasGroup != null)
+        {
+            animationSequence = DOTween.Sequence();
+            animationSequence.Append(textCanvasGroup.DOFade(0f, 0.3f).SetEase(Ease.InQuad));
+            animationSequence.OnComplete(() => {
+                // Change scene
+                LoadMenuScene();
+            });
+        }
+        else
+        {
             LoadMenuScene();
-        });
+        }
     }
     
     /// <summary>
-    /// Chuyển về scene menu
+    /// Load the menu scene
     /// </summary>
     private void LoadMenuScene()
     {
@@ -228,13 +179,13 @@ public class GameWinUI : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[GameWinUI] Không thể load scene '{menuSceneName}': {e.Message}");
-            Debug.LogError("Vui lòng kiểm tra tên scene trong Inspector!");
+            Debug.LogError($"[GameWinUI] Cannot load scene '{menuSceneName}': {e.Message}");
+            Debug.LogError("Please check the scene name in Inspector!");
         }
     }
     
     /// <summary>
-    /// Ẩn UI ngay lập tức
+    /// Hide UI immediately
     /// </summary>
     public void HideUI()
     {
@@ -243,20 +194,16 @@ public class GameWinUI : MonoBehaviour
             animationSequence.Kill();
         }
         
-        canvasGroup.alpha = 0f;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
-        
-        if (winPanel != null)
+        if (winnerText != null)
         {
-            winPanel.SetActive(false);
+            winnerText.gameObject.SetActive(false);
         }
         
         isShowing = false;
     }
     
     /// <summary>
-    /// Set tên scene menu
+    /// Set the menu scene name
     /// </summary>
     public void SetMenuSceneName(string sceneName)
     {
@@ -264,7 +211,7 @@ public class GameWinUI : MonoBehaviour
     }
     
     /// <summary>
-    /// Set thời gian delay trước khi chuyển scene
+    /// Set the delay time before changing scene
     /// </summary>
     public void SetDelayTime(float delaySeconds)
     {
@@ -278,5 +225,10 @@ public class GameWinUI : MonoBehaviour
             animationSequence.Kill();
         }
     }
-}
 
+    [ContextMenu("Show Win UI")]
+    public void ShowWinUI()
+    {
+        ShowWinUI(true, "Checkmate");
+    }
+}
