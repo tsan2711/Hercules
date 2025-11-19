@@ -6597,6 +6597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Exit Button
       objectReference: {fileID: 0}
+    - target: {fileID: 1112477113123782, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224015043490365468, guid: 96a7628c4e4508f4e8622b4001c619a3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -13007,7 +13011,7 @@ MonoBehaviour:
   scaleInDuration: 0.6
   bounceScale: 1.1
   bounceDuration: 0.3
-  menuSceneName: Menu
+  menuSceneName: MainMenu
   delayBeforeSceneChange: 5
   showDebugLogs: 1
 --- !u!1001 &1954946278
