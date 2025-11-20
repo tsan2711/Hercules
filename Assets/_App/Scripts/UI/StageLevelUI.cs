@@ -13,6 +13,7 @@ public class StageLevelUI : MonoBehaviour
     [SerializeField] private int levelNumber = 1;
     
     [Header("UI References (Optional)")]
+    [SerializeField] private Image levelImage; // Image component để hiển thị sprite
     [SerializeField] private TextMeshProUGUI levelNumberText; // TextMeshPro hiển thị số level
     [SerializeField] private TextMeshProUGUI levelNameText; // TextMeshPro hiển thị tên level (nếu có)
     
@@ -33,16 +34,38 @@ public class StageLevelUI : MonoBehaviour
         {
             button.onClick.AddListener(OnLevelClicked);
         }
+        
+        // Tự động tìm Image component nếu chưa được gán
+        if (levelImage == null)
+        {
+            levelImage = GetComponent<Image>();
+            if (levelImage == null)
+            {
+                levelImage = GetComponentInChildren<Image>();
+            }
+        }
     }
     
     /// <summary>
-    /// Initialize level UI với level number
+    /// Initialize level UI với level number và sprite
     /// </summary>
-    public void Initialize(int level)
+    public void Initialize(int level, Sprite sprite = null)
     {
         levelNumber = level;
+        SetSpriteInternal(sprite);
         UpdateSceneName();
         UpdateUI();
+    }
+    
+    /// <summary>
+    /// Set sprite cho level image (internal)
+    /// </summary>
+    private void SetSpriteInternal(Sprite sprite)
+    {
+        if (levelImage != null && sprite != null)
+        {
+            levelImage.sprite = sprite;
+        }
     }
     
     /// <summary>
@@ -148,6 +171,14 @@ public class StageLevelUI : MonoBehaviour
         levelNumber = level;
         UpdateSceneName();
         UpdateUI();
+    }
+    
+    /// <summary>
+    /// Set sprite (runtime)
+    /// </summary>
+    public void SetSprite(Sprite sprite)
+    {
+        SetSpriteInternal(sprite);
     }
     
     private void OnDestroy()

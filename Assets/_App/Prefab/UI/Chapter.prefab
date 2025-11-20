@@ -1148,6 +1148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLevelUI
   levelNumber: 1
+  levelImage: {fileID: 114964011475781718}
   levelNumberText: {fileID: 114195400658410800}
   levelNameText: {fileID: 0}
   sceneNamePrefix: Level_

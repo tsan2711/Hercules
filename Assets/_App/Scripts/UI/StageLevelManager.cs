@@ -2,16 +2,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// Serializable data class chứa thông tin level và sprite
+/// </summary>
+[System.Serializable]
+public class LevelData
+{
+    public int level = 1; // Số level
+    public Sprite sprite; // Sprite cho level này
+}
+
+/// <summary>
 /// Manager tự động tạo ra StageLevelUI (Prefab) dựa trên các level được config
 /// </summary>
 public class StageLevelManager : MonoBehaviour
 {
     [Header("Level Configuration")]
-    [SerializeField] private int totalLevels = 10; // Tổng số level
-    [SerializeField] private int startLevel = 1; // Level bắt đầu (thường là 1)
+    [SerializeField] private LevelData[] levelDataArray; // Mảng dữ liệu level với sprite
     
     [Header("UI Prefab")]
-    [SerializeField] private GameObject stageLevelUIPrefab; // Prefab của StageLevelUI
+    [SerializeField] private StageLevelUI stageLevelUIPrefab; // Prefab của StageLevelUI
     
     [Header("Parent Container")]
     [SerializeField] private Transform containerParent; // Container để chứa các level UI (Grid Layout, Vertical Layout, etc.)
@@ -53,22 +62,31 @@ public class StageLevelManager : MonoBehaviour
             ClearExistingLevelUIs();
         }
         
-        // Tạo các level UI
-        for (int i = 0; i < totalLevels; i++)
+        // Kiểm tra mảng dữ liệu
+        if (levelDataArray == null || levelDataArray.Length == 0)
         {
-            int levelNumber = startLevel + i;
-            CreateLevelUI(levelNumber);
+            Debug.LogWarning("Level Data Array is empty! No levels will be created.");
+            return;
         }
         
-        Debug.Log($"Created {totalLevels} level UIs (Level {startLevel} to {startLevel + totalLevels - 1})");
+        // Tạo các level UI từ mảng dữ liệu
+        foreach (LevelData levelData in levelDataArray)
+        {
+            if (levelData != null)
+            {
+                CreateLevelUI(levelData.level, levelData.sprite);
+            }
+        }
+        
+        Debug.Log($"Created {levelDataArray.Length} level UIs from level data array");
     }
     
     /// <summary>
     /// Tạo một level UI cụ thể
     /// </summary>
-    private void CreateLevelUI(int levelNumber)
+    private void CreateLevelUI(int levelNumber, Sprite sprite = null)
     {
-        GameObject levelUIObject = Instantiate(stageLevelUIPrefab, containerParent);
+        GameObject levelUIObject = Instantiate(stageLevelUIPrefab.gameObject, containerParent);
         levelUIObject.name = $"Level_{levelNumber}_UI";
         
         StageLevelUI levelUI = levelUIObject.GetComponent<StageLevelUI>();
@@ -77,8 +95,8 @@ public class StageLevelManager : MonoBehaviour
             levelUI = levelUIObject.AddComponent<StageLevelUI>();
         }
         
-        // Initialize level UI với level number
-        levelUI.Initialize(levelNumber);
+        // Initialize level UI với level number và sprite
+        levelUI.Initialize(levelNumber, sprite);
         
         createdLevelUIs.Add(levelUI);
     }
@@ -115,10 +133,9 @@ public class StageLevelManager : MonoBehaviour
     /// <summary>
     /// Thêm level mới (runtime)
     /// </summary>
-    public void AddLevel(int levelNumber)
+    public void AddLevel(int levelNumber, Sprite sprite = null)
     {
-        CreateLevelUI(levelNumber);
-        totalLevels = createdLevelUIs.Count;
+        CreateLevelUI(levelNumber, sprite);
     }
     
     /// <summary>
