@@ -16,7 +16,7 @@ public class StageLevelUI : MonoBehaviour
     [SerializeField] private Image levelImage; // Image component để hiển thị sprite
     [SerializeField] private TextMeshProUGUI levelNumberText; // TextMeshPro hiển thị số level
     [SerializeField] private TextMeshProUGUI levelNameText; // TextMeshPro hiển thị tên level (nếu có)
-    
+    [SerializeField] private TextMeshProUGUI descriptionText;
     [Header("Settings")]
     [SerializeField] private string sceneNamePrefix = "Level_"; // Prefix cho tên scene (mặc định: "Level_")
     [SerializeField] private bool useSceneNamePrefix = true; // Có sử dụng prefix không
@@ -47,12 +47,13 @@ public class StageLevelUI : MonoBehaviour
     }
     
     /// <summary>
-    /// Initialize level UI với level number và sprite
+    /// Initialize level UI với level number, sprite và description
     /// </summary>
-    public void Initialize(int level, Sprite sprite = null)
+    public void Initialize(int level, Sprite sprite = null, string description = "")
     {
         levelNumber = level;
         SetSpriteInternal(sprite);
+        SetDescriptionInternal(description);
         UpdateSceneName();
         UpdateUI();
     }
@@ -91,13 +92,28 @@ public class StageLevelUI : MonoBehaviour
         // Update level number text
         if (levelNumberText != null)
         {
-            levelNumberText.text = levelNumber.ToString();
+            levelNumberText.text = "Stage " + levelNumber.ToString();
         }
         
         // Update level name text (nếu có)
         if (levelNameText != null)
         {
             levelNameText.text = $"Level {levelNumber}";
+        }
+    }
+    
+    /// <summary>
+    /// Set description cho level (internal)
+    /// </summary>
+    private void SetDescriptionInternal(string description)
+    {
+        if (descriptionText != null && !string.IsNullOrEmpty(description))
+        {
+            descriptionText.text = description;
+        }
+        else if (descriptionText != null)
+        {
+            descriptionText.text = "";
         }
     }
     
@@ -179,6 +195,14 @@ public class StageLevelUI : MonoBehaviour
     public void SetSprite(Sprite sprite)
     {
         SetSpriteInternal(sprite);
+    }
+    
+    /// <summary>
+    /// Set description (runtime)
+    /// </summary>
+    public void SetDescription(string description)
+    {
+        SetDescriptionInternal(description);
     }
     
     private void OnDestroy()

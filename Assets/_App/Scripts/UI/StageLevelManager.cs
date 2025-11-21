@@ -9,6 +9,7 @@ public class LevelData
 {
     public int level = 1; // Số level
     public Sprite sprite; // Sprite cho level này
+    public string description;
 }
 
 /// <summary>
@@ -74,7 +75,7 @@ public class StageLevelManager : MonoBehaviour
         {
             if (levelData != null)
             {
-                CreateLevelUI(levelData.level, levelData.sprite);
+                CreateLevelUI(levelData.level, levelData.sprite, levelData.description);
             }
         }
         
@@ -84,7 +85,7 @@ public class StageLevelManager : MonoBehaviour
     /// <summary>
     /// Tạo một level UI cụ thể
     /// </summary>
-    private void CreateLevelUI(int levelNumber, Sprite sprite = null)
+    private void CreateLevelUI(int levelNumber, Sprite sprite = null, string description = "")
     {
         GameObject levelUIObject = Instantiate(stageLevelUIPrefab.gameObject, containerParent);
         levelUIObject.name = $"Level_{levelNumber}_UI";
@@ -95,8 +96,8 @@ public class StageLevelManager : MonoBehaviour
             levelUI = levelUIObject.AddComponent<StageLevelUI>();
         }
         
-        // Initialize level UI với level number và sprite
-        levelUI.Initialize(levelNumber, sprite);
+        // Initialize level UI với level number, sprite và description
+        levelUI.Initialize(levelNumber, sprite, description);
         
         createdLevelUIs.Add(levelUI);
     }
@@ -133,9 +134,9 @@ public class StageLevelManager : MonoBehaviour
     /// <summary>
     /// Thêm level mới (runtime)
     /// </summary>
-    public void AddLevel(int levelNumber, Sprite sprite = null)
+    public void AddLevel(int levelNumber, Sprite sprite = null, string description = "")
     {
-        CreateLevelUI(levelNumber, sprite);
+        CreateLevelUI(levelNumber, sprite, description);
     }
     
     /// <summary>

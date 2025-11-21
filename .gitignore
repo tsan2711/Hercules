@@ -8,6 +8,11 @@
 /UserSettings/
 /MemoryCaptures/
 
+# Platform specific build artifacts
+*.app/
+*.ipa
+*.apk
+
 # Unity Package Manager
 /Packages/packages-lock.json
 

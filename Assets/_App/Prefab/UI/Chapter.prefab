@@ -500,7 +500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 37.499985, y: -370.29834}
+  m_AnchoredPosition: {x: 37.499985, y: -419}
   m_SizeDelta: {x: 425, y: 70}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &222802941144077818
@@ -531,7 +531,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MAYBE SOME DESCRIPTION AS WELL.
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1303a6dde387e694f8da16b62d2cf437, type: 2}
   m_sharedMaterial: {fileID: 21513131424051102, guid: 1303a6dde387e694f8da16b62d2cf437, type: 2}
@@ -1151,6 +1151,7 @@ MonoBehaviour:
   levelImage: {fileID: 114964011475781718}
   levelNumberText: {fileID: 114195400658410800}
   levelNameText: {fileID: 0}
+  descriptionText: {fileID: 114766471463255810}
   sceneNamePrefix: Level_
   useSceneNamePrefix: 1
   playClickSound: 1
